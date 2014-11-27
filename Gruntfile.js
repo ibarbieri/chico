@@ -53,7 +53,7 @@ module.exports = function (grunt) {
 
             'autocomplete_js': {
                 'src': ['temp/' + environment + '/core.tmp.js'].concat(files.JS.abilities).concat(files.JS.autocomplete),
-                'dest': destination + '/' + environment + '/<%= pkg.name %>.autocomplete.js'
+                'dest': destination + '/' + environment + '/ac.autocomplete.js'
             },
 
             'css': {
@@ -69,7 +69,7 @@ module.exports = function (grunt) {
                     'banner': '<%= banner.full %>'
                 },
                 'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.autocomplete),
-                'dest': destination + '/' + environment + '/<%= pkg.name %>.autocomplete.css'
+                'dest': destination + '/' + environment + '/ac.autocomplete.css'
             }
 
         },
@@ -134,9 +134,25 @@ module.exports = function (grunt) {
                     'from': '../assets/',
                     'to': '../../assets/0.3/'
                 }]
+            },
+            'test': {
+                'src': ['build/ui/ac.autocomplete.js'],
+                'dest': destination + '/' + environment + '/ac.autocomplete.js',
+                'replacements': [{
+                        'from': 'ch =',
+                        'to': 'ac ='
+                    },
+                    {
+                        'from': 'ch.',
+                        'to': 'ac.'
+                    },
+                    {
+                        'from': 'ch[',
+                        'to': 'ac['
+                    }
+                ]
             }
         }
-
     });
 
     // Load plugins
@@ -152,6 +168,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', []);
     grunt.registerTask('lint', ['jslint']);
     grunt.registerTask('doc', ['jsdoc']);
-    grunt.registerTask('dev', ['concat', 'clean']);
-    grunt.registerTask('dist', ['concat', 'replace', 'uglify', 'cssmin', 'clean']);
+    grunt.registerTask('dev', ['concat', 'clean', 'replace:test']);
+    grunt.registerTask('dist', ['concat', 'replace:example', 'uglify', 'cssmin', 'clean']);
 };
