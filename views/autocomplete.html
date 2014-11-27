@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="cleartype" content="on">
 
-    <link rel="stylesheet" href="/ui/ac.autocomplete.css">
+    <link rel="stylesheet" href="/ui/autocomplete.css">
     <link rel="stylesheet" href="/vendor/mesh.min.css">
     <style>
 
@@ -53,23 +53,27 @@
 
     <div class="ch-box-lite">
         <h2 id="autocomplete">Autocomplete</h2>
-        <form method="get" action="http://www.mercadolibre.com.ar/jm/search" class="ch-form">
-            <div class="ch-form-row">
-                <label for="product">Find a product:</label>
-                <input type="text" name="as_word" id="product" class="autocomplete" placeholder="iphone 5" />
-                <p class="ch-form-hint">This is working with the MercadoLibre API</p>
-            </div>
-            <p class="ch-form-actions">
-                <input type="submit" name="autocompleteSubmit" class="ch-btn">
+
+        <form class="ml-search" action="/" method="GET" role="search">
+            <input type="text" class="ml-search-input" name="as_word" value="" max-length="120"/>
+
+            <p id="mlCategory" class="ml-category" title="Buscar solo en...">
+                <input type="checkbox" id="categorySearch" name="as_categ_id" value="MLA7262"/>
+                <label for="categorySearch">Buscar solo en...</label>
             </p>
+
+            <button type="submit" name="mlSearchBtn" class="ml-search-btn">
+                <i class="ml-icon-search"></i>
+                <span>Buscar</span>
+            </button>
         </form>
     </div>
 
 
     <script src="/vendor/jquery.js"></script>
-    <script src="/ui/ac.autocomplete.js"></script>
+    <script src="/ui/autocomplete.js"></script>
     <script>
-       
+
         var parseResults = function (results) {
             var data = [];
             if (results[2].suggested_queries !== undefined) {
@@ -81,19 +85,29 @@
             }
         }
 
-        var autocomplete = $('.autocomplete').autocomplete()
-                .on('type', function (userInput) {
-                     $.ajax({
-                         'url': 'http://suggestgz.mlapps.com/sites/MLA/autosuggest?q='+ userInput +'&v=1&callback=parseResults',
-                         'dataType': 'jsonp',
-                         'cache': false,
-                         'global': true,
-                         'context': window,
-                         'jsonp': 'parseResults',
-                         'crossDomain': true
-                     });
-                });
+        var autocomplete = $('.ml-search-input').autocomplete({
+            'checkbox': $('#categorySearch')
+        })
+        .on('type', function (userInput) {
+             $.ajax({
+                 'url': 'http://suggestgz.mlapps.com/sites/MLA/autosuggest?q='+ userInput +'&v=1&callback=parseResults',
+                 'dataType': 'jsonp',
+                 'cache': false,
+                 'global': true,
+                 'context': window,
+                 'jsonp': 'parseResults',
+                 'crossDomain': true
+             });
+        });
 
+        autocomplete.addLastSearches();
+
+        autocomplete.on('select', function (e){
+           // TODO disparar la busqueda
+           this.doSearch({
+               element: this._highlighted
+           });
+        });
 
     </script>
 </body>

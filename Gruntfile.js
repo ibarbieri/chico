@@ -53,7 +53,7 @@ module.exports = function (grunt) {
 
             'autocomplete_js': {
                 'src': ['temp/' + environment + '/core.tmp.js'].concat(files.JS.abilities).concat(files.JS.autocomplete),
-                'dest': destination + '/' + environment + '/ac.autocomplete.js'
+                'dest': destination + '/' + environment + '/chico.autocomplete.js'
             },
 
             'css': {
@@ -69,7 +69,7 @@ module.exports = function (grunt) {
                     'banner': '<%= banner.full %>'
                 },
                 'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.autocomplete),
-                'dest': destination + '/' + environment + '/ac.autocomplete.css'
+                'dest': destination + '/' + environment + '/chico.autocomplete.css'
             }
 
         },
@@ -136,19 +136,19 @@ module.exports = function (grunt) {
                 }]
             },
             'test': {
-                'src': ['build/ui/ac.autocomplete.js'],
-                'dest': destination + '/' + environment + '/ac.autocomplete.js',
+                'src': ['build/ui/chico.autocomplete.js'],
+                'dest': destination + '/' + environment + '/chico.autocomplete.js',
                 'replacements': [{
                         'from': 'ch =',
-                        'to': 'ac ='
+                        'to': 'ch ='
                     },
                     {
                         'from': 'ch.',
-                        'to': 'ac.'
+                        'to': 'ch.'
                     },
                     {
                         'from': 'ch[',
-                        'to': 'ac['
+                        'to': 'ch['
                     }
                 ]
             }
