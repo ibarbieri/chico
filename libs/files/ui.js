@@ -106,7 +106,8 @@ JS.autocomplete = [
     // "src/shared/js/Countdown.js",
     // "src/ui/js/Datepicker.js",
     "src/shared/js/Autocomplete.js",
-    "src/ui/js/Autocomplete.js"
+    "src/ui/js/Autocomplete.js",
+    "extensions/autocomplete.searchbox.js"
 ];
 
 /*
