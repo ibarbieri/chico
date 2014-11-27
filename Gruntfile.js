@@ -51,12 +51,25 @@ module.exports = function (grunt) {
                 'dest': destination + '/' + environment + '/<%= pkg.name %>.js'
             },
 
+            'autocomplete_js': {
+                'src': ['temp/' + environment + '/core.tmp.js'].concat(files.JS.abilities).concat(files.JS.autocomplete),
+                'dest': destination + '/' + environment + '/<%= pkg.name %>.autocomplete.js'
+            },
+
             'css': {
                 'options': {
                     'banner': '<%= banner.full %>'
                 },
                 'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.components),
                 'dest': destination + '/' + environment + '/<%= pkg.name %>.css'
+            },
+
+            'autocomplete_css': {
+                'options': {
+                    'banner': '<%= banner.full %>'
+                },
+                'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.autocomplete),
+                'dest': destination + '/' + environment + '/<%= pkg.name %>.autocomplete.css'
             }
 
         },

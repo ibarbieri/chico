@@ -1,0 +1,105 @@
+<!doctype html>
+<!--[if IE 7]>  <html class="no-js lt-ie10 lt-ie9 lt-ie8 ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>  <html class="no-js lt-ie10 lt-ie9 ie8" lang="en"> <![endif]-->
+<!--[if IE 9]>  <html class="no-js lt-ie10 ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es"> <!--<![endif]-->
+<head>
+    <script></script>
+    <meta charset="utf-8" />
+    <title>Autocomplete UI v1.1.1</title>
+
+    <!-- Mobile viewport optimization http://goo.gl/b9SaQ -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="cleartype" content="on">
+
+    <link rel="stylesheet" href="/ui/autocomplete.css">
+    <link rel="stylesheet" href="/vendor/mesh.min.css">
+    <style>
+
+        .ch-loading-small {
+            display: block;
+            margin:0 auto;
+        }
+
+        body {
+            margin-top: 80px;
+        }
+
+        .ml-header {
+            background-color: #fff;
+            border-bottom: 1px solid #D9D9D9;
+            height: 50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 99;
+        }
+
+        .ml-header h1 {
+            text-align: center;
+            line-height: 1.6em;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="ml-header">
+        <h1 id="components">Autocomplete UI v1.1.1</h1>
+    </div>
+
+    <div class="ch-box-lite">
+        <h2 id="autocomplete">Autocomplete</h2>
+        <form method="get" action="http://www.mercadolibre.com.ar/jm/search" class="ch-form">
+            <div class="ch-form-row">
+                <label for="product">Find a product:</label>
+                <input type="text" name="as_word" id="product" class="autocomplete" placeholder="iphone 5" />
+                <p class="ch-form-hint">This is working with the MercadoLibre API</p>
+            </div>
+            <p class="ch-form-actions">
+                <input type="submit" name="autocompleteSubmit" class="ch-btn">
+            </p>
+        </form>
+    </div>
+
+
+    <script src="/vendor/jquery.js"></script>
+    <script src="/ui/autocomplete.js"></script>
+    <script>
+        var extraSuggestions = ['<ul>',
+            '<li class="ch-autocomplete-item" data-suggested="Static option">Static option</li>',
+            '<li class="ch-autocomplete-item" data-suggested="Other Static option">Other static option</li>',
+            '</ul>'].join('');
+
+        var parseResults = function (results) {
+            var data = [];
+            if (results[2].suggested_queries !== undefined) {
+                results[2].suggested_queries.forEach(function (e, i) {
+                    data.push(e.q);
+                });
+
+                autocomplete.suggest(data);
+            }
+        }
+
+        var autocomplete = $('.autocomplete').autocomplete()
+                .on('type', function (userInput) {
+                     $.ajax({
+                         'url': 'http://suggestgz.mlapps.com/sites/MLA/autosuggest?q='+ userInput +'&v=1&callback=parseResults',
+                         'dataType': 'jsonp',
+                         'cache': false,
+                         'global': true,
+                         'context': window,
+                         'jsonp': 'parseResults',
+                         'crossDomain': true
+                     });
+                });
+
+            autocomplete.$container.prepend(extraSuggestions);
+
+    </script>
+</body>
+</html>
