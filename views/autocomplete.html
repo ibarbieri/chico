@@ -69,11 +69,7 @@
     <script src="/vendor/jquery.js"></script>
     <script src="/ui/ac.autocomplete.js"></script>
     <script>
-        var extraSuggestions = ['<ul>',
-            '<li class="ch-autocomplete-item" data-suggested="Static option">Static option</li>',
-            '<li class="ch-autocomplete-item" data-suggested="Other Static option">Other static option</li>',
-            '</ul>'].join('');
-
+       
         var parseResults = function (results) {
             var data = [];
             if (results[2].suggested_queries !== undefined) {
@@ -98,7 +94,6 @@
                      });
                 });
 
-            autocomplete.$container.prepend(extraSuggestions);
 
     </script>
 </body>
