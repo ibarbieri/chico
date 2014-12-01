@@ -1,12 +1,78 @@
 (function (window, Autocomplete) {
     'use strict';
 
-    var $searchInput,
-        $check;
+    var $searchForm,
+        $searchInput,
+        $checkbox,
+        $checkboxLabel,
+        maxQueryLength;
 
     Autocomplete.prototype.initialize = function () {
-        $searchInput = this.$trigger,//settings.$searchInput,
-        $check = this._options.checkbox;
+
+        var that = this;
+
+        $searchForm = this._options.searchForm,
+        $searchInput = this.$trigger,
+        $checkbox = this._options.categoryCheckbox,
+        $checkboxLabel = this._options.categoryCheckboxLabel,
+        maxQueryLength = this._options.maxQueryLength || 15;
+
+        this.addLastSearches();
+
+        this.on('type', function (userInput) {
+
+             $.ajax({
+                 'url': 'http://suggestgz.mlapps.com/sites/MLA/autosuggest?q='+ userInput,
+                 'dataType': 'jsonp',
+                 'cache': false,
+                 'global': true,
+                 'context': this,
+                 'crossDomain': true
+             })
+             .done(this.parseResults);
+
+             this.adecuateCategoryLabel();
+        });
+
+        this.on('select', function (e) {
+           this.doSearch({
+               element: this._highlighted
+           });
+        });
+
+        ch.shortcuts.add( ch.onkeydownarrow, this.uid, this.adecuateCategoryLabel );
+        ch.shortcuts.add( ch.onkeyuparrow, this.uid, this.adecuateCategoryLabel );
+
+        $searchForm.submit(function(e){
+            e.preventDefault();
+            that.doSearch();
+        });
+    }
+
+
+    Autocomplete.prototype.parseResults = function (results) {
+
+        var data = [];
+        if (results[2].suggested_queries !== undefined) {
+            results[2].suggested_queries.forEach(function (e, i) {
+                data.push(e.q);
+            });
+
+            this.suggest(data);
+        }
+    }
+
+
+    // Autocomplete.prototype.navigateSuggestions = function () {
+    Autocomplete.prototype.adecuateCategoryLabel = function () {
+
+        if ( $searchInput.val().length > maxQueryLength) {
+            $checkboxLabel.addClass('ml-label-small');
+        } else {
+            $checkboxLabel.removeClass('ml-label-small');
+        }
+
+        return this;
     }
 
 
@@ -82,6 +148,74 @@
         return list;
     };
 
+
+
+    Autocomplete.prototype.doSearch = function (tracking) {
+
+        // Saving querys
+        // Use trim to remove white spaces
+        var query = $searchInput.val(), //trim($searchInput.val()),
+            search = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G'//settings.uri;
+            // search = 'http://ipod.localhost.com.ar:8080/reproductores/';
+
+        // Naturalization
+        if (query && query.length > 0){
+            query = this.naturalization({
+                string: query,
+                replace: ' ',
+                replacement: '-'
+            });
+        } else {
+            // Focus when submit (valid en IE)
+            $searchInput.focus();
+            return false;
+        }
+
+        // Category checked
+        if ($checkbox !== null && $checkbox.is(':checked')) {
+            if (window.location.href.indexOf('_DisplayType_LF') != -1) {
+                search =  "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']" + '_DisplayType_LF';
+            } else {
+                search = "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']";
+            }
+        }
+
+        // Adults setting
+        if (this.getCookieValue('pr_categ') === 'AD' && search.indexOf('_PrCategId_AD') === -1) {
+            search = search + '_PrCategId_AD';
+        }
+
+        // Add query to the URL string
+        search = search.replace('$query', encodeURIComponent(query));
+
+        // Tracking
+        if(typeof tracking != 'undefined'){
+            search = search + '#D[A:' + query + ',B:' + tracking.element + ']';
+        }
+        // Cookies
+        console.info('revisar seteo de cookie');
+        this.setSearchCookies(query);
+
+        // Redirect
+        // location.href = search;
+        console.info(search);
+
+        return this;
+    };
+
+
+    Autocomplete.prototype.naturalization = function (conf) {
+        var query = conf.string.toLowerCase(),
+            replace = conf.replace,
+            replacement = conf.replacement;
+
+        while (query.toString().indexOf(replace) != -1){
+            query = query.toString().replace(replace,replacement);
+        }
+        return query;
+    }
+
+
     Autocomplete.prototype.getCookieValue = function (name) {
 
         var start = document.cookie.indexOf(name+"="),
@@ -110,7 +244,7 @@
 
 
     Autocomplete.prototype.setCookie = function (config) {
-        console.info('revisar seteo de cookie');
+        
         var domain = '',//meli.domain,
             today,
             expire;
@@ -162,71 +296,7 @@
     }
 
 
-    Autocomplete.prototype.naturalization = function (conf) {
-       var query = conf.string.toLowerCase(),
-           replace = conf.replace,
-           replacement = conf.replacement;
-
-       while (query.toString().indexOf(replace) != -1){
-           query = query.toString().replace(replace,replacement);
-       }
-       return query;
-   }
-
-
-    Autocomplete.prototype.doSearch = function (tracking) {
-
-       // Saving querys
-       // Use trim to remove white spaces
-       var query = $searchInput.val(), //trim($searchInput.val()),
-           search = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G'//settings.uri;
-           // search = 'http://ipod.localhost.com.ar:8080/reproductores/';
-
-       // Naturalization
-       if (query && query.length > 0){
-           query = this.naturalization({
-               string: query,
-               replace: ' ',
-               replacement: '-'
-           });
-       } else {
-           // Focus when submit (valid en IE)
-           $searchInput.focus();
-           return false;
-       }
-
-       // Category checked
-       if ($check !== null && $check.is(':checked')) {
-           if (window.location.href.indexOf('_DisplayType_LF') != -1) {
-               search =  "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']" + '_DisplayType_LF';
-           } else {
-               search = "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']";
-           }
-       }
-
-       // Adults setting
-       if (this.getCookieValue('pr_categ') === 'AD' && search.indexOf('_PrCategId_AD') === -1) {
-           search = search + '_PrCategId_AD';
-       }
-
-       // Add query to the URL string
-       search = search.replace('$query', encodeURIComponent(query));
-
-       // Tracking
-       if(typeof tracking != 'undefined'){
-           search = search + '#D[A:' + query + ',B:' + tracking.element + ']';
-       }
-       // Cookies
-       this.setSearchCookies(query);
-
-       // Redirect
-       // location.href = search;
-       console.info(search);
-
-       return this;
-   };
-
-
+    
 
 
 }(this, this.ch.Autocomplete));
