@@ -74,40 +74,14 @@
     <script src="/ui/autocomplete.js"></script>
     <script>
 
-        var parseResults = function (results) {
-            var data = [];
-            if (results[2].suggested_queries !== undefined) {
-                results[2].suggested_queries.forEach(function (e, i) {
-                    data.push(e.q);
-                });
-
-                autocomplete.suggest(data);
-            }
+        var autocompleteConfig = {
+            'searchForm': $('.ml-search'),
+            'categoryCheckbox': $('#categorySearch'),
+            'categoryCheckboxLabel': $('label[for="categorySearch"]')
         }
 
-        var autocomplete = $('.ml-search-input').autocomplete({
-            'checkbox': $('#categorySearch')
-        })
-        .on('type', function (userInput) {
-             $.ajax({
-                 'url': 'http://suggestgz.mlapps.com/sites/MLA/autosuggest?q='+ userInput +'&v=1&callback=parseResults',
-                 'dataType': 'jsonp',
-                 'cache': false,
-                 'global': true,
-                 'context': window,
-                 'jsonp': 'parseResults',
-                 'crossDomain': true
-             });
-        });
+        var autocomplete = new ch.Autocomplete($('.ml-search-input'), autocompleteConfig);
 
-        autocomplete.addLastSearches();
-
-        autocomplete.on('select', function (e){
-           // TODO disparar la busqueda
-           this.doSearch({
-               element: this._highlighted
-           });
-        });
 
     </script>
 </body>
