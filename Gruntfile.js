@@ -51,11 +51,6 @@ module.exports = function (grunt) {
                 'dest': destination + '/' + environment + '/<%= pkg.name %>.js'
             },
 
-            'autocomplete_js': {
-                'src': ['temp/' + environment + '/core.tmp.js'].concat(files.JS.abilities).concat(files.JS.autocomplete),
-                'dest': destination + '/' + environment + '/chico.autocomplete.js'
-            },
-
             'css': {
                 'options': {
                     'banner': '<%= banner.full %>'
@@ -64,14 +59,18 @@ module.exports = function (grunt) {
                 'dest': destination + '/' + environment + '/<%= pkg.name %>.css'
             },
 
-            'autocomplete_css': {
+            'search_box_js': {
+                'src': ['temp/' + environment + '/core.tmp.js'].concat(files.JS.abilities).concat(files.JS.autocomplete),
+                'dest': 'extensions/searchBox/ac.autocomplete.js'
+            },
+
+            'search_box_css': {
                 'options': {
                     'banner': '<%= banner.full %>'
                 },
                 'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.autocomplete),
-                'dest': destination + '/' + environment + '/chico.autocomplete.css'
+                'dest': 'extensions/searchBox/ac.autocomplete.css'
             }
-
         },
 
         'uglify': {
@@ -136,19 +135,23 @@ module.exports = function (grunt) {
                 }]
             },
             'nameSpace': {
-                'src': ['build/ui/chico.autocomplete.js'],
-                'dest': destination + '/' + environment + '/chico.autocomplete.js',
+                'src': ['extensions/search-box/ac.autocomplete.js'],
+                'dest': 'extensions/search-box/ac.autocomplete.js',
                 'replacements': [{
                         'from': 'ch =',
-                        'to': 'ch ='
+                        'to': 'ac ='
                     },
                     {
                         'from': 'ch.',
-                        'to': 'ch.'
+                        'to': 'ac.'
                     },
                     {
                         'from': 'ch[',
-                        'to': 'ch['
+                        'to': 'ac['
+                    },
+                    {
+                        'from': ' = ch',
+                        'to': ' = ac'
                     }
                 ]
             }
@@ -168,6 +171,8 @@ module.exports = function (grunt) {
     grunt.registerTask('default', []);
     grunt.registerTask('lint', ['jslint']);
     grunt.registerTask('doc', ['jsdoc']);
-    grunt.registerTask('dev', ['concat', 'clean', 'replace:nameSpace']);
+    grunt.registerTask('dev', ['concat', 'clean']);
     grunt.registerTask('dist', ['concat', 'replace:example', 'uglify', 'cssmin', 'clean']);
+    grunt.registerTask('buildExtensions', ['concat', 'clean', 'replace:nameSpace']);
+    grunt.registerTask('distExtensions', ['concat', 'replace:nameSpace', 'uglify', 'cssmin', 'clean']);
 };

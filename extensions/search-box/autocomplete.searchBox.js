@@ -5,17 +5,28 @@
         $searchInput,
         $checkbox,
         $checkboxLabel,
-        maxQueryLength;
+        maxQueryLength,
+        lastSearchesText,
+        meliDomain;
 
+    /**
+     * Init the component
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.initialize();
+     */
     Autocomplete.prototype.initialize = function () {
 
         var that = this;
 
-        $searchForm = this._options.searchForm,
-        $searchInput = this.$trigger,
-        $checkbox = this._options.categoryCheckbox,
-        $checkboxLabel = this._options.categoryCheckboxLabel,
+        $searchForm = this._options.searchForm;
+        $searchInput = this.$trigger;
+        $checkbox = this._options.categoryCheckbox;
+        $checkboxLabel = this._options.categoryCheckboxLabel;
         maxQueryLength = this._options.maxQueryLength || 15;
+        lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
+        meliDomain = this._options.meliDomain || 'meli.domain';
 
         this.addLastSearches();
 
@@ -35,21 +46,28 @@
         });
 
         this.on('select', function (e) {
-           this.doSearch({
+           this.doQuery({
                element: this._highlighted
            });
         });
 
-        ch.shortcuts.add( ch.onkeydownarrow, this.uid, this.adecuateCategoryLabel );
-        ch.shortcuts.add( ch.onkeyuparrow, this.uid, this.adecuateCategoryLabel );
+        ac.shortcuts.add( ac.onkeydownarrow, this.uid, this.adecuateCategoryLabel );
+        ac.shortcuts.add( ac.onkeyuparrow, this.uid, this.adecuateCategoryLabel );
 
         $searchForm.submit(function(e){
             e.preventDefault();
-            that.doSearch();
+            that.doQuery();
         });
     }
 
 
+    /**
+     * Parse the json and add the results to data array
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @example
+     * this.parseResults();
+     */
     Autocomplete.prototype.parseResults = function (results) {
 
         var data = [];
@@ -64,6 +82,15 @@
 
 
     // Autocomplete.prototype.navigateSuggestions = function () {
+    /**
+     * Adds 'last searches' to Autocomplete.
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @returns {Autocomplete}
+     * @example
+     * // Add last searches
+     * Autocomplete.addLastSearches();
+     */
     Autocomplete.prototype.adecuateCategoryLabel = function () {
 
         if ( $searchInput.val().length > maxQueryLength) {
@@ -125,8 +152,8 @@
                     searches.pop();
 
                     list  = '<div class="last-searches">';
-                    // list += '<h4 class="last-searches-title">' + settings.suggest.txt.lastSearch +'</h4>';
-                    list += '<h4 class="last-searches-title">' + 'ultimas busquedas' +'</h4>';
+                    list += '<h4 class="last-searches-title">' + lastSearchesText +'</h4>';
+                    //list += '<h4 class="last-searches-title">' + 'ultimas busquedas' +'</h4>';
                     list += '<ul class="last-searches-list">';
 
                     len = searches.length;
@@ -150,12 +177,12 @@
 
 
 
-    Autocomplete.prototype.doSearch = function (tracking) {
+    Autocomplete.prototype.doQuery = function (tracking) {
 
         // Saving querys
         // Use trim to remove white spaces
         var query = $searchInput.val(), //trim($searchInput.val()),
-            search = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G'//settings.uri;
+            searchQuery = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G'//settings.uri;
             // search = 'http://ipod.localhost.com.ar:8080/reproductores/';
 
         // Naturalization
@@ -174,31 +201,31 @@
         // Category checked
         if ($checkbox !== null && $checkbox.is(':checked')) {
             if (window.location.href.indexOf('_DisplayType_LF') != -1) {
-                search =  "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']" + '_DisplayType_LF';
+                searchQuery =  "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']" + '_DisplayType_LF';
             } else {
-                search = "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']";
+                searchQuery = "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']";
             }
         }
 
         // Adults setting
-        if (this.getCookieValue('pr_categ') === 'AD' && search.indexOf('_PrCategId_AD') === -1) {
-            search = search + '_PrCategId_AD';
+        if (this.getCookieValue('pr_categ') === 'AD' && searchQuery.indexOf('_PrCategId_AD') === -1) {
+            searchQuery = searchQuery + '_PrCategId_AD';
         }
 
         // Add query to the URL string
-        search = search.replace('$query', encodeURIComponent(query));
+        searchQuery = searchQuery.replace('$query', encodeURIComponent(query));
 
         // Tracking
         if(typeof tracking != 'undefined'){
-            search = search + '#D[A:' + query + ',B:' + tracking.element + ']';
+            searchQuery = searchQuery + '#D[A:' + query + ',B:' + tracking.element + ']';
         }
         // Cookies
         console.info('revisar seteo de cookie');
         this.setSearchCookies(query);
 
         // Redirect
-        // location.href = search;
-        console.info(search);
+        // location.href = searchQuery;
+        console.info(searchQuery);
 
         return this;
     };
@@ -244,8 +271,8 @@
 
 
     Autocomplete.prototype.setCookie = function (config) {
-        
-        var domain = '',//meli.domain,
+
+        var domain = meliDomain,
             today,
             expire;
 
@@ -265,8 +292,8 @@
         } else {
             document.cookie = config.name + '=' + config.value + ';path=' + config.path + ';domain=.' + domain;
         }
-
     }
+
 
     Autocomplete.prototype.setContextCookie = function (val) {
         url = urlPms + "/jm/PmsPixel?ck=" + val;
@@ -296,7 +323,4 @@
     }
 
 
-    
-
-
-}(this, this.ch.Autocomplete));
+}(this, this.ac.Autocomplete));

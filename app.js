@@ -17,6 +17,7 @@ app.use('/assets/demo', express.static(__dirname + '/views/assets'));
 app.use('/static', express.static(__dirname + '/views/static'));
 app.use('/test', express.static(__dirname + '/tests'));
 app.use('/libs', express.static(__dirname + '/libs'));
+app.use('/extensions', express.static(__dirname + '/extensions'));
 /**
  * Render HTML files
  */

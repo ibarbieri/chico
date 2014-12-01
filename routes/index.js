@@ -11,7 +11,7 @@ var app = module.parent.exports,
 
 function isAnotherFile (req, res, next) {
     var folder = req.params.version;
-    if (folder === 'static' || folder === 'assets' || folder === 'vendor' || folder === 'test' || folder === 'libs') {
+    if (folder === 'static' || folder === 'assets' || folder === 'vendor' || folder === 'test' || folder === 'libs' || folder === 'extensions') {
         next('route');
     } else {
         next();
