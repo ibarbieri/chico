@@ -135,7 +135,7 @@ module.exports = function (grunt) {
                     'to': '../../assets/0.3/'
                 }]
             },
-            'test': {
+            'nameSpace': {
                 'src': ['build/ui/chico.autocomplete.js'],
                 'dest': destination + '/' + environment + '/chico.autocomplete.js',
                 'replacements': [{
@@ -168,6 +168,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', []);
     grunt.registerTask('lint', ['jslint']);
     grunt.registerTask('doc', ['jsdoc']);
-    grunt.registerTask('dev', ['concat', 'clean', 'replace:test']);
+    grunt.registerTask('dev', ['concat', 'clean', 'replace:nameSpace']);
     grunt.registerTask('dist', ['concat', 'replace:example', 'uglify', 'cssmin', 'clean']);
 };
