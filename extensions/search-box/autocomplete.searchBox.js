@@ -7,7 +7,8 @@
         $checkboxLabel,
         maxQueryLength,
         lastSearchesText,
-        meliDomain;
+        meliDomain,
+        siteId;
 
     /**
      * Init the component
@@ -27,13 +28,14 @@
         maxQueryLength = this._options.maxQueryLength || 15;
         lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
         meliDomain = this._options.meliDomain || 'meli.domain';
+        siteId = this._options.siteId || 'MLA';
 
         this.addLastSearches();
 
         this.on('type', function (userInput) {
 
              $.ajax({
-                 'url': 'http://suggestgz.mlapps.com/sites/MLA/autosuggest?q='+ userInput,
+                 'url': 'http://suggestgz.mlapps.com/sites/'+siteId+'/autosuggest?q='+userInput,
                  'dataType': 'jsonp',
                  'cache': false,
                  'global': true,
@@ -51,8 +53,8 @@
            });
         });
 
-        ac.shortcuts.add( ac.onkeydownarrow, this.uid, this.adecuateCategoryLabel );
-        ac.shortcuts.add( ac.onkeyuparrow, this.uid, this.adecuateCategoryLabel );
+        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
+        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
 
         $searchForm.submit(function(e){
             e.preventDefault();
@@ -81,7 +83,6 @@
     }
 
 
-    // Autocomplete.prototype.navigateSuggestions = function () {
     /**
      * Adds 'last searches' to Autocomplete.
      * @memberof! ch.Autocomplete.prototype
@@ -104,12 +105,11 @@
 
 
     /**
-     * Adds 'last searches' to Autocomplete.
+     * Append 'last searches' to input.
      * @memberof! ch.Autocomplete.prototype
      * @function
      * @returns {Autocomplete}
      * @example
-     * // Add last searches
      * Autocomplete.addLastSearches();
      */
     Autocomplete.prototype.addLastSearches = function () {
@@ -117,7 +117,6 @@
         var lastSearches;
 
         lastSearches = this.getLastSearches();
-
         this.$container.append(lastSearches);
 
         return this;
@@ -125,12 +124,11 @@
 
 
     /**
-     * Get 'last searches' to Autocomplete.
+     * Get 'last searches' from cookie.
      * @memberof! ch.Autocomplete.prototype
      * @function
      * @returns {list}
      * @example
-     * // Add last searches
      * Autocomplete.getLastSearches();
      */
     Autocomplete.prototype.getLastSearches = function () {
@@ -153,7 +151,6 @@
 
                     list  = '<div class="last-searches">';
                     list += '<h4 class="last-searches-title">' + lastSearchesText +'</h4>';
-                    //list += '<h4 class="last-searches-title">' + 'ultimas busquedas' +'</h4>';
                     list += '<ul class="last-searches-list">';
 
                     len = searches.length;
@@ -176,13 +173,20 @@
     };
 
 
-
+    /**
+     * Do query
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.doQuery();
+     */
     Autocomplete.prototype.doQuery = function (tracking) {
 
         // Saving querys
         // Use trim to remove white spaces
         var query = $searchInput.val(), //trim($searchInput.val()),
-            searchQuery = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G'//settings.uri;
+            searchQuery = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G';//settings.uri;
             // search = 'http://ipod.localhost.com.ar:8080/reproductores/';
 
         // Naturalization
@@ -231,6 +235,14 @@
     };
 
 
+    /**
+     * Naturalize query
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.naturalization();
+     */
     Autocomplete.prototype.naturalization = function (conf) {
         var query = conf.string.toLowerCase(),
             replace = conf.replace,
@@ -243,6 +255,14 @@
     }
 
 
+    /**
+     * Get the cookie from the user browser
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.getCookieValue();
+     */
     Autocomplete.prototype.getCookieValue = function (name) {
 
         var start = document.cookie.indexOf(name+"="),
@@ -261,7 +281,6 @@
 
 
     // Autocomplete.prototype.setCookieValue = function (word) {
-
     //     if (word != null && word != "") {
     //         setContextCookie("S" + word);
     //     }
@@ -270,6 +289,13 @@
     // }
 
 
+    /**
+     * Set the cookie to the user browser
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setCookie();
+     */
     Autocomplete.prototype.setCookie = function (config) {
 
         var domain = meliDomain,
@@ -295,6 +321,13 @@
     }
 
 
+    /**
+     * Set the cookie context
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setContextCookie();
+     */
     Autocomplete.prototype.setContextCookie = function (val) {
         url = urlPms + "/jm/PmsPixel?ck=" + val;
 
@@ -306,6 +339,13 @@
     }
 
 
+    /**
+     * Set the search cookie
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setSearchCookies();
+     */
     Autocomplete.prototype.setSearchCookies = function (query) {
         try{
             // Only if PMS active

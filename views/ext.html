@@ -14,6 +14,7 @@
     <meta http-equiv="cleartype" content="on">
 
     <link rel="stylesheet" href="/extensions/search-box/ac.autocomplete.css">
+    <link rel="stylesheet" href="/extensions/search-box/autocomplete.searchBox.css">
     <style>
 
         .ch-loading-small {
@@ -46,6 +47,14 @@
             cursor: pointer;
         }
 
+        .ch-box-lite {
+            position: relative;
+            padding: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            min-height: 150px;
+        }
+
     </style>
 </head>
 
@@ -74,18 +83,17 @@
     </section>
 
 
-    <section id="carousel">
+<!--     <section id="carousel">
         <h1>Carousel Auto Sliding</h1>
         <div class="ch-box-lite">
         </div>
-    </section>
+    </section> -->
 
 
     <script src="/vendor/jquery.js"></script>
     <script src="/extensions/search-box/ac.autocomplete.js"></script>
     <script src="/extensions/search-box/autocomplete.searchBox.js"></script>
     <script>
-
         // maxQueryLength
         var autocompleteConfig = {
             'searchForm': $('.ml-search'),
@@ -93,7 +101,9 @@
             'categoryCheckboxLabel': $('label[for="categorySearch"]'),
             'maxQueryLength': 15,
             'lastSearchesText': 'Últimas búsquedas',
-            'meliDomain': 'localhost'
+            'meliDomain': 'localhost',
+            'searchQuery': 'http://listado.localhost.com.ar:8080/$query_DisplayType_G',
+            'siteId': 'MLA'
         }
 
         var autocomplete = new ac.Autocomplete($('.ml-search-input'), autocompleteConfig);
