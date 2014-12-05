@@ -43,10 +43,11 @@
 }
 
 
-/* Input
+/* Input search
 ---------------------------------------------------------------*/
 .ml-search input {
     border: 1px solid #CCC;
+    border-right: none;
     border-radius: 3px 0 0 3px;
     font-size: 16px;
     padding: 5px 15px;
@@ -58,6 +59,14 @@
     box-shadow: none;
     font-family: Arial,Helvetica,"Nimbus Sans L",sans-serif;
     vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.ml-search input[type=text]:focus {
+    box-shadow: 0 0 5px rgba(117,127,16,.2);
+    outline: none;
 }
 
 .ml-search-categ input[type=text] {
@@ -85,9 +94,22 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#f1f1f1',GradientType=0);
     height: 40px;
     position: absolute;
-    right: -2px;
     top: 0;
     width: 46px;
+}
+
+.ml-search .ml-icon-search {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-position: 14px 10px;
+    width: 44px;
+    height: 40px;
+    background-image: url(http://static.mlstatic.com/org-img/commons/assets/sprite.png?v1);
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    text-indent: -9999px;
 }
 
 
@@ -102,8 +124,8 @@
     background: linear-gradient(to right,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
     color: #999;
     line-height: 17px;
-    margin: 0;
-    padding: 0 15px 0 8px;
+    margin: 0 20px 0 0;
+    padding: 0 0 0 8px;
     position: absolute;
     right: 40px;
     top: 11px;
@@ -130,6 +152,15 @@
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+}
+
+.ml-search .ml-category input[type=checkbox]:checked {
+    background-image: url(http://static.mlstatic.com/org-img/commons/sprite.png);
+    background-position: -3px -285px;
+}
+
+.ml-search .ml-category input[type=checkbox]:focus {
+    outline: 1px dotted #9a9a9a;
 }
 
 

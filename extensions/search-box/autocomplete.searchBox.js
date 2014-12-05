@@ -10,6 +10,7 @@
         meliDomain,
         siteId;
 
+
     /**
      * Init the component
      * @memberof! ch.Autocomplete.prototype
@@ -118,7 +119,6 @@
 
         lastSearches = this.getLastSearches();
         this.$container.append(lastSearches);
-
         return this;
     };
 
@@ -139,22 +139,25 @@
 
         isPMSCookie = this.getCookieValue("pmsctx");
 
+
         if (isPMSCookie) {
             var i,
-                len,
+                text,
                 searches = isPMSCookie.replace(/\+/g,' ').split('*')[5].split('|'),
-                text;
+                searchesLength;
 
                 // Check if cookie exist and have word
                 if (searches != null && searches[0] !=null && searches[0] != '') {
+
                     searches.pop();
 
                     list  = '<div class="last-searches">';
                     list += '<h4 class="last-searches-title">' + lastSearchesText +'</h4>';
                     list += '<ul class="last-searches-list">';
 
-                    len = searches.length;
-                    for (i = 0; i < len ; i++) {
+                    searchesLength = searches.length;
+
+                    for (i = 0; i < searchesLength ; i++) {
                         text = searches[i];
                         text = text.substring(1,text.length).toLowerCase();
 
@@ -265,18 +268,19 @@
      */
     Autocomplete.prototype.getCookieValue = function (name) {
 
-        var start = document.cookie.indexOf(name+"="),
+        var start = document.cookie.indexOf(name + "="),
             len = start + name.length + 1,
-            end = document.cookie.indexOf(";",len);
+            end = document.cookie.indexOf(";", len);
 
         if (start == -1) {
             return null;
         }
 
         if (end == -1) {
-            end=document.cookie.length;
+            end = document.cookie.length;
         }
-        return unescape(document.cookie.substring(len,end));
+
+        return unescape(document.cookie.substring(len, end));
     }
 
 
@@ -347,7 +351,7 @@
      * Autocomplete.setSearchCookies();
      */
     Autocomplete.prototype.setSearchCookies = function (query) {
-        try{
+        try {
             // Only if PMS active
             this.setCookie({
                 name: 'ml_list',
@@ -357,7 +361,7 @@
                 name: 'LAST_SEARCH',
                 value: query
             });
-        }catch(e){
+        } catch(e) {
             // Nothing
         }
     }
