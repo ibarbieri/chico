@@ -71,7 +71,7 @@
 
                 <p id="mlCategory" class="ml-category" title="Buscar solo en...">
                     <input type="checkbox" id="categorySearch" name="as_categ_id" value="MLA7262"/>
-                    <label for="categorySearch">Buscar solo en...</label>
+                    <label for="categorySearch" onclick>Buscar solo en Reproductores</label>
                 </p>
 
                 <button type="submit" name="mlSearchBtn" class="ml-search-btn">
@@ -82,19 +82,11 @@
 
     </section>
 
-
-<!--     <section id="carousel">
-        <h1>Carousel Auto Sliding</h1>
-        <div class="ch-box-lite">
-        </div>
-    </section> -->
-
-
-    <script src="/vendor/jquery.js"></script>
-    <script src="/extensions/search-box/ac.autocomplete.js"></script>
-    <script src="/extensions/search-box/autocomplete.searchBox.js"></script>
-    <script>
-        // maxQueryLength
+    <script type="text/javascript" src="/vendor/jquery.js"></script>
+    <script type="text/javascript" src="/extensions/search-box/ac.autocomplete.js"></script>
+    <script type="text/javascript" src="/extensions/search-box/autocomplete.searchBox.js"></script>
+    <script type="text/javascript">
+        // Configuration
         var autocompleteConfig = {
             'searchForm': $('.ml-search'),
             'categoryCheckbox': $('#categorySearch'),
@@ -103,11 +95,19 @@
             'lastSearchesText': 'Últimas búsquedas',
             'meliDomain': 'localhost',
             'searchQuery': 'http://listado.localhost.com.ar:8080/$query_DisplayType_G',
-            'siteId': 'MLA'
+            'siteId': 'MLA',
+            'genericAditionalInfo': 'en todas las Tiendas Oficiales'
         }
 
+
+        // Instance
         var autocomplete = new ac.Autocomplete($('.ml-search-input'), autocompleteConfig);
 
+
+        // Instance of autocomplete scroll when the popover is showed
+        autocomplete._popover.once('show', function () {
+            $('.ch-popover-content').perfectScrollbar({suppressScrollX: true});
+        });
 
     </script>
 </body>

@@ -64,6 +64,13 @@
     box-sizing: border-box;
 }
 
+.ml-search input[type=text] {
+    width: 92% !important;
+    height: 40px !important;
+    border-radius: 3px 0 0 3px !important;
+
+}
+
 .ml-search input[type=text]:focus {
     box-shadow: 0 0 5px rgba(117,127,16,.2);
     outline: none;
@@ -124,7 +131,7 @@
     background: linear-gradient(to right,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
     color: #999;
     line-height: 17px;
-    margin: 0 20px 0 0;
+    margin: 0 11px 0 0;
     padding: 0 0 0 8px;
     position: absolute;
     right: 40px;
@@ -135,6 +142,15 @@
 .ml-search .ml-category label {
     vertical-align: middle;
     -webkit-user-select: none;
+}
+
+.ml-search .ml-category .ml-label-small {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    width: 58px;
 }
 
 .ml-search .ml-category input[type=checkbox] {
@@ -164,32 +180,55 @@
 }
 
 
-/* Last searches
+/* Aditional Info
 ---------------------------------------------------------------*/
-.last-searches {
+.aditional-info {
     border-top: solid 1px #EEE;
-    margin: 10px -10px 0px -10px;
-    padding: 9px 0 0 0;
+    margin: 8px -10px 0px -10px;
+    padding: 8px 0 0 0;
 }
 
-.last-searches .last-searches-title {
+.aditional-info .aditional-info-title {
     color: #CCC;
     font-size: 13px;
     line-height: 13px;
     margin: 10px 15px 8px;
 }
 
-.last-searches .last-searches-item {
+.aditional-info .aditional-info-item {
     color: #333333;
     display: block;
-    font-size : 14px;
-    line-height: 14px;
-    margin: 2px 10px;
+    font-size: 13px;
+    line-height: 7px;
+    margin: 2px 5px;
     padding: 5px;
 }
 
-.last-searches .last-searches-item:hover {
+.aditional-info .aditional-info-item:hover {
     background-color: #FDF9D5;
     border-radius: 5px;
     text-decoration: none;
 }
+
+
+/* Autocomplete scroll bar
+---------------------------------------------------------------*/
+.ch-popover-content {
+    position: relative;
+    margin: 0px auto 10px auto;
+    padding: 0px;
+    width: auto;
+    height: 130px;
+    overflow: hidden;
+}
+
+.ch-popover-content .ch-autocomplete-list {
+    width: 400px;
+    height: 350px;
+}
+
+
+/*! perfect-scrollbar - v0.5.8
+* http://noraesae.github.com/perfect-scrollbar/
+* Copyright (c) 2014 Hyunje Alex Jun; Licensed MIT */
+.ps-container.ps-active-x>.ps-scrollbar-x-rail,.ps-container.ps-active-y>.ps-scrollbar-y-rail{display:block}.ps-container>.ps-scrollbar-x-rail{display:none;position:absolute;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;opacity:0;-ms-filter:"alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:background-color .2s linear,opacity .2s linear;-moz-transition:background-color .2s linear,opacity .2s linear;-o-transition:background-color .2s linear,opacity .2s linear;transition:background-color .2s linear,opacity .2s linear;bottom:3px;height:8px}.ps-container>.ps-scrollbar-x-rail>.ps-scrollbar-x{position:absolute;background-color:#aaa;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;-webkit-transition:background-color .2s linear;-moz-transition:background-color .2s linear;-o-transition:background-color .2s linear;transition:background-color .2s linear;bottom:0;height:8px}.ps-container>.ps-scrollbar-x-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container>.ps-scrollbar-y-rail{display:none;position:absolute;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;opacity:0;-ms-filter:"alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:background-color .2s linear,opacity .2s linear;-moz-transition:background-color .2s linear,opacity .2s linear;-o-transition:background-color .2s linear,opacity .2s linear;transition:background-color .2s linear,opacity .2s linear;right:3px;width:8px}.ps-container>.ps-scrollbar-y-rail>.ps-scrollbar-y{position:absolute;background-color:#aaa;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;-webkit-transition:background-color .2s linear;-moz-transition:background-color .2s linear;-o-transition:background-color .2s linear;transition:background-color .2s linear;right:0;width:8px}.ps-container>.ps-scrollbar-y-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail,.ps-container:hover>.ps-scrollbar-y-rail{opacity:.6;-ms-filter:"alpha(Opacity=60)";filter:alpha(opacity=60)}.ps-container:hover>.ps-scrollbar-x-rail.in-scrolling,.ps-container:hover>.ps-scrollbar-y-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail:hover{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail:hover>.ps-scrollbar-x{background-color:#999}.ps-container:hover>.ps-scrollbar-y-rail:hover{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y{background-color:#999}
