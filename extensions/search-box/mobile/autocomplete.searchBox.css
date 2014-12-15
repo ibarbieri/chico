@@ -5,34 +5,9 @@
 */
 
 
-/* Autosugest
----------------------------------------------------------------*/
-/*.ch-popover-content .ch-autocomple-list {
-    max-height: 150px !important;
-    overflow: auto;
-}
-
-.ch-popover-content .ch-autocomple-list.no-scroll {
-    height: auto !important;
-}
-
-.ch-popover-content .ch-autocomplete-item {
-    color: #0059B2;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 16px;
-    margin: 5px 0;
-    padding: 5px;
-}
-
-.ch-popover-content .ch-autocomplete-item:first-child {
-    margin-top: 0;
-}*/
-
-
 /* Form
 ---------------------------------------------------------------*/
-.ml-search {
+.nav-search {
     margin: 0 0 0 210px;
     position: relative;
     float: left;
@@ -40,12 +15,13 @@
     border-radius: 4px;
     width: 44%;
     height: 40px;
+    top: -41px;
 }
 
 
 /* Input search
 ---------------------------------------------------------------*/
-.ml-search input {
+.nav-search input {
     border: 1px solid #CCC;
     border-right: none;
     border-radius: 3px 0 0 3px;
@@ -64,19 +40,18 @@
     box-sizing: border-box;
 }
 
-.ml-search input[type=text] {
+.nav-search input[type=text] {
     width: 92% !important;
     height: 40px !important;
     border-radius: 3px 0 0 3px !important;
-
 }
 
-.ml-search input[type=text]:focus {
+.nav-search input[type=text]:focus {
     box-shadow: 0 0 5px rgba(117,127,16,.2);
     outline: none;
 }
 
-.ml-search-categ input[type=text] {
+.nav-search-categ input[type=text] {
     padding-right: 27%;
     width: 71%;
 }
@@ -84,7 +59,7 @@
 
 /* Button
 ---------------------------------------------------------------*/
-.ml-search button {
+.nav-search button {
     background: #fff;
     background: -moz-linear-gradient(top,#fff 0,#f1f1f1 100%);
     background: -ms-linear-gradient(top,#fff 0,#f1f1f1 100%);
@@ -102,14 +77,15 @@
     height: 40px;
     position: absolute;
     top: 0;
+    right: 0;
     width: 46px;
 }
 
-.ml-search .ml-icon-search {
+.nav-search .nav-icon-search {
     position: absolute;
     left: 0;
     top: 0;
-    background-position: 14px 10px;
+    background-position: 13px 10px;
     width: 44px;
     height: 40px;
     background-image: url(http://static.mlstatic.com/org-img/commons/assets/sprite.png?v1);
@@ -120,9 +96,16 @@
 }
 
 
+/* Autosuggest
+---------------------------------------------------------------*/
+.ac-autocomplete-list .ac-autocomplete-item i {
+    display: none;
+}
+
+
 /* Category checkbox
 ---------------------------------------------------------------*/
-.ml-search .ml-category {
+.nav-search .nav-category {
     background: -moz-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
     background: -webkit-gradient(linear,left top,right top,color-stop(0%,rgba(255,255,255,0)),color-stop(2%,rgba(255,255,255,1)),color-stop(99%,rgba(255,255,255,1)));
     background: -webkit-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
@@ -139,12 +122,12 @@
     text-align: right;
 }
 
-.ml-search .ml-category label {
+.nav-search .nav-category label {
     vertical-align: middle;
     -webkit-user-select: none;
 }
 
-.ml-search .ml-category .ml-label-small {
+.nav-search .nav-category .nav-label-small {
     display: inline-block;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -153,7 +136,7 @@
     width: 58px;
 }
 
-.ml-search .ml-category input[type=checkbox] {
+.nav-search .nav-category input[type=checkbox] {
     border: 1px solid #CCC;
     background: 0;
     box-shadow: none;
@@ -170,12 +153,12 @@
     border-radius: 3px;
 }
 
-.ml-search .ml-category input[type=checkbox]:checked {
+.nav-search .nav-category input[type=checkbox]:checked {
     background-image: url(http://static.mlstatic.com/org-img/commons/sprite.png);
     background-position: -3px -285px;
 }
 
-.ml-search .ml-category input[type=checkbox]:focus {
+.nav-search .nav-category input[type=checkbox]:focus {
     outline: 1px dotted #9a9a9a;
 }
 
@@ -189,7 +172,7 @@
 }
 
 .aditional-info .aditional-info-title {
-    color: #CCC;
+    color: #999999;
     font-size: 13px;
     line-height: 13px;
     margin: 10px 15px 8px;
@@ -210,6 +193,15 @@
     text-decoration: none;
 }
 
+.aditional-info .official-store li a {
+    color: #333333;
+    font-size: 13px;
+}
+
+.aditional-info .official-store li a span {
+    color: #999999;
+}
+
 
 /* Autocomplete scroll bar
 ---------------------------------------------------------------*/
@@ -223,7 +215,7 @@
 }
 
 .ch-popover-content .ch-autocomplete-list {
-    width: 400px;
+    width: auto;
     height: 350px;
 }
 

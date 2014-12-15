@@ -35,8 +35,8 @@
 
 
         // REDIFINE the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
-        ac.shortcuts.remove(ac.onkeyenter);
-        ac.shortcuts.add(ac.onkeyenter, this.uid, function (event) {
+        ch.shortcuts.remove(ch.onkeyenter);
+        ch.shortcuts.add(ch.onkeyenter, this.uid, function (event) {
             that._selectSuggestion();
         });
 
@@ -69,11 +69,11 @@
         });
 
 
-        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
-        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
+        ch.shortcuts.add(ch.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
+        ch.shortcuts.add(ch.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
 
-        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.scrollInToView);
-        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.scrollInToView);
+        ch.shortcuts.add(ch.onkeydownarrow, this.uid, this.scrollInToView);
+        ch.shortcuts.add(ch.onkeyuparrow, this.uid, this.scrollInToView);
 
         $searchForm.submit(function (event) {
             event.preventDefault();
@@ -97,7 +97,6 @@
         }
 
     }
-
 
 
     /**
@@ -236,12 +235,12 @@
             var filtersLength = firstQueryFilters.values.length;
 
             for (i = 0; i < filtersLength; i++) {
-                suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + firstQueryFilters.values[i].name);
+                suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+firstQueryFilters.values[i].name+'</span>');
 
             };
 
             // Add the last <li>. It's the generic option tha always appear.
-            suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + genericAditionalInfo);
+            suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+genericAditionalInfo+'</span>');
         }
 
         for (i = 0; i < suggestedQueriesLength; i++) {
@@ -265,9 +264,9 @@
      */
     Autocomplete.prototype.adecuateCategoryLabel = function () {
         if ($searchInput.val().length > maxQueryLength) {
-            $checkboxLabel.addClass('ml-label-small');
+            $checkboxLabel.addClass('nav-label-small');
         } else {
-            $checkboxLabel.removeClass('ml-label-small');
+            $checkboxLabel.removeClass('nav-label-small');
         }
 
         return this;
@@ -373,7 +372,8 @@
             list,
             uri,
             i,
-            suggestedInInput = '';
+            suggestedInInput = '',
+            officialStore = 'official-store';
 
         searchesLength = searches.length;
 
@@ -381,9 +381,10 @@
 
         if (title !== undefined) {
             list += '<h4 class="aditional-info-title">' + title +'</h4>';
+            officialStore = '';
         }
 
-        list += '<ul class="aditional-info-list">';
+        list += '<ul class="aditional-info-list'+ ' ' +officialStore+'">';
 
         for (i = 0; i < searchesLength ; i++) {
             try {
@@ -587,7 +588,7 @@
         }
     }
 
-}(this, this.ac.Autocomplete));
+}(this, this.ch.Autocomplete));
 
 
 // TODO: migrate to a vanilla javascript scroll

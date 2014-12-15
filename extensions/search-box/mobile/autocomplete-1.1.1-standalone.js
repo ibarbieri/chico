@@ -268,7 +268,7 @@ ac.util = {
                     args[i].attr('unselectable', 'on');
 
                 } else {
-                    args[i].addClass('ch-user-no-select');
+                    args[i].addClass('ac-user-no-select');
                 }
 
             }
@@ -487,6 +487,134 @@ ac.util = {
          */
         'zIndex': 1000
     };
+ac.util.fixLabels = function () {
+        var labels = document.getElementsByTagName('label'),
+            target_id,
+            el,
+            i = 0;
+
+        function labelTap() {
+            el = document.getElementById(this.getAttribute('for'));
+            if (['radio', 'checkbox'].indexOf(el.getAttribute('type')) !== -1) {
+                el.setAttribute('selected', !el.getAttribute('selected'));
+            } else {
+                el.focus();
+            }
+        }
+
+        for (; labels[i]; i += 1) {
+            if (labels[i].getAttribute('for')) {
+                $(labels[i]).on(ac.onpointertap, labelTap);
+            }
+        }
+    };
+
+    /**
+     * Cancel pointers if the user scroll.
+     * @name cancelPointerOnScroll
+     * @memberof ac.util
+     */
+    ac.util.cancelPointerOnScroll = function () {
+        $document.on('touchmove', function () {
+            ac.pointerCanceled = true;
+
+            $document.one('touchend', function () {
+                ac.pointerCanceled = false;
+            });
+        });
+    };
+
+    /*!
+     * MBP - Mobile boilerplate helper functions
+     * @name MBP
+     * @memberof ac.util
+     * @namespace
+     * @see View on <a href="https://github.com/h5bp/mobile-boilerplate" target="_blank">https://github.com/h5bp/mobile-boilerplate</a>
+     */
+    ac.util.MBP = {
+
+        // Fix for iPhone viewport scale bug
+        // http://www.blog.highub.com/mobile-2/a-fix-for-iphone-viewport-scale-bug/
+        'viewportmeta': $('meta[name=viewport]'),
+
+        'gestureStart': function () {
+            ac.util.MBP.viewportmeta.content = 'width=device-width, minimum-scale=0.25, maximum-scale=1.6';
+        },
+
+        'scaleFix': function () {
+            if (ac.util.MBP.viewportmeta && /iPhone|iPad|iPod/.test(userAgent) && !/Opera Mini/.test(userAgent)) {
+                ac.util.MBP.viewportmeta.content = 'width=device-width, minimum-scale=1.0, maximum-scale=1.0';
+                document.addEventListener('gesturestart', ac.util.MBP.gestureStart, false);
+            }
+        },
+
+        /*
+        * Normalized hide address bar for iOS & Android
+        * (c) Scott Jehl, scottjehl.com
+        * MIT License
+        */
+        // If we cache this we don't need to re-calibrate everytime we call
+        // the hide url bar
+        'BODY_SCROLL_TOP': false,
+
+        // It should be up to the mobile
+        'hideUrlBar': function () {
+            // if there is a hash, or MBP.BODY_SCROLL_TOP hasn't been set yet, wait till that happens
+            if (!window.location.hash && ac.util.MBP.BODY_SCROLL_TOP !== false) {
+                window.scrollTo( 0, ac.util.MBP.BODY_SCROLL_TOP === 1 ? 0 : 1 );
+            }
+        },
+
+        'hideUrlBarOnLoad': function () {
+            // If there's a hash, or addEventListener is undefined, stop here
+            if( !window.location.hash && window.addEventListener ) {
+
+                var scrollTop = ac.util.getScroll().top;
+
+                //scroll to 1
+                window.scrollTo(0, 1);
+                ac.util.MBP.BODY_SCROLL_TOP = 1;
+
+                //reset to 0 on bodyready, if needed
+                var bodycheck = setInterval(function () {
+                    if(body) {
+                        clearInterval(bodycheck);
+                        ac.util.MBP.BODY_SCROLL_TOP = scrollTop;
+                        ac.util.MBP.hideUrlBar();
+                    }
+                }, 15 );
+
+                window.addEventListener('load', function() {
+                    setTimeout(function () {
+                        //at load, if user hasn't scrolled more than 20 or so...
+                        if(scrollTop < 20) {
+                            //reset to hide addr bar at onload
+                            ac.util.MBP.hideUrlBar();
+                        }
+                    }, 0);
+                });
+            }
+        },
+
+        // Prevent iOS from zooming onfocus
+        // https://github.com/h5bp/mobile-boilerplate/pull/108
+        'preventZoom': function () {
+            var formFields = $('input, select, textarea'),
+                contentString = 'width=device-width,initial-scale=1,maximum-scale=',
+                i = 0;
+
+            for (; i < formFields.length; i += 1) {
+
+                formFields[i].onfocus = function() {
+                    ac.util.MBP.viewportmeta.content = contentString + '1';
+                };
+
+                formFields[i].onblur = function () {
+                    ac.util.MBP.viewportmeta.content = contentString + '10';
+                };
+            }
+        }
+    };
 ac.support = {
 
         /**
@@ -599,63 +727,6 @@ ac.onlayoutchange = 'layoutchange';
      * @type {String}
      */
     ac.onkeyinput = ('oninput' in document.createElement('input')) ? 'input' : 'keydown';
-ac.onkeytab = 'tab';
-
-    /**
-     * Enter key event.
-     * @constant
-     * @memberof ch
-     * @type {String}
-     */
-    ac.onkeyenter = 'enter';
-
-    /**
-     * Esc key event.
-     * @constant
-     * @memberof ch
-     * @type {String}
-     */
-    ac.onkeyesc = 'esc';
-
-    /**
-     * Left arrow key event.
-     * @constant
-     * @memberof ch
-     * @type {String}
-     */
-    ac.onkeyleftarrow = 'left_arrow';
-
-    /**
-     * Up arrow key event.
-     * @constant
-     * @memberof ch
-     * @type {String}
-     */
-    ac.onkeyuparrow = 'up_arrow';
-
-    /**
-     * Rigth arrow key event.
-     * @constant
-     * @memberof ch
-     * @type {String}
-     */
-    ac.onkeyrightarrow = 'right_arrow';
-
-    /**
-     * Down arrow key event.
-     * @constant
-     * @memberof ch
-     * @type {String}
-     */
-    ac.onkeydownarrow = 'down_arrow';
-
-    /**
-     * Backspace key event.
-     * @constant
-     * @memberof ch
-     * @type {String}
-     */
-    ac.onkeybackspace = 'backspace';
 ac.factory = function (Klass, fn) {
         /**
          * Identification of the constructor, in lowercases.
@@ -747,11 +818,26 @@ ac.factory = function (Klass, fn) {
             return (components.length > 1) ? components : components[0];
         };
     };
-    // Remove the no-js classname from html tag
+    // Remove no-js classname
     $html.removeClass('no-js');
 
-    // Exposse private $ (jQuery) into ac.$
-    ac.$ = window.$;
+    // Iphone scale fix
+    ac.util.MBP.scaleFix();
+
+    // Hide navigation url bar
+    ac.util.MBP.hideUrlBarOnLoad();
+
+    // Prevent zoom onfocus
+    ac.util.MBP.preventZoom();
+
+    // Fix the broken iPad/iPhone form label click issue
+    ac.util.fixLabels();
+
+    // Cancel pointers if the user scroll.
+    ac.util.cancelPointerOnScroll();
+
+    // Exposse private $ (Zepto) into ac.$
+    ac.$ = $;
 	ac.version = '1.1.1';
 	window.ac = ac;
 }(this, this.$));
@@ -1042,7 +1128,7 @@ ac.factory = function (Klass, fn) {
                 'method': 'GET',
                 'params': '',
                 'async': true,
-                'waiting': '<div class="ch-loading-large"></div>'
+                'waiting': '<div class="ac-loading-large"></div>'
             }, options || defaults);
 
             if (options.cache !== undefined) {
@@ -1134,7 +1220,7 @@ ac.factory = function (Klass, fn) {
                 }
             // Case 3: jQuery/Zepto/HTML Element
             } else if (ac.util.is$(content) || content.nodeType !== undefined) {
-                setContent($(content).remove(null, true).removeClass('ch-hide'));
+                setContent($(content).remove(null, true).removeClass('ac-hide'));
             }
 
             return that;
@@ -1180,12 +1266,12 @@ ac.factory = function (Klass, fn) {
          * @private
          */
         var that = this,
-            triggerClass = 'ch-' + this.name + '-trigger-on',
+            triggerClass = 'ac-' + this.name + '-trigger-on',
             fx = this._options.fx,
             useEffects = (ac.support.fx && fx !== 'none' && fx !== false);
 
         function showCallback() {
-            that.$container.removeClass('ch-hide').attr('aria-hidden', 'false');
+            that.$container.removeClass('ac-hide').attr('aria-hidden', 'false');
 
             /**
              * Event emitted when the componentg is shown.
@@ -1200,7 +1286,7 @@ ac.factory = function (Klass, fn) {
         }
 
         function hideCallback() {
-            that.$container.addClass('ch-hide').attr('aria-hidden', 'true');
+            that.$container.addClass('ac-hide').attr('aria-hidden', 'true');
 
             /**
              * Event emitted when the component is hidden.
@@ -1932,190 +2018,6 @@ ac.factory = function (Klass, fn) {
     ac.Positioner = Positioner;
 
 }(this, this.ac.$, this.ch));
-(function (window, $, ch) {
-    'use strict';
-
-    var $document = $(window.document),
-        codeMap = {
-            '8': ac.onkeybackspace,
-            '9': ac.onkeytab,
-            '13': ac.onkeyenter,
-            '27': ac.onkeyesc,
-            '37': ac.onkeyleftarrow,
-            '38': ac.onkeyuparrow,
-            '39': ac.onkeyrightarrow,
-            '40': ac.onkeydownarrow
-        },
-
-        /**
-         * Shortcuts
-         * @memberof ch
-         * @namespace
-         */
-        shortcuts = {
-
-            '_active': null,
-
-            '_queue': [],
-
-            '_collection': {},
-
-            /**
-             * Add a callback to a shortcut with given name.
-             * @param {(ac.onkeybackspace | ac.onkeytab | ac.onkeyenter | ac.onkeyesc | ac.onkeyleftarrow | ac.onkeyuparrow | ac.onkeyrightarrow | ac.onkeydownarrow)} shortcut Shortcut to subscribe.
-             * @param {String} name A name to add in the collection.
-             * @param {Function} callback A given function.
-             * @returns {Object} Retuns the ac.shortcuts.
-             * @example
-             * // Add a callback to ESC key with "component" name.
-             * ac.shortcuts.add(ac.onkeyesc, 'component', component.hide);
-             */
-            'add': function (shortcut, name, callback) {
-
-                if (this._collection[name] === undefined) {
-                    this._collection[name] = {};
-                }
-
-                if (this._collection[name][shortcut] === undefined) {
-                    this._collection[name][shortcut] = [];
-                }
-
-                this._collection[name][shortcut].push(callback);
-
-                return this;
-
-            },
-
-            /**
-             * Removes a callback from a shortcut with given name.
-             * @param {String} name A name to remove from the collection.
-             * @param {(ac.onkeybackspace | ac.onkeytab | ac.onkeyenter | ac.onkeyesc | ac.onkeyleftarrow | ac.onkeyuparrow | ac.onkeyrightarrow | ac.onkeydownarrow)} [shortcut] Shortcut to unsubscribe.
-             * @param {Function} callback A given function.
-             * @returns {Object} Retuns the ac.shortcuts.
-             * @example
-             * // Remove a callback from ESC key with "component" name.
-             * ac.shortcuts.remove(ac.onkeyesc, 'component', component.hide);
-             */
-            'remove': function (name, shortcut, callback) {
-                var evt,
-                    evtCollection,
-                    evtCollectionLenght;
-
-                if (name === undefined) {
-                    throw new Error('Shortcuts - "remove(name, shortcut, callback)": "name" parameter must be defined.');
-                }
-
-                if (shortcut === undefined) {
-                    delete this._collection[name];
-                    return this;
-                }
-
-                if (callback === undefined) {
-                    delete this._collection[name][shortcut];
-                    return this;
-                }
-
-                evtCollection = this._collection[name][shortcut];
-
-                evtCollectionLenght = evtCollection.length;
-
-                for (evt = 0; evt < evtCollectionLenght; evt += 1) {
-
-                    if (evtCollection[evt] === callback) {
-                        evtCollection.splice(evt, 1);
-                    }
-                }
-
-                return this;
-
-            },
-
-            /**
-             * Turn on shortcuts associated to a given name.
-             * @param {String} name A given name from the collection.
-             * @returns {Object} Retuns the ac.shortcuts.
-             * @example
-             * // Turn on shortcuts associated to "component" name.
-             * ac.shortcuts.on('component');
-             */
-            'on': function (name) {
-                var queueLength = this._queue.length,
-                    item = queueLength - 1;
-
-                // check if the instance exist and move the order, adds it at the las position and removes the current
-                for (item; item >= 0; item -= 1) {
-                    if (this._queue[item] === name) {
-                        this._queue.splice(item, 1);
-                    }
-                }
-
-                this._queue.push(name);
-                this._active = name;
-
-                return this;
-            },
-
-            /**
-             * Turn off shortcuts associated to a given name.
-             * @param {String} name A given name from the collection.
-             * @returns {Object} Retuns the ac.shortcuts.
-             * @example
-             * // Turn off shortcuts associated to "component" name.
-             * ac.shortcuts.off('component');
-             */
-            'off': function (name) {
-                var queueLength = this._queue.length,
-                    item = queueLength - 1;
-
-                for (item; item >= 0; item -= 1) {
-                    if (this._queue[item] === name) {
-                        // removes the instance that I'm setting off
-                        this._queue.splice(item, 1);
-
-                        // the queue is full
-                        if (this._queue.length > 0) {
-                            this._active = this._queue[this._queue.length - 1];
-                        } else {
-                        // the queue no has elements
-                            this._active = null;
-                        }
-                    }
-                }
-
-                return this;
-            }
-        };
-
-    $document.on('keydown.shortcuts', function (event) {
-        var keyCode = event.keyCode.toString(),
-            shortcut = codeMap[keyCode],
-            callbacks,
-            callbacksLenght,
-            i = 0;
-
-        if (shortcut !== undefined && shortcuts._active !== null) {
-            callbacks = shortcuts._collection[shortcuts._active][shortcut];
-
-            event.type = shortcut;
-
-
-            if (callbacks !== undefined) {
-
-                callbacksLenght = callbacks.length;
-
-                for (i = 0; i < callbacksLenght; i += 1) {
-                    callbacks[i](event);
-                }
-
-            }
-
-        }
-    });
-
-    ac.shortcuts = shortcuts;
-
-}(this, this.ac.$, this.ch));
-
 (function (window, ch) {
     'use strict';
 
@@ -2422,7 +2324,7 @@ ac.factory = function (Klass, fn) {
      * @param {String} [options.params] Params like query string to be sent to the server.
      * @param {Boolean} [options.cache] Force to cache the request by the browser. Default: true.
      * @param {Boolean} [options.async] Force to sent request asynchronously. Default: true.
-     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ch-loading ch-loading-centered"&gt;&lt;/div&gt;'.
+     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ac-loading ac-loading-centered"&gt;&lt;/div&gt;'.
      * @param {(jQuerySelector | ZeptoSelector | HTMLElement | String)} [options.content] The content to be shown into the Popover container.
      * @returns {popover} Returns a new instance of Popover.
      * @example
@@ -2513,7 +2415,7 @@ ac.factory = function (Klass, fn) {
         'height': 'auto',
         'shownby': 'pointertap',
         'hiddenby': 'button',
-        'waiting': '<div class="ch-loading ch-loading-centered"></div>',
+        'waiting': '<div class="ac-loading ac-loading-centered"></div>',
         'position': 'absolute'
     };
 
@@ -2544,9 +2446,9 @@ ac.factory = function (Klass, fn) {
          */
         this.$container = $([
             '<div',
-            ' class="ch-popover ch-hide ' + this._options._className + ' ' + this._options.addClass + '"',
+            ' class="ac-popover ac-hide ' + this._options._className + ' ' + this._options.addClass + '"',
             ' role="' + this._options._ariaRole + '"',
-            ' id="ch-' + this.name + '-' + this.uid + '"',
+            ' id="ac-' + this.name + '-' + this.uid + '"',
             ' style="z-index:' + (ac.util.zIndex += 1) + ';width:' + this._options.width + ';height:' + this._options.height + '"',
             '>'
         ].join('')).on(ac.onpointertap + '.' + this.name, function (event) {
@@ -2558,7 +2460,7 @@ ac.factory = function (Klass, fn) {
          * @private
          * @type {(jQuerySelector | ZeptoSelector)}
          */
-        this._$content = $('<div class="ch-popover-content">').appendTo(this.$container);
+        this._$content = $('<div class="ac-popover-content">').appendTo(this.$container);
 
         // Add functionality to the trigger if it exists
         this._configureTrigger();
@@ -2657,7 +2559,7 @@ ac.factory = function (Klass, fn) {
         // Open event when configured as able to shown anyway
         if (this._options.shownby !== 'none') {
             this._$el
-                .addClass('ch-shownby-' + this._options.shownby)
+                .addClass('ac-shownby-' + this._options.shownby)
                 .on(shownbyEvent[this._options.shownby] + '.' + this.name, function (event) {
                     ac.util.prevent(event);
                     showHandler();
@@ -2683,7 +2585,7 @@ ac.factory = function (Klass, fn) {
         }
 
         // Set WAI-ARIA
-        this._el.setAttribute('aria-owns', 'ch-' + this.name + '-' + this.uid);
+        this._el.setAttribute('aria-owns', 'ac-' + this.name + '-' + this.uid);
         this._el.setAttribute('aria-haspopup', 'true');
 
         /**
@@ -2735,7 +2637,7 @@ ac.factory = function (Klass, fn) {
 
         // Hide with the button Close
         if (hiddenby === 'button' || hiddenby === 'all') {
-            $('<i class="ch-close" role="button" aria-label="Close"></i>').on(pointertap, function () {
+            $('<i class="ac-close" role="button" aria-label="Close"></i>').on(pointertap, function () {
                 that.hide();
             }).prependTo(this.$container);
         }
@@ -2996,7 +2898,7 @@ ac.factory = function (Klass, fn) {
         if (this.$trigger !== undefined) {
             this.$trigger
                 .off('.' + this.name)
-                .removeClass('ch-' + this.name + '-trigger')
+                .removeClass('ac-' + this.name + '-trigger')
                 .removeAttr('data-title aria-owns aria-haspopup data-side data-align role')
                 .attr({
                     'alt': this._snippet.alt,
@@ -3079,7 +2981,7 @@ ac.factory = function (Klass, fn) {
      * @param {String} [options.params] Params like query string to be sent to the server.
      * @param {Boolean} [options.cache] Force to cache the request by the browser. Default: true.
      * @param {Boolean} [options.async] Force to sent request asynchronously. Default: true.
-     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ch-loading ch-loading-centered"&gt;&lt;/div&gt;'.
+     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ac-loading ac-loading-centered"&gt;&lt;/div&gt;'.
      * @param {(jQuerySelector | ZeptoSelector | HTMLElement | String)} [options.content] The content to be shown into the Layer container.
      * @returns {layer} Returns a new instance of Layer.
      * @example
@@ -3158,7 +3060,7 @@ ac.factory = function (Klass, fn) {
      * @private
      */
     Layer.prototype._defaults = $.extend(ac.util.clone(parent._defaults), {
-        '_className': 'ch-layer ch-box-lite ch-cone',
+        '_className': 'ac-layer ac-box-lite ac-cone',
         '_ariaRole': 'tooltip',
         'shownby': 'pointerenter',
         'hiddenby': 'pointerleave',
@@ -3166,7 +3068,7 @@ ac.factory = function (Klass, fn) {
         'align': 'left',
         'offsetX': 0,
         'offsetY': 10,
-        'waiting': '<div class="ch-loading-small"></div>'
+        'waiting': '<div class="ac-loading-small"></div>'
     });
 
     /**
@@ -3231,10 +3133,10 @@ ac.factory = function (Klass, fn) {
      * @requires ac.Popover
      * @param {(jQuerySelector | ZeptoSelector)} $el A jQuery or Zepto Selector to create an instance of ac.Autocomplete.
      * @param {Object} [options] Options to customize an instance.
-     * @param {String} [options.loadingClass] Default: "ch-autocomplete-loading".
-     * @param {String} [options.highlightedClass] Default: "ch-autocomplete-highlighted".
-     * @param {String} [options.itemClass] Default: "ch-autocomplete-item".
-     * @param {String} [options.addClass] CSS class names that will be added to the container on the component initialization. Default: "ch-box-lite ch-autocomplete".
+     * @param {String} [options.loadingClass] Default: "ac-autocomplete-loading".
+     * @param {String} [options.highlightedClass] Default: "ac-autocomplete-highlighted".
+     * @param {String} [options.itemClass] Default: "ac-autocomplete-item".
+     * @param {String} [options.addClass] CSS class names that will be added to the container on the component initialization. Default: "ac-box-lite ac-autocomplete".
      * @param {Number} [options.keystrokesTime] Default: 150.
      * @param {Boolean} [options.html] Default: false.
      * @param {String} [options.side] The side option where the target element will be positioned. You must use: "left", "right", "top", "bottom" or "center". Default: "bottom".
@@ -3319,16 +3221,16 @@ ac.factory = function (Klass, fn) {
      * @private
      */
     Autocomplete.prototype._defaults = {
-        'loadingClass': 'ch-autocomplete-loading',
-        'highlightedClass': 'ch-autocomplete-highlighted',
-        'itemClass': 'ch-autocomplete-item',
-        'addClass': 'ch-box-lite ch-autocomplete',
+        'loadingClass': 'ac-autocomplete-loading',
+        'highlightedClass': 'ac-autocomplete-highlighted',
+        'itemClass': 'ac-autocomplete-item',
+        'addClass': 'ac-box-lite ac-autocomplete',
         'side': 'bottom',
         'align': 'left',
         'html': false,
         '_hiddenby': 'none',
         'keystrokesTime': 150,
-        '_itemTemplate': '<li class="{{itemClass}}"{{suggestedData}}>{{term}}<i class="ch-icon-arrow-up" data-js="ch-autocomplete-complete-query"></i></li>'
+        '_itemTemplate': '<li class="{{itemClass}}"{{suggestedData}}>{{term}}<i class="ac-icon-arrow-up" data-js="ac-autocomplete-complete-query"></i></li>'
     };
 
     /**
@@ -3367,10 +3269,10 @@ ac.factory = function (Klass, fn) {
          * @type {(jQuerySelector | ZeptoSelector)}
          * @private
          */
-        this._$suggestionsList = $('<ul class="ch-autocomplete-list"></ul>');
+        this._$suggestionsList = $('<ul class="ac-autocomplete-list"></ul>');
 
         // The component who shows and manage the suggestions.
-        this._popover = $.popover({
+        this._popover = new ac.Popover({
             'reference': this._$el,
             'content': this._$suggestionsList,
             'side': this._options.side,
@@ -3582,7 +3484,7 @@ ac.factory = function (Klass, fn) {
     };
 
     /**
-     * It highlights the item adding the "ch-autocomplete-highlighted" class name or the class name that you configured as "highlightedClass" option.
+     * It highlights the item adding the "ac-autocomplete-highlighted" class name or the class name that you configured as "highlightedClass" option.
      * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
@@ -3882,3 +3784,601 @@ ac.factory = function (Klass, fn) {
     };
 
 }(this.ac.Autocomplete, this.ch));
+(function (window, Autocomplete) {
+    'use strict';
+
+    var $searchForm,
+        $searchInput,
+        $checkbox,
+        $checkboxLabel,
+        maxQueryLength,
+        lastSearchesText,
+        meliDomain,
+        siteId,
+        genericAditionalInfo;
+
+
+    /**
+     * Init the component
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.initialize();
+     */
+    Autocomplete.prototype.initialize = function () {
+
+        var that = this;
+
+        $searchForm = this._options.searchForm;
+        $searchInput = this.$trigger;
+        $checkbox = this._options.categoryCheckbox;
+        $checkboxLabel = this._options.categoryCheckboxLabel;
+        maxQueryLength = this._options.maxQueryLength || 15;
+        lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
+        meliDomain = this._options.meliDomain || 'meli.domain';
+        siteId = this._options.siteId || 'MLA';
+        genericAditionalInfo = this._options.genericAditionalInfo || 'en todas las Tiendas Oficiales';
+
+
+        // REDIFINE the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
+        ac.shortcuts.remove(ac.onkeyenter);
+        ac.shortcuts.add(ac.onkeyenter, this.uid, function (event) {
+            that._selectSuggestion();
+        });
+
+
+        // Add the last searches queries from the cookies
+        this.addLastSearches();
+
+
+        this.on('type', function (userInput) {
+
+             $.ajax({
+                 'url': 'http://suggestgz.mlapps.com/sites/'+siteId+'/autosuggest?q='+userInput,
+                 'dataType': 'jsonp',
+                 'cache': false,
+                 'global': true,
+                 'context': this,
+                 'crossDomain': true
+             })
+             .done(this.parseResults);
+
+             this.adecuateCategoryLabel();
+        });
+
+
+        // doQuery when the select event is fire and a suggest y selected
+        this.on('select', function (e) {
+           this.doQuery({
+               element: this._highlighted
+           });
+        });
+
+
+        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
+        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
+
+        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.scrollInToView);
+        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.scrollInToView);
+
+        $searchForm.submit(function (event) {
+            event.preventDefault();
+            that.doQuery();
+        });
+    }
+
+
+    /**
+     * Parse the json and add the results to data array
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * this.parseResults();
+     */
+    Autocomplete.prototype.scrollInToView = function () {
+        var highlightedElement = document.querySelector('.ac-autocomplete-highlighted');
+
+        if (highlightedElement !== null) {
+            highlightedElement.scrollIntoView(false)
+        }
+
+    }
+
+
+    /**
+     * Parse the json and add the results to data array
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * this.parseResults();
+     */
+    Autocomplete.prototype.parseResults = function (results) {
+
+        var resultsTemp = {
+           "q":"ipod",
+           "suggested_queries":[
+              {
+                 "q":"ipod",
+                 "match_start":0,
+                 "match_end":4,
+                 "filters": {
+                    "id": "official_store_id",
+                    "name": "Tienda Oficial",
+                    "values": [
+                        {
+                            "id": "177",
+                            "name": "en Tienda Oficial Apple"
+                        },
+                        {
+                            "id": "188",
+                            "name": "en Tienda Oficial Megatone"
+                        }
+                    ]
+                 }
+              },
+              {
+                 "q":"ipod touch",
+                 "match_start":0,
+                 "match_end":4
+              },
+              {
+                 "q":"ipod 5",
+                 "match_start":0,
+                 "match_end":4
+              },
+              {
+                 "q":"ipod nano",
+                 "match_start":0,
+                 "match_end":4
+              },
+              {
+                 "q":"dock ipod",
+                 "match_start":5,
+                 "match_end":9
+              },
+              {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              }
+           ]
+        }
+
+        // if (results[2].suggested_queries !== undefined) {
+        //     results[2].suggested_queries.forEach(function (e, i) {
+        //         console.log(e.filters.name);
+        //         data.push(e.q);
+        //     });
+
+        //     this.suggest(data);
+        // }
+
+        var i,
+            queries = resultsTemp.suggested_queries,
+            suggestedResults = [],
+            suggestedResultsTO = [],
+            suggestedQueriesLength = queries.length;
+
+        if (queries === undefined) {
+            return;
+        }
+
+        var firstQuery = queries[0],
+            firstQueryFilters = firstQuery.filters;
+
+        if (firstQueryFilters !== undefined) {
+
+            var filtersLength = firstQueryFilters.values.length;
+
+            for (i = 0; i < filtersLength; i++) {
+                suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+firstQueryFilters.values[i].name+'</span>');
+
+            };
+
+            // Add the last <li>. It's the generic option tha always appear.
+            suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+genericAditionalInfo+'</span>');
+        }
+
+        for (i = 0; i < suggestedQueriesLength; i++) {
+            suggestedResults.push(queries[i].q);
+        };
+
+        // Add the official store queries suggested
+        this.addOfficialStoreQueries(suggestedResultsTO);
+
+        this.suggest(suggestedResults);
+    }
+
+
+    /**
+     * Adds 'last searches' to Autocomplete.
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {Autocomplete}
+     * @example
+     * Autocomplete.adecuateCategoryLabel();
+     */
+    Autocomplete.prototype.adecuateCategoryLabel = function () {
+        if ($searchInput.val().length > maxQueryLength) {
+            $checkboxLabel.addClass('nav-label-small');
+        } else {
+            $checkboxLabel.removeClass('nav-label-small');
+        }
+
+        return this;
+    }
+
+
+    /**
+     * Append 'last searches' to input.
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {Autocomplete}
+     * @example
+     * Autocomplete.addLastSearches();
+     */
+    Autocomplete.prototype.addLastSearches = function () {
+        var lastSearches = this.getLastSearches();
+
+        // Check if the last searches get from the cookie
+        if (lastSearches !== false) {
+            this._$lastSearchesQueries = $(this.makeTemplate(lastSearches, lastSearchesText, true)).appendTo(this.$container);
+        }
+
+        return this;
+    };
+
+
+    /**
+     * Get 'last searches' from cookie.
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.getLastSearches();
+     */
+    Autocomplete.prototype.getLastSearches = function () {
+
+        var isPMSCookie = this.getCookieValue("pmsctx"),
+            list,
+            searches;
+
+        // The user hasn't cookies. Esc the function becouse there aren't cookies to set as last searchs.
+        if (!isPMSCookie) {
+            return false;
+        }
+
+        searches = isPMSCookie.replace(/\+/g,' ').split('*')[5].split('|');
+
+        // Check if cookie exist and have word
+        if (searches != null && searches[0] !=null && searches[0] != '') {
+
+            // Remove the current querie empty by default of the cookie "" that is set when the browser load de page
+            // TESTEAR
+            searches.pop();
+
+            var i,
+                searchesLength = searches.length;
+
+            for (i = 0; i < searchesLength ; i++) {
+                searches[i] = searches[i].substr(1).toLowerCase();
+            }
+
+            // Return the searches array
+            return searches;
+        }
+
+    };
+
+
+    /**
+     * Add the official
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.doQuery();
+     */
+    Autocomplete.prototype.addOfficialStoreQueries = function (officialStoreQueries) {
+
+        if (this._$lastListOficialStore !== undefined) {
+            this._$lastListOficialStore.remove();
+        }
+
+        // Check if the officialStoreQueries was get from the api
+        if (officialStoreQueries !== false) {
+            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries)).insertAfter($('.ac-popover-content'));
+        }
+
+        return this;
+    };
+
+
+    /**
+     * Make html template to the list
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.doQuery();
+     */
+    Autocomplete.prototype.makeTemplate = function (searches, title, suggestedToInput) {
+
+        var searchesLength,
+            list,
+            uri,
+            i,
+            suggestedInInput = '',
+            officialStore = 'official-store';
+
+        searchesLength = searches.length;
+
+        list  = '<div class="aditional-info">';
+
+        if (title !== undefined) {
+            list += '<h4 class="aditional-info-title">' + title +'</h4>';
+            officialStore = '';
+        }
+
+        list += '<ul class="aditional-info-list'+ ' ' +officialStore+'">';
+
+        for (i = 0; i < searchesLength ; i++) {
+            try {
+                uri = decodeURI(searches[i]);
+            } catch (e) {}
+
+
+            if (suggestedToInput) {
+                suggestedInInput = searches[i];
+            }
+
+            list += '<li class="ac-autocomplete-item" data-suggested="'+suggestedInInput+'"><a num="'+i+'" href="/'+uri+'" class="aditional-info-item">'+searches[i]+'</a></li>';
+
+        }
+
+        list += '</ul></div>';
+
+        return list;
+    };
+
+
+    /**
+     * Do query
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.doQuery();
+     */
+    Autocomplete.prototype.doQuery = function (tracking) {
+        // Saving querys
+        // Use trim to remove white spaces
+        var query = $searchInput.val(), //trim($searchInput.val()),
+            searchQuery = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G';//settings.uri;
+            // searac = 'http://ipod.localhost.com.ar:8080/reproductores/';
+
+        // Naturalization
+        if (query && query.length > 0){
+            query = this.naturalization({
+                string: query,
+                replace: ' ',
+                replacement: '-'
+            });
+        } else {
+            // Focus when submit (valid en IE)
+            $searchInput.focus();
+            return false;
+        }
+
+        // Category checked
+        if ($checkbox !== null && $checkbox.is(':checked')) {
+            if (window.location.href.indexOf('_DisplayType_LF') != -1) {
+                searchQuery =  "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']" + '_DisplayType_LF';
+            } else {
+                searchQuery = "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']";
+            }
+        }
+
+        // Adults setting
+        if (this.getCookieValue('pr_categ') === 'AD' && searchQuery.indexOf('_PrCategId_AD') === -1) {
+            searchQuery = searchQuery + '_PrCategId_AD';
+        }
+
+        // Add query to the URL string
+        searchQuery = searchQuery.replace('$query', encodeURIComponent(query));
+
+        // Tracking
+        if (typeof tracking != 'undefined'){
+            searchQuery = searchQuery + '#D[A:' + query + ',B:' + tracking.element + ']';
+        }
+
+        // Cookies
+        console.info('revisar seteo de cookie');
+        this.setSearchCookies(query);
+
+        // Redirect
+        // location.href = searchQuery;
+        console.info(searchQuery);
+
+        return this;
+    };
+
+
+    /**
+     * Naturalize query
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.naturalization();
+     */
+    Autocomplete.prototype.naturalization = function (conf) {
+        var query = conf.string.toLowerCase(),
+            replace = conf.replace,
+            replacement = conf.replacement;
+
+        while (query.toString().indexOf(replace) != -1){
+            query = query.toString().replace(replace,replacement);
+        }
+        return query;
+    }
+
+
+    /**
+     * Get the cookie from the user browser
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {cookie}
+     * @example
+     * Autocomplete.getCookieValue();
+     */
+    Autocomplete.prototype.getCookieValue = function (name) {
+
+        var start = document.cookie.indexOf(name + "="),
+            len = start + name.length + 1,
+            end = document.cookie.indexOf(";", len);
+
+        if (start == -1) {
+            return null;
+        }
+
+        if (end == -1) {
+            end = document.cookie.length;
+        }
+
+        return unescape(document.cookie.substring(len, end));
+    }
+
+
+    /**
+     * Set the cookie to the user browser
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setCookie();
+     */
+    Autocomplete.prototype.setCookie = function (config) {
+
+        var domain = meliDomain,
+            today,
+            expire;
+
+        config.path = config.path || '/';
+
+        if (config.days !== undefined) {
+
+            today = new Date();
+            expire = new Date();
+
+            if (config.days === undefined || config.days === 0) {
+                config.days = 1;
+            }
+
+            expire.setTime(today.getTime() + 3600000 * 24 * config.days);
+            document.cookie = config.name + '=' + config.value + ';path=' + config.path + ';domain=.' + domain + ';expires=' + expire.toGMTString();
+
+        } else {
+            document.cookie = config.name + '=' + config.value + ';path=' + config.path + ';domain=.' + domain;
+        }
+    }
+
+
+    /**
+     * Set the cookie context
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setContextCookie();
+     */
+    Autocomplete.prototype.setContextCookie = function (val) {
+        url = urlPms + "/jm/PmsPixel?ck=" + val;
+
+        var pixelDiv = document.getElementById("pmspxl");
+
+        if (pixelDiv != null) {
+            pixelDiv.innerHTML = "<img width=0 height=0 src='" + url + "'>";
+        }
+    }
+
+
+    /**
+     * Set the search cookie
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setSearchCookies();
+     */
+    Autocomplete.prototype.setSearchCookies = function (query) {
+        try {
+            // Only if PMS active
+            // this.setCookie({
+            //     name: 'ml_list',
+            //     value: 'searching'
+            // });
+            this.setCookie({
+                name: 'LAST_SEARCH',
+                value: query
+            });
+        } catch(e) {
+            // Nothing
+        }
+    }
+
+}(this, this.ac.Autocomplete));
+
+
+// TODO: migrate to a vanilla javascript scroll
+/*! perfect-scrollbar - v0.5.8
+* http://noraesae.github.com/perfect-scrollbar/
+* Copyright (c) 2014 Hyunje Alex Jun; Licensed MIT */
+(function(e){"use strict";"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?e(require("jquery")):e(jQuery)})(function(e){"use strict";function t(e){return"string"==typeof e?parseInt(e,10):~~e}var o={wheelSpeed:1,wheelPropagation:!1,swipePropagation:!0,minScrollbarLength:null,maxScrollbarLength:null,useBothWheelAxes:!1,useKeyboard:!0,suppressScrollX:!1,suppressScrollY:!1,scrollXMarginOffset:0,scrollYMarginOffset:0,includePadding:!1},n=0,r=function(){var e=n++;return function(t){var o=".perfect-scrollbar-"+e;return t===void 0?o:t+o}},l="WebkitAppearance"in document.documentElement.style;e.fn.perfectScrollbar=function(n,i){return this.each(function(){function a(e,o){var n=e+o,r=D-R;j=0>n?0:n>r?r:n;var l=t(j*(Y-D)/(D-R));M.scrollTop(l)}function s(e,o){var n=e+o,r=E-k;W=0>n?0:n>r?r:n;var l=t(W*(C-E)/(E-k));M.scrollLeft(l)}function c(e){return P.minScrollbarLength&&(e=Math.max(e,P.minScrollbarLength)),P.maxScrollbarLength&&(e=Math.min(e,P.maxScrollbarLength)),e}function u(){var e={width:I};e.left=B?M.scrollLeft()+E-C:M.scrollLeft(),N?e.bottom=_-M.scrollTop():e.top=Q+M.scrollTop(),H.css(e);var t={top:M.scrollTop(),height:A};Z?t.right=B?C-M.scrollLeft()-V-J.outerWidth():V-M.scrollLeft():t.left=B?M.scrollLeft()+2*E-C-$-J.outerWidth():$+M.scrollLeft(),G.css(t),U.css({left:W,width:k-z}),J.css({top:j,height:R-et})}function d(){M.removeClass("ps-active-x"),M.removeClass("ps-active-y"),E=P.includePadding?M.innerWidth():M.width(),D=P.includePadding?M.innerHeight():M.height(),C=M.prop("scrollWidth"),Y=M.prop("scrollHeight"),!P.suppressScrollX&&C>E+P.scrollXMarginOffset?(X=!0,I=E-F,k=c(t(I*E/C)),W=t(M.scrollLeft()*(I-k)/(C-E))):(X=!1,k=0,W=0,M.scrollLeft(0)),!P.suppressScrollY&&Y>D+P.scrollYMarginOffset?(O=!0,A=D-tt,R=c(t(A*D/Y)),j=t(M.scrollTop()*(A-R)/(Y-D))):(O=!1,R=0,j=0,M.scrollTop(0)),W>=I-k&&(W=I-k),j>=A-R&&(j=A-R),u(),X&&M.addClass("ps-active-x"),O&&M.addClass("ps-active-y")}function p(){var t,o,n=function(e){s(t,e.pageX-o),d(),e.stopPropagation(),e.preventDefault()},r=function(){H.removeClass("in-scrolling"),e(q).unbind(K("mousemove"),n)};U.bind(K("mousedown"),function(l){o=l.pageX,t=U.position().left,H.addClass("in-scrolling"),e(q).bind(K("mousemove"),n),e(q).one(K("mouseup"),r),l.stopPropagation(),l.preventDefault()}),t=o=null}function f(){var t,o,n=function(e){a(t,e.pageY-o),d(),e.stopPropagation(),e.preventDefault()},r=function(){G.removeClass("in-scrolling"),e(q).unbind(K("mousemove"),n)};J.bind(K("mousedown"),function(l){o=l.pageY,t=J.position().top,G.addClass("in-scrolling"),e(q).bind(K("mousemove"),n),e(q).one(K("mouseup"),r),l.stopPropagation(),l.preventDefault()}),t=o=null}function v(e,t){var o=M.scrollTop();if(0===e){if(!O)return!1;if(0===o&&t>0||o>=Y-D&&0>t)return!P.wheelPropagation}var n=M.scrollLeft();if(0===t){if(!X)return!1;if(0===n&&0>e||n>=C-E&&e>0)return!P.wheelPropagation}return!0}function g(e,t){var o=M.scrollTop(),n=M.scrollLeft(),r=Math.abs(e),l=Math.abs(t);if(l>r){if(0>t&&o===Y-D||t>0&&0===o)return!P.swipePropagation}else if(r>l&&(0>e&&n===C-E||e>0&&0===n))return!P.swipePropagation;return!0}function b(){function e(e){var t=e.originalEvent.deltaX,o=-1*e.originalEvent.deltaY;return(t===void 0||o===void 0)&&(t=-1*e.originalEvent.wheelDeltaX/6,o=e.originalEvent.wheelDeltaY/6),e.originalEvent.deltaMode&&1===e.originalEvent.deltaMode&&(t*=10,o*=10),t!==t&&o!==o&&(t=0,o=e.originalEvent.wheelDelta),[t,o]}function t(t){if(l||!(M.find("select:focus").length>0)){var n=e(t),r=n[0],i=n[1];o=!1,P.useBothWheelAxes?O&&!X?(i?M.scrollTop(M.scrollTop()-i*P.wheelSpeed):M.scrollTop(M.scrollTop()+r*P.wheelSpeed),o=!0):X&&!O&&(r?M.scrollLeft(M.scrollLeft()+r*P.wheelSpeed):M.scrollLeft(M.scrollLeft()-i*P.wheelSpeed),o=!0):(M.scrollTop(M.scrollTop()-i*P.wheelSpeed),M.scrollLeft(M.scrollLeft()+r*P.wheelSpeed)),d(),o=o||v(r,i),o&&(t.stopPropagation(),t.preventDefault())}}var o=!1;window.onwheel!==void 0?M.bind(K("wheel"),t):window.onmousewheel!==void 0&&M.bind(K("mousewheel"),t)}function h(){var t=!1;M.bind(K("mouseenter"),function(){t=!0}),M.bind(K("mouseleave"),function(){t=!1});var o=!1;e(q).bind(K("keydown"),function(n){if((!n.isDefaultPrevented||!n.isDefaultPrevented())&&t){for(var r=document.activeElement?document.activeElement:q.activeElement;r.shadowRoot;)r=r.shadowRoot.activeElement;if(!e(r).is(":input,[contenteditable]")){var l=0,i=0;switch(n.which){case 37:l=-30;break;case 38:i=30;break;case 39:l=30;break;case 40:i=-30;break;case 33:i=90;break;case 32:case 34:i=-90;break;case 35:i=n.ctrlKey?-Y:-D;break;case 36:i=n.ctrlKey?M.scrollTop():D;break;default:return}M.scrollTop(M.scrollTop()-i),M.scrollLeft(M.scrollLeft()+l),o=v(l,i),o&&n.preventDefault()}}})}function w(){function e(e){e.stopPropagation()}J.bind(K("click"),e),G.bind(K("click"),function(e){var o=t(R/2),n=e.pageY-G.offset().top-o,r=D-R,l=n/r;0>l?l=0:l>1&&(l=1),M.scrollTop((Y-D)*l)}),U.bind(K("click"),e),H.bind(K("click"),function(e){var o=t(k/2),n=e.pageX-H.offset().left-o,r=E-k,l=n/r;0>l?l=0:l>1&&(l=1),M.scrollLeft((C-E)*l)})}function m(){function t(){var e=window.getSelection?window.getSelection():document.getSlection?document.getSlection():{rangeCount:0};return 0===e.rangeCount?null:e.getRangeAt(0).commonAncestorContainer}function o(){r||(r=setInterval(function(){return x()?(M.scrollTop(M.scrollTop()+l.top),M.scrollLeft(M.scrollLeft()+l.left),d(),void 0):(clearInterval(r),void 0)},50))}function n(){r&&(clearInterval(r),r=null),H.removeClass("in-scrolling"),G.removeClass("in-scrolling")}var r=null,l={top:0,left:0},i=!1;e(q).bind(K("selectionchange"),function(){e.contains(M[0],t())?i=!0:(i=!1,n())}),e(window).bind(K("mouseup"),function(){i&&(i=!1,n())}),e(window).bind(K("mousemove"),function(e){if(i){var t={x:e.pageX,y:e.pageY},r=M.offset(),a={left:r.left,right:r.left+M.outerWidth(),top:r.top,bottom:r.top+M.outerHeight()};t.x<a.left+3?(l.left=-5,H.addClass("in-scrolling")):t.x>a.right-3?(l.left=5,H.addClass("in-scrolling")):l.left=0,t.y<a.top+3?(l.top=5>a.top+3-t.y?-5:-20,G.addClass("in-scrolling")):t.y>a.bottom-3?(l.top=5>t.y-a.bottom+3?5:20,G.addClass("in-scrolling")):l.top=0,0===l.top&&0===l.left?n():o()}})}function T(t,o){function n(e,t){M.scrollTop(M.scrollTop()-t),M.scrollLeft(M.scrollLeft()-e),d()}function r(){h=!0}function l(){h=!1}function i(e){return e.originalEvent.targetTouches?e.originalEvent.targetTouches[0]:e.originalEvent}function a(e){var t=e.originalEvent;return t.targetTouches&&1===t.targetTouches.length?!0:t.pointerType&&"mouse"!==t.pointerType&&t.pointerType!==t.MSPOINTER_TYPE_MOUSE?!0:!1}function s(e){if(a(e)){w=!0;var t=i(e);p.pageX=t.pageX,p.pageY=t.pageY,f=(new Date).getTime(),null!==b&&clearInterval(b),e.stopPropagation()}}function c(e){if(!h&&w&&a(e)){var t=i(e),o={pageX:t.pageX,pageY:t.pageY},r=o.pageX-p.pageX,l=o.pageY-p.pageY;n(r,l),p=o;var s=(new Date).getTime(),c=s-f;c>0&&(v.x=r/c,v.y=l/c,f=s),g(r,l)&&(e.stopPropagation(),e.preventDefault())}}function u(){!h&&w&&(w=!1,clearInterval(b),b=setInterval(function(){return x()?.01>Math.abs(v.x)&&.01>Math.abs(v.y)?(clearInterval(b),void 0):(n(30*v.x,30*v.y),v.x*=.8,v.y*=.8,void 0):(clearInterval(b),void 0)},10))}var p={},f=0,v={},b=null,h=!1,w=!1;t&&(e(window).bind(K("touchstart"),r),e(window).bind(K("touchend"),l),M.bind(K("touchstart"),s),M.bind(K("touchmove"),c),M.bind(K("touchend"),u)),o&&(window.PointerEvent?(e(window).bind(K("pointerdown"),r),e(window).bind(K("pointerup"),l),M.bind(K("pointerdown"),s),M.bind(K("pointermove"),c),M.bind(K("pointerup"),u)):window.MSPointerEvent&&(e(window).bind(K("MSPointerDown"),r),e(window).bind(K("MSPointerUp"),l),M.bind(K("MSPointerDown"),s),M.bind(K("MSPointerMove"),c),M.bind(K("MSPointerUp"),u)))}function y(){M.bind(K("scroll"),function(){d()})}function L(){M.unbind(K()),e(window).unbind(K()),e(q).unbind(K()),M.data("perfect-scrollbar",null),M.data("perfect-scrollbar-update",null),M.data("perfect-scrollbar-destroy",null),U.remove(),J.remove(),H.remove(),G.remove(),M=H=G=U=J=X=O=E=D=C=Y=k=W=_=N=Q=R=j=V=Z=$=B=K=null}function S(){d(),y(),p(),f(),w(),m(),b(),(ot||nt)&&T(ot,nt),P.useKeyboard&&h(),M.data("perfect-scrollbar",M),M.data("perfect-scrollbar-update",d),M.data("perfect-scrollbar-destroy",L)}var P=e.extend(!0,{},o),M=e(this),x=function(){return!!M};if("object"==typeof n?e.extend(!0,P,n):i=n,"update"===i)return M.data("perfect-scrollbar-update")&&M.data("perfect-scrollbar-update")(),M;if("destroy"===i)return M.data("perfect-scrollbar-destroy")&&M.data("perfect-scrollbar-destroy")(),M;if(M.data("perfect-scrollbar"))return M.data("perfect-scrollbar");M.addClass("ps-container");var E,D,C,Y,X,k,W,I,O,R,j,A,B="rtl"===M.css("direction"),K=r(),q=this.ownerDocument||document,H=e("<div class='ps-scrollbar-x-rail'>").appendTo(M),U=e("<div class='ps-scrollbar-x'>").appendTo(H),_=t(H.css("bottom")),N=_===_,Q=N?null:t(H.css("top")),z=t(H.css("borderLeftWidth"))+t(H.css("borderRightWidth")),F=t(H.css("marginLeft"))+t(H.css("marginRight")),G=e("<div class='ps-scrollbar-y-rail'>").appendTo(M),J=e("<div class='ps-scrollbar-y'>").appendTo(G),V=t(G.css("right")),Z=V===V,$=Z?null:t(G.css("left")),et=t(G.css("borderTopWidth"))+t(G.css("borderBottomWidth")),tt=t(G.css("marginTop"))+t(G.css("marginBottom")),ot="ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch,nt=null!==window.navigator.msMaxTouchPoints;return S(),M})}});

@@ -1,0 +1,226 @@
+/**
+ * autocomplete.SearchBox extension
+ * @authors: ibarbieri
+ * @description: core style of the autocomplete searchBox extension.
+*/
+
+
+/* Form
+---------------------------------------------------------------*/
+.nav-search {
+    margin: 0 0 0 210px;
+    position: relative;
+    float: left;
+    background: #FFF;
+    border-radius: 4px;
+    width: 44%;
+    height: 40px;
+    top: -41px;
+}
+
+
+/* Input search
+---------------------------------------------------------------*/
+.nav-search input {
+    border: 1px solid #CCC;
+    border-right: none;
+    border-radius: 3px 0 0 3px;
+    font-size: 16px;
+    padding: 5px 15px;
+    margin: 0;
+    width: 92%;
+    height: 40px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    font-family: Arial,Helvetica,"Nimbus Sans L",sans-serif;
+    vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.nav-search input[type=text] {
+    width: 92% !important;
+    height: 40px !important;
+    border-radius: 3px 0 0 3px !important;
+}
+
+.nav-search input[type=text]:focus {
+    box-shadow: 0 0 5px rgba(117,127,16,.2);
+    outline: none;
+}
+
+.nav-search-categ input[type=text] {
+    padding-right: 27%;
+    width: 71%;
+}
+
+
+/* Button
+---------------------------------------------------------------*/
+.nav-search button {
+    background: #fff;
+    background: -moz-linear-gradient(top,#fff 0,#f1f1f1 100%);
+    background: -ms-linear-gradient(top,#fff 0,#f1f1f1 100%);
+    background: -o-linear-gradient(top,#fff 0,#f1f1f1 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#f1f1f1));
+    background: -webkit-linear-gradient(top,#fff 0,#f1f1f1 100%);
+    background: linear-gradient(to bottom,#fff 0,#f1f1f1 100%);
+    -moz-border-radius: 0 3px 3px 0;
+    -webkit-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+    border: 1px solid #CDCCCB;
+    color: #666;
+    cursor: pointer;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#f1f1f1',GradientType=0);
+    height: 40px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 46px;
+}
+
+.nav-search .nav-icon-search {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-position: 13px 10px;
+    width: 44px;
+    height: 40px;
+    background-image: url(http://static.mlstatic.com/org-img/commons/assets/sprite.png?v1);
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    text-indent: -9999px;
+}
+
+
+/* Autosuggest
+---------------------------------------------------------------*/
+.ac-autocomplete-list .ac-autocomplete-item i {
+    display: none;
+}
+
+
+/* Category checkbox
+---------------------------------------------------------------*/
+.nav-search .nav-category {
+    background: -moz-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
+    background: -webkit-gradient(linear,left top,right top,color-stop(0%,rgba(255,255,255,0)),color-stop(2%,rgba(255,255,255,1)),color-stop(99%,rgba(255,255,255,1)));
+    background: -webkit-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
+    background: -o-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
+    background: -ms-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
+    background: linear-gradient(to right,rgba(255,255,255,0) 0,rgba(255,255,255,1) 2%,rgba(255,255,255,1) 99%);
+    color: #999;
+    line-height: 17px;
+    margin: 0 11px 0 0;
+    padding: 0 0 0 8px;
+    position: absolute;
+    right: 40px;
+    top: 11px;
+    text-align: right;
+}
+
+.nav-search .nav-category label {
+    vertical-align: middle;
+    -webkit-user-select: none;
+}
+
+.nav-search .nav-category .nav-label-small {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    width: 58px;
+}
+
+.nav-search .nav-category input[type=checkbox] {
+    border: 1px solid #CCC;
+    background: 0;
+    box-shadow: none;
+    display: inline-block;
+    margin: 3px 2px 0 0;
+    height: 14px;
+    padding: 0;
+    vertical-align: top;
+    width: 14px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.nav-search .nav-category input[type=checkbox]:checked {
+    background-image: url(http://static.mlstatic.com/org-img/commons/sprite.png);
+    background-position: -3px -285px;
+}
+
+.nav-search .nav-category input[type=checkbox]:focus {
+    outline: 1px dotted #9a9a9a;
+}
+
+
+/* Aditional Info
+---------------------------------------------------------------*/
+.aditional-info {
+    border-top: solid 1px #EEE;
+    margin: 8px -10px 0px -10px;
+    padding: 8px 0 0 0;
+}
+
+.aditional-info .aditional-info-title {
+    color: #999999;
+    font-size: 13px;
+    line-height: 13px;
+    margin: 10px 15px 8px;
+}
+
+.aditional-info .aditional-info-item {
+    color: #333333;
+    display: block;
+    font-size: 13px;
+    line-height: 7px;
+    margin: 2px 5px;
+    padding: 5px;
+}
+
+.aditional-info .aditional-info-item:hover {
+    background-color: #FDF9D5;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.aditional-info .official-store li a {
+    color: #333333;
+    font-size: 13px;
+}
+
+.aditional-info .official-store li a span {
+    color: #999999;
+}
+
+
+/* Autocomplete scroll bar
+---------------------------------------------------------------*/
+.ch-popover-content {
+    position: relative;
+    margin: 0px auto 10px auto;
+    padding: 0px;
+    width: auto;
+    height: 130px;
+    overflow: hidden;
+}
+
+.ch-popover-content .ch-autocomplete-list {
+    width: auto;
+    height: 350px;
+}
+
+
+/*! perfect-scrollbar - v0.5.8
+* http://noraesae.github.com/perfect-scrollbar/
+* Copyright (c) 2014 Hyunje Alex Jun; Licensed MIT */
+.ps-container.ps-active-x>.ps-scrollbar-x-rail,.ps-container.ps-active-y>.ps-scrollbar-y-rail{display:block}.ps-container>.ps-scrollbar-x-rail{display:none;position:absolute;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;opacity:0;-ms-filter:"alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:background-color .2s linear,opacity .2s linear;-moz-transition:background-color .2s linear,opacity .2s linear;-o-transition:background-color .2s linear,opacity .2s linear;transition:background-color .2s linear,opacity .2s linear;bottom:3px;height:8px}.ps-container>.ps-scrollbar-x-rail>.ps-scrollbar-x{position:absolute;background-color:#aaa;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;-webkit-transition:background-color .2s linear;-moz-transition:background-color .2s linear;-o-transition:background-color .2s linear;transition:background-color .2s linear;bottom:0;height:8px}.ps-container>.ps-scrollbar-x-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container>.ps-scrollbar-y-rail{display:none;position:absolute;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;opacity:0;-ms-filter:"alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:background-color .2s linear,opacity .2s linear;-moz-transition:background-color .2s linear,opacity .2s linear;-o-transition:background-color .2s linear,opacity .2s linear;transition:background-color .2s linear,opacity .2s linear;right:3px;width:8px}.ps-container>.ps-scrollbar-y-rail>.ps-scrollbar-y{position:absolute;background-color:#aaa;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;-webkit-transition:background-color .2s linear;-moz-transition:background-color .2s linear;-o-transition:background-color .2s linear;transition:background-color .2s linear;right:0;width:8px}.ps-container>.ps-scrollbar-y-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail,.ps-container:hover>.ps-scrollbar-y-rail{opacity:.6;-ms-filter:"alpha(Opacity=60)";filter:alpha(opacity=60)}.ps-container:hover>.ps-scrollbar-x-rail.in-scrolling,.ps-container:hover>.ps-scrollbar-y-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail:hover{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail:hover>.ps-scrollbar-x{background-color:#999}.ps-container:hover>.ps-scrollbar-y-rail:hover{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y{background-color:#999}

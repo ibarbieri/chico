@@ -64,6 +64,23 @@ JS.components = [
 
 
 /*
+ * JS: Autocomplete
+ */
+JS.autocomplete = [
+    "src/shared/js/onImagesLoads.js",
+    "src/shared/js/Component.js",
+    "src/shared/js/Popover.js",
+    "src/ui/js/Popover.js",
+    "src/shared/js/Layer.js",
+    "src/shared/js/Autocomplete.js",
+    "src/ui/js/Autocomplete.js",
+    "extensions/search-box/mobile/autocomplete.searchBox.js"
+];
+
+
+
+
+/*
  * CSS routes
  */
 
@@ -124,6 +141,17 @@ CSS.components = [
 CSS.compatible = [
     "src/mobile/css/compatible.css"
 ];
+
+
+/*
+ * CSS: Autocomplete
+ */
+CSS.autocomplete = [
+    "src/shared/css/Popover.css",
+    "src/shared/css/Autocomplete.css",
+    "extensions/search-box/mobile/autocomplete.searchBox.css"
+];
+
 
 /*
  * Expose both objects

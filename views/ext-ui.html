@@ -1,0 +1,111 @@
+<!doctype html>
+<!--[if IE 7]>  <html class="no-js lt-ie10 lt-ie9 lt-ie8 ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>  <html class="no-js lt-ie10 lt-ie9 ie8" lang="en"> <![endif]-->
+<!--[if IE 9]>  <html class="no-js lt-ie10 ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es"> <!--<![endif]-->
+<head>
+    <script></script>
+    <meta charset="utf-8" />
+    <title>Extensions</title>
+
+    <!-- Mobile viewport optimization http://goo.gl/b9SaQ -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="cleartype" content="on">
+
+    <!-- 0.13.4-->
+    <link rel="stylesheet" href="http://static.mlstatic.com/org-img/ch/ui/0.13.4/chico.min.css">
+    <link rel="stylesheet" href="/extensions/search-box/ui/autocomplete-1.1.1-standalone.css">
+
+    <!-- 1.1.1-->
+<!--
+        <link rel="stylesheet" href="http://static.mlstatic.com/org-img/ch/ui/1.1.1/chico.min.css">
+        <link rel="stylesheet" href="/extensions/search-box/ui/autocomplete.searchBox.css"> -->
+
+</head>
+
+<body>
+    <div class="ml-header">
+        <h1 id="components" class="ch-shownby-pointertap" aria-owns="ch-layer-34" aria-haspopup="true">Extensions (Chico UI 1.1.1)</h1>
+    </div>
+
+    <section id="autocomplete">
+        <h1>Autocomplete Search Box</h1>
+
+            <form class="nav-search" action="/" method="GET" role="search">
+                <input style="width:150px;" type="text" class="nav-search-input" name="as_word" value="" max-length="120"/>
+
+                <p id="mlCategory" class="nav-category" title="Buscar solo en...">
+                    <input type="checkbox" id="categorySearch" name="as_categ_id" value="MLA7262"/>
+                    <label for="categorySearch" onclick>Buscar solo en Reproductores</label>
+                </p>
+
+                <button type="submit" name="mlSearchBtn" class="nav-search-btn">
+                    <i class="nav-icon-search"></i>
+                    <span class="ch-hide">Buscar</span>
+                </button>
+            </form>
+
+    </section>
+
+    <!-- 0.13.4 -->
+<!--
+    <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/ui/0.13.4/jquery.js"></script>
+    <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/ui/0.13.4/chico.min.js"></script>
+ -->
+    <!-- 1.1.1 -->
+    <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/vendor/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/ui/1.1.1/chico.min.js"></script>
+
+
+    <!-- 0.13.4 -->
+
+    <script type="text/javascript" src="/extensions/search-box/ui/autocomplete-1.1.1-standalone.js"></script>
+
+
+    <!-- 1.1.1 -->
+<!--
+    <script type="text/javascript" src="/extensions/search-box/ui/autocomplete.searchBox.js"></script>
+ -->
+
+    <script type="text/javascript">
+        //grunt buildExtensions
+
+        // Configuration
+        var autocompleteConfig = {
+            'searchForm': $('.nav-search'),
+            'categoryCheckbox': $('#categorySearch'),
+            'categoryCheckboxLabel': $('label[for="categorySearch"]'),
+            'maxQueryLength': 15,
+            'lastSearchesText': 'Últimas búsquedas',
+            'meliDomain': 'localhost',
+            'searchQuery': 'http://listado.localhost.com.ar:8080/$query_DisplayType_G',
+            'siteId': 'MLA',
+            'genericAditionalInfo': 'en <span>todas las Tiendas Oficiales</span>'
+        }
+
+
+        // Instance of autocomplete with chico 1.1.1 standalone
+        var autocomplete = new ac.Autocomplete($('.nav-search-input'), autocompleteConfig);
+
+        //      Instance of autocomplete scroll when the popover is showed
+        autocomplete._popover.once('show', function () {
+            $('.ac-popover-content').perfectScrollbar({
+                suppressScrollX: true
+            });
+        });
+
+
+        //Instance of autocomplete with chico 1.1.1
+        // var autocomplete = new ch.Autocomplete($('.nav-search-input'), autocompleteConfig);
+
+        // autocomplete._popover.once('show', function () {
+        //     $('.ch-popover-content').perfectScrollbar({
+        //         suppressScrollX: true
+        //     });
+        // });
+
+
+    </script>
+</body>
+</html>

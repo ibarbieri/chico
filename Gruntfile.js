@@ -58,18 +58,16 @@ module.exports = function (grunt) {
                 'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.components),
                 'dest': destination + '/' + environment + '/<%= pkg.name %>.css'
             },
-
-            'search_box_js': {
+            'autocompleteJs': {
                 'src': ['temp/' + environment + '/core.tmp.js'].concat(files.JS.abilities).concat(files.JS.autocomplete),
-                'dest': 'extensions/searchBox/ac.autocomplete.js'
+                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.js'
             },
-
-            'search_box_css': {
+            'autocompleteCss': {
                 'options': {
                     'banner': '<%= banner.full %>'
                 },
-                'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.autocomplete),
-                'dest': 'extensions/searchBox/ac.autocomplete.css'
+                'src': files.CSS.core.concat(files.CSS.autocomplete),
+                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css'
             }
         },
 
@@ -134,9 +132,9 @@ module.exports = function (grunt) {
                     'to': '../../assets/0.3/'
                 }]
             },
-            'nameSpace': {
-                'src': ['extensions/search-box/ac.autocomplete.js'],
-                'dest': 'extensions/search-box/ac.autocomplete.js',
+            'nameSpaceJs': {
+                'src': ['extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.js'],
+                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.js',
                 'replacements': [{
                         'from': 'ch =',
                         'to': 'ac ='
@@ -152,6 +150,28 @@ module.exports = function (grunt) {
                     {
                         'from': ' = ch',
                         'to': ' = ac'
+                    },
+                    {
+                        'from': 'ch-',
+                        'to': 'ac-'
+                    },
+                ]
+            },
+            'nameSpaceCss': {
+                'src': ['extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css'],
+                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css',
+                'replacements': [{
+                        'from': 'ch-',
+                        'to': 'ac-'
+                    }
+                ]
+            },
+            'assetsPath': {
+                'src': ['extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css'],
+                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css',
+                'replacements': [{
+                        'from': '../assets/',
+                        'to': 'http://static.mlstatic.com/org-img/ch/assets/0.3/'
                     }
                 ]
             }
@@ -173,6 +193,6 @@ module.exports = function (grunt) {
     grunt.registerTask('doc', ['jsdoc']);
     grunt.registerTask('dev', ['concat', 'clean']);
     grunt.registerTask('dist', ['concat', 'replace:example', 'uglify', 'cssmin', 'clean']);
-    grunt.registerTask('buildExtensions', ['concat', 'clean', 'replace:nameSpace']);
+    grunt.registerTask('buildExtensions', ['concat', 'clean', 'replace']);
     grunt.registerTask('distExtensions', ['concat', 'replace:nameSpace', 'uglify', 'cssmin', 'clean']);
 };

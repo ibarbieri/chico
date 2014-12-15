@@ -11,7 +11,7 @@
 (function (window, $) {
 	'use strict';
 
-var ch = {},
+var ac = {},
 
         /**
          * Reference to the window jQuery or Zepto Selector.
@@ -117,14 +117,14 @@ var ch = {},
 
             return '';
         }());
-ch.util = {
+ac.util = {
 
         /**
          * Returns true if an object is an array, false if it is not.
          * @param {Object} obj The object to be checked.
          * @returns {Boolean}
          * @example
-         * ch.util.isArray([1, 2, 3]); // true
+         * ac.util.isArray([1, 2, 3]); // true
          */
         'isArray': (function () {
             if (typeof Array.isArray === 'function') {
@@ -133,7 +133,7 @@ ch.util = {
 
             return function (obj) {
                 if (obj === undefined) {
-                    throw new Error('"ch.util.isArray(obj)": It must receive a parameter.');
+                    throw new Error('"ac.util.isArray(obj)": It must receive a parameter.');
                 }
 
                 return (Object.prototype.toString.call(obj) === '[object Array]');
@@ -145,7 +145,7 @@ ch.util = {
          * @param {String} url The url to be checked.
          * @returns {Boolean}
          * @example
-         * ch.util.isUrl('www.chico-ui.com.ar'); // true
+         * ac.util.isUrl('www.chico-ui.com.ar'); // true
          */
         'isUrl': function (url) {
             if (url === undefined || typeof url !== 'string') {
@@ -229,7 +229,7 @@ ch.util = {
          * @param {Object} $el The element to be checked as instance of $.
          * @returns {Boolean}
          * @example
-         * ch.util.is$($('element')); // true
+         * ac.util.is$($('element')); // true
          */
         'is$': (function () {
             if ($.zepto === undefined) {
@@ -247,7 +247,7 @@ ch.util = {
          * Adds CSS rules to disable text selection highlighting.
          * @param {...jQuerySelector} jQuery or Zepto Selector to disable text selection highlighting.
          * @example
-         * ch.util.avoidTextSelection($(selector));
+         * ac.util.avoidTextSelection($(selector));
          */
         'avoidTextSelection': function () {
             var args = arguments,
@@ -255,20 +255,20 @@ ch.util = {
                 i = 0;
 
             if (arguments.length < 1) {
-                throw new Error('"ch.util.avoidTextSelection(selector);": The selector parameter is required.');
+                throw new Error('"ac.util.avoidTextSelection(selector);": The selector parameter is required.');
             }
 
             for (i; i < len; i += 1) {
 
                 if (!(args[i] instanceof $ || $.zepto.isZ(args[i]))) {
-                    throw new Error('"ch.util.avoidTextSelection(selector);": The parameter must be a jQuery or Zepto selector.');
+                    throw new Error('"ac.util.avoidTextSelection(selector);": The parameter must be a jQuery or Zepto selector.');
                 }
 
                 if ($html.hasClass('lt-ie10')) {
                     args[i].attr('unselectable', 'on');
 
                 } else {
-                    args[i].addClass('ch-user-no-select');
+                    args[i].addClass('ac-user-no-select');
                 }
 
             }
@@ -281,16 +281,16 @@ ch.util = {
          * @returns {CSSStyleDeclaration}
          * @link http://www.quirksmode.org/dom/getstyles.html
          * @example
-         * ch.util.getStyles(HTMLElement, 'color'); // true
+         * ac.util.getStyles(HTMLElement, 'color'); // true
          */
         'getStyles': function (el, prop) {
 
             if (el === undefined || !(el.nodeType === 1)) {
-                throw new Error('"ch.util.getStyles(el, prop)": The "el" parameter is required and must be a HTMLElement.');
+                throw new Error('"ac.util.getStyles(el, prop)": The "el" parameter is required and must be a HTMLElement.');
             }
 
             if (prop === undefined || typeof prop !== 'string') {
-                throw new Error('"ch.util.getStyles(el, prop)": The "prop" parameter is required and must be a string.');
+                throw new Error('"ac.util.getStyles(el, prop)": The "prop" parameter is required and must be a string.');
             }
 
             if (window.getComputedStyle) {
@@ -308,11 +308,11 @@ ch.util = {
          * @param {Object} obj The object to copy.
          * @returns {Object}
          * @example
-         * ch.util.clone(object);
+         * ac.util.clone(object);
          */
         'clone': function (obj) {
             if (obj === undefined || typeof obj !== 'object') {
-                throw new Error('"ch.util.clone(obj)": The "obj" parameter is required and must be a object.');
+                throw new Error('"ac.util.clone(obj)": The "obj" parameter is required and must be a object.');
             }
 
             var copy = {},
@@ -334,16 +334,16 @@ ch.util = {
          * @returns {Object}
          * @exampleDescription
          * @example
-         * ch.util.inherit(obj, parent);
+         * ac.util.inherit(obj, parent);
          */
         'inherits': function (obj, superConstructor) {
 
             if (obj === undefined || typeof obj !== 'function') {
-                throw new Error('"ch.util.inherits(obj, superConstructor)": The "obj" parameter is required and must be a constructor function.');
+                throw new Error('"ac.util.inherits(obj, superConstructor)": The "obj" parameter is required and must be a constructor function.');
             }
 
             if (superConstructor === undefined || typeof superConstructor !== 'function') {
-                throw new Error('"ch.util.inherits(obj, superConstructor)": The "superConstructor" parameter is required and must be a constructor function.');
+                throw new Error('"ac.util.inherits(obj, superConstructor)": The "superConstructor" parameter is required and must be a constructor function.');
             }
 
             var child = obj.prototype || {};
@@ -357,7 +357,7 @@ ch.util = {
          * @param {Event} event The event ot be prevented.
          * @returns {Object}
          * @example
-         * ch.util.prevent(event);
+         * ac.util.prevent(event);
          */
         prevent: function (event) {
             if (typeof event === 'object') {
@@ -369,7 +369,7 @@ ch.util = {
          * Get the current vertical and horizontal positions of the scroll bar.
          * @returns {Object}
          * @example
-         * ch.util.getScroll();
+         * ac.util.getScroll();
          */
         'getScroll': function () {
             return {
@@ -383,7 +383,7 @@ ch.util = {
          * @param {HTMLElement} el A given HTMLElement.
          * @returns {Object}
          * @example
-         * ch.util.getOuterDimensions(el);
+         * ac.util.getOuterDimensions(el);
          */
         'getOuterDimensions': function (el) {
             var obj = el.getBoundingClientRect();
@@ -399,19 +399,19 @@ ch.util = {
          * @param {HTMLElement} el A given HTMLElement.
          * @returns {Object}
          * @example
-         * ch.util.getOffset(el);
+         * ac.util.getOffset(el);
          */
         'getOffset': function (el) {
 
             var rect = el.getBoundingClientRect(),
-                fixedParent = ch.util.getPositionedParent(el, 'fixed'),
-                scroll = ch.util.getScroll(),
+                fixedParent = ac.util.getPositionedParent(el, 'fixed'),
+                scroll = ac.util.getScroll(),
                 offset = {
                     'left': rect.left,
                     'top': rect.top
                 };
 
-            if (ch.util.getStyles(el, 'position') !== 'fixed' && fixedParent === null) {
+            if (ac.util.getStyles(el, 'position') !== 'fixed' && fixedParent === null) {
                 offset.left += scroll.left;
                 offset.top += scroll.top;
             }
@@ -425,7 +425,7 @@ ch.util = {
          * @param {String} position A given position (static, relative, fixed or absolute).
          * @returns {HTMLElement}
          * @example
-         * ch.util.getPositionedParent(el, 'fixed');
+         * ac.util.getPositionedParent(el, 'fixed');
          */
         'getPositionedParent': function (el, position) {
             var currentParent = el.offsetParent,
@@ -438,7 +438,7 @@ ch.util = {
                     break;
                 }
 
-                if (ch.util.getStyles(currentParent, 'position') !== position) {
+                if (ac.util.getStyles(currentParent, 'position') !== position) {
                     currentParent = currentParent.offsetParent;
                 } else {
                     parent = currentParent;
@@ -452,11 +452,11 @@ ch.util = {
         /**
          * Reference to the vendor prefix of the current browser.
          * @constant
-         * @memberof ch.util
+         * @memberof ac.util
          * @type {String}
          * @link http://lea.verou.me/2009/02/find-the-vendor-prefix-of-the-current-browser
          * @example
-         * ch.util.VENDOR_PREFIX === 'webkit';
+         * ac.util.VENDOR_PREFIX === 'webkit';
          */
         'VENDOR_PREFIX': (function () {
 
@@ -483,18 +483,18 @@ ch.util = {
          * zIndex values.
          * @type {Number}
          * @example
-         * ch.util.zIndex += 1;
+         * ac.util.zIndex += 1;
          */
         'zIndex': 1000
     };
-ch.support = {
+ac.support = {
 
         /**
          * Verify that CSS Transitions are supported (or any of its browser-specific implementations).
          * @type {Boolean}
          * @link http://gist.github.com/373874
          * @example
-         * if (ch.support.transition) {
+         * if (ac.support.transition) {
          *     // Some code here!
          * }
          */
@@ -504,7 +504,7 @@ ch.support = {
          * Checks if the $ library has fx methods.
          * @type {Boolean}
          * @example
-         * if (ch.support.fx) {
+         * if (ac.support.fx) {
          *     // Some code here!
          * }
          */
@@ -514,13 +514,13 @@ ch.support = {
          * Checks if the User Agent support touch events.
          * @type {Boolean}
          * @example
-         * if (ch.support.touch) {
+         * if (ac.support.touch) {
          *     // Some code here!
          * }
          */
         'touch': 'createTouch' in document
     };
-ch.onlayoutchange = 'layoutchange';
+ac.onlayoutchange = 'layoutchange';
 
     /**
      * Equivalent to 'resize'.
@@ -528,7 +528,7 @@ ch.onlayoutchange = 'layoutchange';
      * @memberof ch
      * @type {String}
      */
-    ch.onresize = 'resize';
+    ac.onresize = 'resize';
 
     /**
      * Equivalent to 'scroll'.
@@ -536,7 +536,7 @@ ch.onlayoutchange = 'layoutchange';
      * @memberof ch
      * @type {String}
      */
-    ch.onscroll = 'scroll';
+    ac.onscroll = 'scroll';
 
     /**
      * Equivalent to 'touchstart' or 'mousedown', depending on device capabilities.
@@ -545,7 +545,7 @@ ch.onlayoutchange = 'layoutchange';
      * @type {String}
      * @link http://www.w3.org/TR/2013/WD-pointerevents-20130115/#dfn-pointerdown | Pointer Events W3C Working Draft
      */
-    ch.onpointerdown = (ch.support.touch) ? 'touchstart' : 'mousedown';
+    ac.onpointerdown = (ac.support.touch) ? 'touchstart' : 'mousedown';
 
     /**
      * Equivalent to 'touchend' or 'mouseup', depending on device capabilities.
@@ -554,7 +554,7 @@ ch.onlayoutchange = 'layoutchange';
      * @type {String}
      * @link http://www.w3.org/TR/2013/WD-pointerevents-20130115/#dfn-pointerup | Pointer Events W3C Working Draft
      */
-    ch.onpointerup = (ch.support.touch) ? 'touchend' : 'mouseup';
+    ac.onpointerup = (ac.support.touch) ? 'touchend' : 'mouseup';
 
     /**
      * Equivalent to 'touchmove' or 'mousemove', depending on device capabilities.
@@ -563,7 +563,7 @@ ch.onlayoutchange = 'layoutchange';
      * @type {String}
      * @link http://www.w3.org/TR/2013/WD-pointerevents-20130115/#dfn-pointermove | Pointer Events W3C Working Draft
      */
-    ch.onpointermove = (ch.support.touch) ? 'touchmove' : 'mousemove';
+    ac.onpointermove = (ac.support.touch) ? 'touchmove' : 'mousemove';
 
     /**
      * Equivalent to 'touchend' or 'click', depending on device capabilities.
@@ -572,7 +572,7 @@ ch.onlayoutchange = 'layoutchange';
      * @type {String}
      * @link http://www.w3.org/TR/2013/WD-pointerevents-20130115/#list-of-pointer-events | Pointer Events W3C Working Draft
      */
-    ch.onpointertap = (ch.support.touch) ? 'touchend' : 'click';
+    ac.onpointertap = (ac.support.touch) ? 'touchend' : 'click';
 
     /**
      * Equivalent to 'touchstart' or 'mouseenter', depending on device capabilities.
@@ -581,7 +581,7 @@ ch.onlayoutchange = 'layoutchange';
      * @type {String}
      * @link http://www.w3.org/TR/2013/WD-pointerevents-20130115/#dfn-pointerenter | Pointer Events W3C Working Draft
      */
-    ch.onpointerenter = (ch.support.touch) ? 'touchstart' : 'mouseenter';
+    ac.onpointerenter = (ac.support.touch) ? 'touchstart' : 'mouseenter';
 
     /**
      * Equivalent to 'touchend' or 'mouseleave', depending on device capabilities.
@@ -590,7 +590,7 @@ ch.onlayoutchange = 'layoutchange';
      * @type {String}
      * @link http://www.w3.org/TR/2013/WD-pointerevents-20130115/#dfn-pointerleave | Pointer Events W3C Working Draft
      */
-    ch.onpointerleave = (ch.support.touch) ? 'touchend' : 'mouseleave';
+    ac.onpointerleave = (ac.support.touch) ? 'touchend' : 'mouseleave';
 
     /**
      * Alphanumeric keys event.
@@ -598,8 +598,8 @@ ch.onlayoutchange = 'layoutchange';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeyinput = ('oninput' in document.createElement('input')) ? 'input' : 'keydown';
-ch.onkeytab = 'tab';
+    ac.onkeyinput = ('oninput' in document.createElement('input')) ? 'input' : 'keydown';
+ac.onkeytab = 'tab';
 
     /**
      * Enter key event.
@@ -607,7 +607,7 @@ ch.onkeytab = 'tab';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeyenter = 'enter';
+    ac.onkeyenter = 'enter';
 
     /**
      * Esc key event.
@@ -615,7 +615,7 @@ ch.onkeytab = 'tab';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeyesc = 'esc';
+    ac.onkeyesc = 'esc';
 
     /**
      * Left arrow key event.
@@ -623,7 +623,7 @@ ch.onkeytab = 'tab';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeyleftarrow = 'left_arrow';
+    ac.onkeyleftarrow = 'left_arrow';
 
     /**
      * Up arrow key event.
@@ -631,7 +631,7 @@ ch.onkeytab = 'tab';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeyuparrow = 'up_arrow';
+    ac.onkeyuparrow = 'up_arrow';
 
     /**
      * Rigth arrow key event.
@@ -639,7 +639,7 @@ ch.onkeytab = 'tab';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeyrightarrow = 'right_arrow';
+    ac.onkeyrightarrow = 'right_arrow';
 
     /**
      * Down arrow key event.
@@ -647,7 +647,7 @@ ch.onkeytab = 'tab';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeydownarrow = 'down_arrow';
+    ac.onkeydownarrow = 'down_arrow';
 
     /**
      * Backspace key event.
@@ -655,8 +655,8 @@ ch.onkeytab = 'tab';
      * @memberof ch
      * @type {String}
      */
-    ch.onkeybackspace = 'backspace';
-ch.factory = function (Klass, fn) {
+    ac.onkeybackspace = 'backspace';
+ac.factory = function (Klass, fn) {
         /**
          * Identification of the constructor, in lowercases.
          * @type {String}
@@ -673,13 +673,13 @@ ch.factory = function (Klass, fn) {
          * The class constructor exposed directly into the "ch" namespace.
          * @exampleDescription Creating a component instance by specifying a query selector and a configuration object.
          * @example
-         * ch.Component($('#example'), {
+         * ac.Component($('#example'), {
          *     'key': 'value'
          * });
          */
         // Uses the function.name property (non-standard) on the newest browsers OR
         // uppercases the first letter from the identification name of the constructor
-        ch[(name.charAt(0).toUpperCase() + name.substr(1))] = Klass;
+        ac[(name.charAt(0).toUpperCase() + name.substr(1))] = Klass;
 
         /**
          * The class constructor exposed into the "$" namespace.
@@ -750,10 +750,10 @@ ch.factory = function (Klass, fn) {
     // Remove the no-js classname from html tag
     $html.removeClass('no-js');
 
-    // Exposse private $ (jQuery) into ch.$
-    ch.$ = window.$;
-	ch.version = '1.1.1';
-	window.ch = ch;
+    // Exposse private $ (jQuery) into ac.$
+    ac.$ = window.$;
+	ac.version = '1.1.1';
+	window.ac = ac;
 }(this, this.$));
 (function (ch) {
     'use strict';
@@ -765,16 +765,16 @@ ch.factory = function (Klass, fn) {
      * @returns {Object} Returns a new instance of EventEmitter.
      * @example
      * // Create a new instance of EventEmitter.
-     * var emitter = new ch.EventEmitter();
+     * var emitter = new ac.EventEmitter();
      * @example
      * // Inheriting from EventEmitter.
-     * ch.util.inherits(Component, ch.EventEmitter);
+     * ac.util.inherits(Component, ac.EventEmitter);
      */
     function EventEmitter() {}
 
     /**
      * Adds a listener to the collection for a specified event.
-     * @memberof! ch.EventEmitter.prototype
+     * @memberof! ac.EventEmitter.prototype
      * @function
      * @param {String} event The event name to subscribe.
      * @param {Function} listener Listener function.
@@ -787,11 +787,11 @@ ch.factory = function (Klass, fn) {
     EventEmitter.prototype.on = function (event, listener, once) {
 
         if (event === undefined) {
-            throw new Error('ch.EventEmitter - "on(event, listener)": It should receive an event.');
+            throw new Error('ac.EventEmitter - "on(event, listener)": It should receive an event.');
         }
 
         if (listener === undefined) {
-            throw new Error('ch.EventEmitter - "on(event, listener)": It should receive a listener function.');
+            throw new Error('ac.EventEmitter - "on(event, listener)": It should receive a listener function.');
         }
 
         this._eventsCollection = this._eventsCollection || {};
@@ -809,7 +809,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Adds a listener to the collection for a specified event to will execute only once.
-     * @memberof! ch.EventEmitter.prototype
+     * @memberof! ac.EventEmitter.prototype
      * @function
      * @param {String} event Event name.
      * @param {Function} listener Listener function.
@@ -827,7 +827,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Removes a listener from the collection for a specified event.
-     * @memberof! ch.EventEmitter.prototype
+     * @memberof! ac.EventEmitter.prototype
      * @function
      * @param {String} event Event name.
      * @param {Function} listener Listener function.
@@ -865,7 +865,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Returns all listeners from the collection for a specified event.
-     * @memberof! ch.EventEmitter.prototype
+     * @memberof! ac.EventEmitter.prototype
      * @function
      * @param {String} event The event name.
      * @returns {Array}
@@ -875,7 +875,7 @@ ch.factory = function (Klass, fn) {
      */
     EventEmitter.prototype.getListeners = function (event) {
         if (event === undefined) {
-            throw new Error('ch.EventEmitter - "getListeners(event)": It should receive an event.');
+            throw new Error('ac.EventEmitter - "getListeners(event)": It should receive an event.');
         }
 
         return this._eventsCollection[event];
@@ -883,7 +883,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Execute each item in the listener collection in order with the specified data.
-     * @memberof! ch.EventEmitter.prototype
+     * @memberof! ac.EventEmitter.prototype
      * @function
      * @param {String} event The name of the event you want to emit.
      * @param {...Object} var_args Data to pass to the listeners.
@@ -901,7 +901,7 @@ ch.factory = function (Klass, fn) {
             len;
 
         if (event === undefined) {
-            throw new Error('ch.EventEmitter - "emit(event)": It should receive an event.');
+            throw new Error('ac.EventEmitter - "emit(event)": It should receive an event.');
         }
 
         if (typeof event === 'string') {
@@ -931,7 +931,7 @@ ch.factory = function (Klass, fn) {
     };
 
     // Expose EventEmitter
-    ch.EventEmitter = EventEmitter;
+    ac.EventEmitter = EventEmitter;
 
 }(this.ch));
 (function ($, ch) {
@@ -969,20 +969,20 @@ ch.factory = function (Klass, fn) {
 
             /**
              * Event emitted when the content change.
-             * @event ch.Content#contentchange
+             * @event ac.Content#contentchange
              * @private
              */
             that.emit('_contentchange');
 
             /**
              * Event emitted if the content is loaded successfully.
-             * @event ch.Content#contentdone
+             * @event ac.Content#contentdone
              * @ignore
              */
 
             /**
              * Event emitted when the content is loading.
-             * @event ch.Content#contentwaiting
+             * @event ac.Content#contentwaiting
              * @example
              * // Subscribe to "contentwaiting" event.
              * component.on('contentwaiting', function (event) {
@@ -992,7 +992,7 @@ ch.factory = function (Klass, fn) {
 
             /**
              * Event emitted if the content isn't loaded successfully.
-             * @event ch.Content#contenterror
+             * @event ac.Content#contenterror
              * @example
              * // Subscribe to "contenterror" event.
              * component.on('contenterror', function (event) {
@@ -1015,14 +1015,14 @@ ch.factory = function (Klass, fn) {
 
             /**
              * Event emitted when the content change.
-             * @event ch.Content#contentchange
+             * @event ac.Content#contentchange
              * @private
              */
             that.emit('_contentchange');
 
             /**
              * Event emitted if the content is loaded successfully.
-             * @event ch.Content#contentdone
+             * @event ac.Content#contentdone
              * @example
              * // Subscribe to "contentdone" event.
              * component.on('contentdone', function (event) {
@@ -1042,7 +1042,7 @@ ch.factory = function (Klass, fn) {
                 'method': 'GET',
                 'params': '',
                 'async': true,
-                'waiting': '<div class="ch-loading-large"></div>'
+                'waiting': '<div class="ac-loading-large"></div>'
             }, options || defaults);
 
             if (options.cache !== undefined) {
@@ -1093,7 +1093,7 @@ ch.factory = function (Klass, fn) {
         /**
          * Allows to manage the components content.
          * @function
-         * @memberof! ch.Content#
+         * @memberof! ac.Content#
          * @param {(String | jQuerySelector | ZeptoSelector)} content The content that will be used by a component.
          * @param {Object} [options] A custom options to be used with content loaded by ajax.
          * @param {String} [options.method] The type of request ("POST" or "GET") to load content by ajax. Default: "GET".
@@ -1126,15 +1126,15 @@ ch.factory = function (Klass, fn) {
 
             if (typeof content === 'string') {
                 // Case 1: AJAX call
-                if (ch.util.isUrl(content)) {
+                if (ac.util.isUrl(content)) {
                     getAsyncContent(content, options);
                 // Case 2: Plain text
                 } else {
                     setContent(content);
                 }
             // Case 3: jQuery/Zepto/HTML Element
-            } else if (ch.util.is$(content) || content.nodeType !== undefined) {
-                setContent($(content).remove(null, true).removeClass('ch-hide'));
+            } else if (ac.util.is$(content) || content.nodeType !== undefined) {
+                setContent($(content).remove(null, true).removeClass('ac-hide'));
             }
 
             return that;
@@ -1153,9 +1153,9 @@ ch.factory = function (Klass, fn) {
         });
     }
 
-    ch.Content = Content;
+    ac.Content = Content;
 
-}(this.ch.$, this.ch));
+}(this.ac.$, this.ch));
 (function (ch) {
     'use strict';
 
@@ -1180,16 +1180,16 @@ ch.factory = function (Klass, fn) {
          * @private
          */
         var that = this,
-            triggerClass = 'ch-' + this.name + '-trigger-on',
+            triggerClass = 'ac-' + this.name + '-trigger-on',
             fx = this._options.fx,
-            useEffects = (ch.support.fx && fx !== 'none' && fx !== false);
+            useEffects = (ac.support.fx && fx !== 'none' && fx !== false);
 
         function showCallback() {
-            that.$container.removeClass('ch-hide').attr('aria-hidden', 'false');
+            that.$container.removeClass('ac-hide').attr('aria-hidden', 'false');
 
             /**
              * Event emitted when the componentg is shown.
-             * @event ch.Collapsible#show
+             * @event ac.Collapsible#show
              * @example
              * // Subscribe to "show" event.
              * collapsible.on('show', function () {
@@ -1200,11 +1200,11 @@ ch.factory = function (Klass, fn) {
         }
 
         function hideCallback() {
-            that.$container.addClass('ch-hide').attr('aria-hidden', 'true');
+            that.$container.addClass('ac-hide').attr('aria-hidden', 'true');
 
             /**
              * Event emitted when the component is hidden.
-             * @event ch.Collapsible#hide
+             * @event ac.Collapsible#hide
              * @example
              * // Subscribe to "hide" event.
              * collapsible.on('hide', function () {
@@ -1231,7 +1231,7 @@ ch.factory = function (Klass, fn) {
 
             /**
              * Event emitted before the component is shown.
-             * @event ch.Collapsible#beforeshow
+             * @event ac.Collapsible#beforeshow
              * @example
              * // Subscribe to "beforeshow" event.
              * collapsible.on('beforeshow', function () {
@@ -1267,7 +1267,7 @@ ch.factory = function (Klass, fn) {
 
             /**
              * Event emitted before the component is hidden.
-             * @event ch.Collapsible#beforehide
+             * @event ac.Collapsible#beforehide
              * @example
              * // Subscribe to "beforehide" event.
              * collapsible.on('beforehide', function () {
@@ -1305,7 +1305,7 @@ ch.factory = function (Klass, fn) {
         this.on('disable', this.hide);
     }
 
-    ch.Collapsible = Collapsible;
+    ac.Collapsible = Collapsible;
 
 }(this.ch));
 (function (window, $, ch) {
@@ -1325,7 +1325,7 @@ ch.factory = function (Klass, fn) {
 
     function update() {
 
-        var eve = (resized ? ch.onresize : ch.onscroll);
+        var eve = (resized ? ac.onresize : ac.onscroll);
 
         // Refresh viewport
         this.refresh();
@@ -1336,18 +1336,18 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Event emitted when the dimensions of the viewport changes.
-         * @event ch.viewport#resize
+         * @event ac.viewport#resize
          * @example
-         * ch.viewport.on('resize', function () {
+         * ac.viewport.on('resize', function () {
          *     // Some code here!
          * });
          */
 
         /**
          * Event emitted when the viewport is scrolled.
-         * @event ch.viewport#scroll
+         * @event ac.viewport#scroll
          * @example
-         * ch.viewport.on('scroll', function () {
+         * ac.viewport.on('scroll', function () {
          *     // Some code here!
          * });
          */
@@ -1360,19 +1360,19 @@ ch.factory = function (Klass, fn) {
      * The Viewport is a component to ease viewport management. You can get the dimensions of the viewport and beyond, which can be quite helpful to perform some checks with JavaScript.
      * @memberof ch
      * @constructor
-     * @augments ch.EventEmitter
-     * @requires ch.util
+     * @augments ac.EventEmitter
+     * @requires ac.util
      * @returns {viewport} Returns a new instance of Viewport.
      */
     function Viewport() {
         this._init();
     }
 
-    ch.util.inherits(Viewport, ch.EventEmitter);
+    ac.util.inherits(Viewport, ac.EventEmitter);
 
     /**
      * Initialize a new instance of Viewport.
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @private
      * @returns {viewport}
@@ -1388,7 +1388,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Element representing the visible area.
-         * @memberof! ch.viewport#element
+         * @memberof! ac.viewport#element
          * @type {(jQuerySelector | ZeptoSelector)}
          */
         this.$el = $window;
@@ -1396,7 +1396,7 @@ ch.factory = function (Klass, fn) {
         this.refresh();
 
         $window
-            .on(ch.onresize + '.viewport', function () {
+            .on(ac.onresize + '.viewport', function () {
                 // No changing, exit
                 if (!resized) {
                     resized = true;
@@ -1409,7 +1409,7 @@ ch.factory = function (Klass, fn) {
                     });
                 }
             })
-            .on(ch.onscroll + '.viewport', function () {
+            .on(ac.onscroll + '.viewport', function () {
                 // No changing, exit
                 if (!scrolled) {
                     scrolled = true;
@@ -1426,54 +1426,54 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Calculates/updates the client rects of viewport (in pixels).
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @returns {viewport}
      * @example
      * // Update the client rects of the viewport.
-     * ch.viewport.calculateClientRect();
+     * ac.viewport.calculateClientRect();
      */
     Viewport.prototype.calculateClientRect = function () {
         /**
          * The current top client rect of the viewport (in pixels).
          * @public
-         * @name ch.Viewport#top
+         * @name ac.Viewport#top
          * @type {Number}
          * @example
          * // Checks if the top client rect of the viewport is equal to 0.
-         * (ch.viewport.top === 0) ? 'Yes': 'No';
+         * (ac.viewport.top === 0) ? 'Yes': 'No';
          */
 
          /**
          * The current left client rect of the viewport (in pixels).
          * @public
-         * @name ch.Viewport#left
+         * @name ac.Viewport#left
          * @type {Number}
          * @example
          * // Checks if the left client rect of the viewport is equal to 0.
-         * (ch.viewport.left === 0) ? 'Yes': 'No';
+         * (ac.viewport.left === 0) ? 'Yes': 'No';
          */
         this.top = this.left = 0;
 
         /**
          * The current bottom client rect of the viewport (in pixels).
          * @public
-         * @name ch.Viewport#bottom
+         * @name ac.Viewport#bottom
          * @type {Number}
          * @example
          * // Checks if the bottom client rect of the viewport is equal to a number.
-         * (ch.viewport.bottom === 900) ? 'Yes': 'No';
+         * (ac.viewport.bottom === 900) ? 'Yes': 'No';
          */
         this.bottom = this.$el.height();
 
         /**
          * The current right client rect of the viewport (in pixels).
          * @public
-         * @name ch.Viewport#right
+         * @name ac.Viewport#right
          * @type {Number}
          * @example
          * // Checks if the right client rect of the viewport is equal to a number.
-         * (ch.viewport.bottom === 1200) ? 'Yes': 'No';
+         * (ac.viewport.bottom === 1200) ? 'Yes': 'No';
          */
         this.right = this.$el.width();
 
@@ -1482,12 +1482,12 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Calculates/updates the dimensions (width and height) of the viewport (in pixels).
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @returns {viewport}
      * @example
      * // Update the dimensions values of the viewport.
-     * ch.viewport.calculateDimensions();
+     * ac.viewport.calculateDimensions();
      */
     Viewport.prototype.calculateDimensions = function () {
         this.calculateClientRect();
@@ -1495,22 +1495,22 @@ ch.factory = function (Klass, fn) {
         /**
          * The current height of the viewport (in pixels).
          * @public
-         * @name ch.Viewport#height
+         * @name ac.Viewport#height
          * @type Number
          * @example
          * // Checks if the height of the viewport is equal to a number.
-         * (ch.viewport.height === 700) ? 'Yes': 'No';
+         * (ac.viewport.height === 700) ? 'Yes': 'No';
          */
         this.height = this.bottom;
 
         /**
          * The current width of the viewport (in pixels).
          * @public
-         * @name ch.Viewport#width
+         * @name ac.Viewport#width
          * @type Number
          * @example
          * // Checks if the height of the viewport is equal to a number.
-         * (ch.viewport.width === 1200) ? 'Yes': 'No';
+         * (ac.viewport.width === 1200) ? 'Yes': 'No';
          */
         this.width = this.right;
 
@@ -1519,12 +1519,12 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Calculates/updates the viewport position.
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @returns {viewport}
      * @example
      * // Update the offest values of the viewport.
-     * ch.viewport.calculateOffset();
+     * ac.viewport.calculateOffset();
      */
     Viewport.prototype.calculateOffset = function () {
 
@@ -1533,45 +1533,45 @@ ch.factory = function (Klass, fn) {
          * @type {Object}
          * @private
          */
-        var scroll = ch.util.getScroll();
+        var scroll = ac.util.getScroll();
 
         /**
          * The offset top of the viewport.
-         * @memberof! ch.Viewport#offsetTop
+         * @memberof! ac.Viewport#offsetTop
          * @type {Number}
          * @example
          * // Checks if the offset top of the viewport is equal to a number.
-         * (ch.viewport.offsetTop === 200) ? 'Yes': 'No';
+         * (ac.viewport.offsetTop === 200) ? 'Yes': 'No';
          */
         this.offsetTop = scroll.top;
 
         /**
          * The offset left of the viewport.
-         * @memberof! ch.Viewport#offsetLeft
+         * @memberof! ac.Viewport#offsetLeft
          * @type {Number}
          * @example
          * // Checks if the offset left of the viewport is equal to a number.
-         * (ch.viewport.offsetLeft === 200) ? 'Yes': 'No';
+         * (ac.viewport.offsetLeft === 200) ? 'Yes': 'No';
          */
         this.offsetLeft = scroll.left;
 
         /**
          * The offset right of the viewport.
-         * @memberof! ch.Viewport#offsetRight
+         * @memberof! ac.Viewport#offsetRight
          * @type {Number}
          * @example
          * // Checks if the offset right of the viewport is equal to a number.
-         * (ch.viewport.offsetRight === 200) ? 'Yes': 'No';
+         * (ac.viewport.offsetRight === 200) ? 'Yes': 'No';
          */
         this.offsetRight = this.left + this.width;
 
         /**
          * The offset bottom of the viewport.
-         * @memberof! ch.Viewport#offsetBottom
+         * @memberof! ac.Viewport#offsetBottom
          * @type {Number}
          * @example
          * // Checks if the offset bottom of the viewport is equal to a number.
-         * (ch.viewport.offsetBottom === 200) ? 'Yes': 'No';
+         * (ac.viewport.offsetBottom === 200) ? 'Yes': 'No';
          */
         this.offsetBottom = this.offsetTop + this.height;
 
@@ -1580,20 +1580,20 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Rertuns/updates the viewport orientation: landscape or portrait.
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @returns {viewport}
      * @example
      * // Update the dimensions values of the viewport.
-     * ch.viewport.calculateDimensions();
+     * ac.viewport.calculateDimensions();
      */
     Viewport.prototype.calculateOrientation = function () {
         /** The viewport orientation: landscape or portrait.
-         * @memberof! ch.Viewport#orientation
+         * @memberof! ac.Viewport#orientation
          * @type {String}
          * @example
          * // Checks if the orientation is "landscape".
-         * (ch.viewport.orientation === 'landscape') ? 'Yes': 'No';
+         * (ac.viewport.orientation === 'landscape') ? 'Yes': 'No';
          */
         this.orientation = (Math.abs(this.$el.orientation) === 90) ? 'landscape' : 'portrait';
 
@@ -1602,13 +1602,13 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Calculates if an element is completely located in the viewport.
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @returns {Boolean}
      * @params {HTMLElement} el A given HMTLElement.
      * @example
      * // Checks if an element is in the viewport.
-     * ch.viewport.inViewport(HTMLElement) ? 'Yes': 'No';
+     * ac.viewport.inViewport(HTMLElement) ? 'Yes': 'No';
      */
     Viewport.prototype.inViewport = function (el) {
         var r = el.getBoundingClientRect();
@@ -1618,13 +1618,13 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Calculates if an element is visible in the viewport.
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @returns {Boolean}
      * @params {HTMLElement} el A given HTMLElement.
      * @example
      * // Checks if an element is visible.
-     * ch.viewport.isVisisble(HTMLElement) ? 'Yes': 'No';
+     * ac.viewport.isVisisble(HTMLElement) ? 'Yes': 'No';
      */
     Viewport.prototype.isVisible = function (el) {
         var r = el.getBoundingClientRect();
@@ -1634,12 +1634,12 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Upadtes the viewport dimension, viewport positions and orietation.
-     * @memberof! ch.Viewport.prototype
+     * @memberof! ac.Viewport.prototype
      * @function
      * @returns {viewport}
      * @example
      * // Refreshs the viewport.
-     * ch.viewport.refresh();
+     * ac.viewport.refresh();
      */
     Viewport.prototype.refresh = function () {
         this.calculateDimensions();
@@ -1650,9 +1650,9 @@ ch.factory = function (Klass, fn) {
     };
 
     // Creates an instance of the Viewport into ch namespace.
-    ch.viewport = new Viewport();
+    ac.viewport = new Viewport();
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 (function (window, $, ch) {
     'use strict';
 
@@ -1662,19 +1662,19 @@ ch.factory = function (Klass, fn) {
      * @constructor
      * @param {Object} options Configuration object.
      * @param {(jQuerySelector | ZeptoSelector)} options.target Reference to the element to be positioned.
-     * @param {(jQuerySelector | ZeptoSelector)} [options.reference] It's a reference to position and size of element that will be considered to carry out the position. If it isn't defined through configuration, it will be the ch.viewport.
+     * @param {(jQuerySelector | ZeptoSelector)} [options.reference] It's a reference to position and size of element that will be considered to carry out the position. If it isn't defined through configuration, it will be the ac.viewport.
      * @param {String} [options.side] The side option where the target element will be positioned. You must use: "left", "right", "top", "bottom" or "center". Default: "center".
      * @param {String} [options.align] The align options where the target element will be positioned. You must use: "left", "right", "top", "bottom" or "center". Default: "center".
      * @param {Number} [options.offsetX] Distance to displace the target horizontally. Default: 0.
      * @param {Number} [options.offsetY] Distance to displace the target vertically. Default: 0.
      * @param {String} [options.position] Thethe type of positioning used. You must use: "absolute" or "fixed". Default: "fixed".
-     * @requires ch.util
-     * @requires ch.Viewport
+     * @requires ac.util
+     * @requires ac.Viewport
      * @returns {positioner} Returns a new instance of Positioner.
      * @example
      * // Instance the Positioner It requires a little configuration.
      * // The default behavior place an element center into the Viewport.
-     * var positioned = new ch.Positioner({
+     * var positioned = new ac.Positioner({
      *     'target': $(selector),
      *     'reference': $(selector),
      *     'side': 'top',
@@ -1685,7 +1685,7 @@ ch.factory = function (Klass, fn) {
      * @example
      * // offsetX: The Positioner could be configurated with an offsetX.
      * // This example show an element displaced horizontally by 10px of defined position.
-     * var positioned = new ch.Positioner({
+     * var positioned = new ac.Positioner({
      *     'target': $(selector),
      *     'reference': $(selector),
      *     'side': 'top',
@@ -1695,7 +1695,7 @@ ch.factory = function (Klass, fn) {
      * @example
      * // offsetY: The Positioner could be configurated with an offsetY.
      * // This example show an element displaced vertically by 10px of defined position.
-     * var positioned = new ch.Positioner({
+     * var positioned = new ac.Positioner({
      *     'target': $(selector),
      *     'reference': $(selector),
      *     'side': 'top',
@@ -1704,7 +1704,7 @@ ch.factory = function (Klass, fn) {
      * });
      * @example
      * // positioned: The positioner could be configured to work with fixed or absolute position value.
-     * var positioned = new ch.Positioner({
+     * var positioned = new ac.Positioner({
      *     'target': $(selector),
      *     'reference': $(selector),
      *     'position': 'fixed'
@@ -1713,11 +1713,11 @@ ch.factory = function (Klass, fn) {
     function Positioner(options) {
 
         if (options === undefined) {
-            throw new window.Error('ch.Positioner: Expected options defined.');
+            throw new window.Error('ac.Positioner: Expected options defined.');
         }
 
         // Creates its private options
-        this._options = ch.util.clone(this._defaults);
+        this._options = ac.util.clone(this._defaults);
 
         // Init
         this._configure(options);
@@ -1725,14 +1725,14 @@ ch.factory = function (Klass, fn) {
 
     /**
      * The name of the component.
-     * @memberof! ch.Positioner.prototype
+     * @memberof! ac.Positioner.prototype
      * @type {String}
      */
     Positioner.prototype.name = 'positioner';
 
     /**
      * Returns a reference to the Constructor function that created the instance's prototype.
-     * @memberof! ch.Positioner.prototype
+     * @memberof! ac.Positioner.prototype
      * @function
      * @private
      */
@@ -1748,13 +1748,13 @@ ch.factory = function (Klass, fn) {
         'offsetY': 0,
         'side': 'center',
         'align': 'center',
-        'reference': ch.viewport,
+        'reference': ac.viewport,
         'position': 'fixed'
     };
 
     /**
      * Configures the positioner instance with a given options.
-     * @memberof! ch.Positioner.prototype
+     * @memberof! ac.Positioner.prototype
      * @function
      * @private
      * @returns {positioner}
@@ -1789,7 +1789,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Updates the current position with a given options
-     * @memberof! ch.Positioner.prototype
+     * @memberof! ac.Positioner.prototype
      * @function
      * @returns {positioner}
      * @params {Object} options A configuration object.
@@ -1809,7 +1809,7 @@ ch.factory = function (Klass, fn) {
             this._configure(options);
         }
 
-        if (this._reference !== ch.viewport) {
+        if (this._reference !== ac.viewport) {
             this._calculateReference();
         }
 
@@ -1822,8 +1822,8 @@ ch.factory = function (Klass, fn) {
     };
 
     /**
-     * Calculates the reference (element or ch.viewport) of the position.
-     * @memberof! ch.Positioner.prototype
+     * Calculates the reference (element or ac.viewport) of the position.
+     * @memberof! ac.Positioner.prototype
      * @function
      * @private
      * @returns {positioner}
@@ -1836,14 +1836,14 @@ ch.factory = function (Klass, fn) {
         reference.setAttribute('data-side', this._options.side);
         reference.setAttribute('data-align', this._options.align);
 
-        this._reference = ch.util.getOuterDimensions(reference);
+        this._reference = ac.util.getOuterDimensions(reference);
 
         if (reference.offsetParent === this.$target[0].offsetParent) {
             this._reference.left = reference.offsetLeft;
             this._reference.top = reference.offsetTop;
 
         } else {
-            offset = ch.util.getOffset(reference);
+            offset = ac.util.getOffset(reference);
             this._reference.left = offset.left;
             this._reference.top = offset.top;
         }
@@ -1853,7 +1853,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Calculates the positioned element.
-     * @memberof! ch.Positioner.prototype
+     * @memberof! ac.Positioner.prototype
      * @function
      * @private
      * @returns {positioner}
@@ -1864,14 +1864,14 @@ ch.factory = function (Klass, fn) {
         target.setAttribute('data-side', this._options.side);
         target.setAttribute('data-align', this._options.align);
 
-        this._target = ch.util.getOuterDimensions(target);
+        this._target = ac.util.getOuterDimensions(target);
 
         return this;
     };
 
     /**
      * Calculates the points.
-     * @memberof! ch.Positioner.prototype
+     * @memberof! ac.Positioner.prototype
      * @function
      * @private
      * @returns {positioner}
@@ -1929,22 +1929,22 @@ ch.factory = function (Klass, fn) {
         return this;
     };
 
-    ch.Positioner = Positioner;
+    ac.Positioner = Positioner;
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 (function (window, $, ch) {
     'use strict';
 
     var $document = $(window.document),
         codeMap = {
-            '8': ch.onkeybackspace,
-            '9': ch.onkeytab,
-            '13': ch.onkeyenter,
-            '27': ch.onkeyesc,
-            '37': ch.onkeyleftarrow,
-            '38': ch.onkeyuparrow,
-            '39': ch.onkeyrightarrow,
-            '40': ch.onkeydownarrow
+            '8': ac.onkeybackspace,
+            '9': ac.onkeytab,
+            '13': ac.onkeyenter,
+            '27': ac.onkeyesc,
+            '37': ac.onkeyleftarrow,
+            '38': ac.onkeyuparrow,
+            '39': ac.onkeyrightarrow,
+            '40': ac.onkeydownarrow
         },
 
         /**
@@ -1962,13 +1962,13 @@ ch.factory = function (Klass, fn) {
 
             /**
              * Add a callback to a shortcut with given name.
-             * @param {(ch.onkeybackspace | ch.onkeytab | ch.onkeyenter | ch.onkeyesc | ch.onkeyleftarrow | ch.onkeyuparrow | ch.onkeyrightarrow | ch.onkeydownarrow)} shortcut Shortcut to subscribe.
+             * @param {(ac.onkeybackspace | ac.onkeytab | ac.onkeyenter | ac.onkeyesc | ac.onkeyleftarrow | ac.onkeyuparrow | ac.onkeyrightarrow | ac.onkeydownarrow)} shortcut Shortcut to subscribe.
              * @param {String} name A name to add in the collection.
              * @param {Function} callback A given function.
-             * @returns {Object} Retuns the ch.shortcuts.
+             * @returns {Object} Retuns the ac.shortcuts.
              * @example
              * // Add a callback to ESC key with "component" name.
-             * ch.shortcuts.add(ch.onkeyesc, 'component', component.hide);
+             * ac.shortcuts.add(ac.onkeyesc, 'component', component.hide);
              */
             'add': function (shortcut, name, callback) {
 
@@ -1989,12 +1989,12 @@ ch.factory = function (Klass, fn) {
             /**
              * Removes a callback from a shortcut with given name.
              * @param {String} name A name to remove from the collection.
-             * @param {(ch.onkeybackspace | ch.onkeytab | ch.onkeyenter | ch.onkeyesc | ch.onkeyleftarrow | ch.onkeyuparrow | ch.onkeyrightarrow | ch.onkeydownarrow)} [shortcut] Shortcut to unsubscribe.
+             * @param {(ac.onkeybackspace | ac.onkeytab | ac.onkeyenter | ac.onkeyesc | ac.onkeyleftarrow | ac.onkeyuparrow | ac.onkeyrightarrow | ac.onkeydownarrow)} [shortcut] Shortcut to unsubscribe.
              * @param {Function} callback A given function.
-             * @returns {Object} Retuns the ch.shortcuts.
+             * @returns {Object} Retuns the ac.shortcuts.
              * @example
              * // Remove a callback from ESC key with "component" name.
-             * ch.shortcuts.remove(ch.onkeyesc, 'component', component.hide);
+             * ac.shortcuts.remove(ac.onkeyesc, 'component', component.hide);
              */
             'remove': function (name, shortcut, callback) {
                 var evt,
@@ -2033,10 +2033,10 @@ ch.factory = function (Klass, fn) {
             /**
              * Turn on shortcuts associated to a given name.
              * @param {String} name A given name from the collection.
-             * @returns {Object} Retuns the ch.shortcuts.
+             * @returns {Object} Retuns the ac.shortcuts.
              * @example
              * // Turn on shortcuts associated to "component" name.
-             * ch.shortcuts.on('component');
+             * ac.shortcuts.on('component');
              */
             'on': function (name) {
                 var queueLength = this._queue.length,
@@ -2058,10 +2058,10 @@ ch.factory = function (Klass, fn) {
             /**
              * Turn off shortcuts associated to a given name.
              * @param {String} name A given name from the collection.
-             * @returns {Object} Retuns the ch.shortcuts.
+             * @returns {Object} Retuns the ac.shortcuts.
              * @example
              * // Turn off shortcuts associated to "component" name.
-             * ch.shortcuts.off('component');
+             * ac.shortcuts.off('component');
              */
             'off': function (name) {
                 var queueLength = this._queue.length,
@@ -2112,9 +2112,9 @@ ch.factory = function (Klass, fn) {
         }
     });
 
-    ch.shortcuts = shortcuts;
+    ac.shortcuts = shortcuts;
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 
 (function (window, ch) {
     'use strict';
@@ -2150,20 +2150,20 @@ ch.factory = function (Klass, fn) {
             });
     }
 
-    ch.onImagesLoads = onImagesLoads;
+    ac.onImagesLoads = onImagesLoads;
 
 }(this, this.ch));
 (function (window, $, ch) {
     'use strict';
 
-    var util = ch.util,
+    var util = ac.util,
         uid = 0;
 
     /**
      * Base class for all components.
      * @memberof ch
      * @constructor
-     * @augments ch.EventEmitter
+     * @augments ac.EventEmitter
      * @param {(jQuerySelector | ZeptoSelector)} $el jQuery or Zepto Selector.
      * @param {Object} [options] Configuration options.
      * @returns {component} Returns a new instance of Component.
@@ -2182,7 +2182,7 @@ ch.factory = function (Klass, fn) {
         if (this.initialize !== undefined) {
             /**
              * If you define an initialize method, it will be executed when a new Expandable is created.
-             * @memberof! ch.Expandable.prototype
+             * @memberof! ac.Expandable.prototype
              * @function
              */
             this.initialize();
@@ -2190,7 +2190,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Event emitted when the component is ready to use.
-         * @event ch.Component#ready
+         * @event ac.Component#ready
          * @example
          * // Subscribe to "ready" event.
          * component.on('ready', function () {
@@ -2200,11 +2200,11 @@ ch.factory = function (Klass, fn) {
         window.setTimeout(function () { that.emit('ready'); }, 50);
     }
 
-    ch.util.inherits(Component, ch.EventEmitter);
+    ac.util.inherits(Component, ac.EventEmitter);
 
     /**
      * The name of a component.
-     * @memberof! ch.Component.prototype
+     * @memberof! ac.Component.prototype
      * @type {String}
      * @example
      * // You can reach the associated instance.
@@ -2214,14 +2214,14 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Returns a reference to the constructor function.
-     * @memberof! ch.Component.prototype
+     * @memberof! ac.Component.prototype
      * @function
      */
     Component.prototype.constructor = Component;
 
     /**
      * Initialize a new instance of Component and merge custom options with defaults options.
-     * @memberof! ch.Component.prototype
+     * @memberof! ac.Component.prototype
      * @function
      * @private
      * @returns {component}
@@ -2278,7 +2278,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Adds functionality or abilities from other classes.
-     * @memberof! ch.Component.prototype
+     * @memberof! ac.Component.prototype
      * @function
      * @returns {component}
      * @params {...String} var_args The name of the abilities to will be used.
@@ -2298,7 +2298,7 @@ ch.factory = function (Klass, fn) {
             arg = arguments[i];
 
             if (this[arg.toLowerCase()] === undefined) {
-                ch[arg].call(this);
+                ac[arg].call(this);
             }
         }
 
@@ -2307,7 +2307,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Enables an instance of Component.
-     * @memberof! ch.Component.prototype
+     * @memberof! ac.Component.prototype
      * @function
      * @returns {component}
      * @example
@@ -2319,7 +2319,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Emits when a component is enabled.
-         * @event ch.Component#enable
+         * @event ac.Component#enable
          * @example
          * // Subscribe to "enable" event.
          * component.on('enable', function () {
@@ -2333,7 +2333,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Disables an instance of Component.
-     * @memberof! ch.Component.prototype
+     * @memberof! ac.Component.prototype
      * @function
      * @returns {component}
      * @example
@@ -2345,7 +2345,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Emits when a component is disable.
-         * @event ch.Component#disable
+         * @event ac.Component#disable
          * @example
          * // Subscribe to "disable" event.
          * component.on('disable', function () {
@@ -2359,7 +2359,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Destroys an instance of Component and remove its data from asociated element.
-     * @memberof! ch.Component.prototype
+     * @memberof! ac.Component.prototype
      * @function
      * @example
      * // Destroy a component
@@ -2377,7 +2377,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Emits when a component is destroyed.
-         * @event ch.Component#destroy
+         * @event ac.Component#destroy
          * @exampleDescription
          * @example
          * // Subscribe to "destroy" event.
@@ -2390,9 +2390,9 @@ ch.factory = function (Klass, fn) {
         return;
     };
 
-    ch.Component = Component;
+    ac.Component = Component;
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 (function (window, $, ch) {
     'use strict';
 
@@ -2400,11 +2400,11 @@ ch.factory = function (Klass, fn) {
      * Popover is the basic unit of a dialog window.
      * @memberof ch
      * @constructor
-     * @augments ch.Component
-     * @mixes ch.Collapsible
-     * @mixes ch.Content
-     * @requires ch.Positioner
-     * @param {(jQuerySelector | ZeptoSelector)} $el A jQuery or Zepto Selector to create an instance of ch.Popover.
+     * @augments ac.Component
+     * @mixes ac.Collapsible
+     * @mixes ac.Content
+     * @requires ac.Positioner
+     * @param {(jQuerySelector | ZeptoSelector)} $el A jQuery or Zepto Selector to create an instance of ac.Popover.
      * @param {Object} [options] Options to customize an instance.
      * @param {String} [options.addClass] CSS class names that will be added to the container on the component initialization.
      * @param {String} [options.fx] Enable or disable UI effects. You must use: "slideDown", "fadeIn" or "none". Default: "fadeIn".
@@ -2422,12 +2422,12 @@ ch.factory = function (Klass, fn) {
      * @param {String} [options.params] Params like query string to be sent to the server.
      * @param {Boolean} [options.cache] Force to cache the request by the browser. Default: true.
      * @param {Boolean} [options.async] Force to sent request asynchronously. Default: true.
-     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ch-loading ch-loading-centered"&gt;&lt;/div&gt;'.
+     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ac-loading ac-loading-centered"&gt;&lt;/div&gt;'.
      * @param {(jQuerySelector | ZeptoSelector | HTMLElement | String)} [options.content] The content to be shown into the Popover container.
      * @returns {popover} Returns a new instance of Popover.
      * @example
      * // Create a new Popover.
-     * var popover = new ch.Popover($el, [options]);
+     * var popover = new ac.Popover($el, [options]);
      * @example
      * // Create a new Popover with jQuery or Zepto.
      * var popover = $(selector).popover([options]);
@@ -2453,7 +2453,7 @@ ch.factory = function (Klass, fn) {
         if (this.initialize !== undefined) {
             /**
              * If you define an initialize method, it will be executed when a new Popover is created.
-             * @memberof! ch.Popover.prototype
+             * @memberof! ac.Popover.prototype
              * @function
              */
             this.initialize();
@@ -2461,7 +2461,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Event emitted when the component is ready to use.
-         * @event ch.Popover#ready
+         * @event ac.Popover#ready
          * @example
          * // Subscribe to "ready" event.
          * popover.on('ready', function () {
@@ -2474,15 +2474,15 @@ ch.factory = function (Klass, fn) {
     var $document = $(window.document),
         $body = $('body'),
         // Inheritance
-        parent = ch.util.inherits(Popover, ch.Component),
+        parent = ac.util.inherits(Popover, ac.Component),
         shownbyEvent = {
-            'pointertap': ch.onpointertap,
-            'pointerenter': ch.onpointerenter
+            'pointertap': ac.onpointertap,
+            'pointerenter': ac.onpointerenter
         };
 
     /**
      * The name of the component.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @type {String}
      * @example
      * // You can reach the associated instance.
@@ -2492,14 +2492,14 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Returns a reference to the constructor function.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      */
     Popover.prototype.constructor = Popover;
 
     /**
      * Configuration by default.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @type {Object}
      * @private
      */
@@ -2513,13 +2513,13 @@ ch.factory = function (Klass, fn) {
         'height': 'auto',
         'shownby': 'pointertap',
         'hiddenby': 'button',
-        'waiting': '<div class="ch-loading ch-loading-centered"></div>',
+        'waiting': '<div class="ac-loading ac-loading-centered"></div>',
         'position': 'absolute'
     };
 
     /**
      * Initialize a new instance of Popover and merge custom options with defaults options.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @private
      * @returns {popover}
@@ -2544,12 +2544,12 @@ ch.factory = function (Klass, fn) {
          */
         this.$container = $([
             '<div',
-            ' class="ch-popover ch-hide ' + this._options._className + ' ' + this._options.addClass + '"',
+            ' class="ac-popover ac-hide ' + this._options._className + ' ' + this._options.addClass + '"',
             ' role="' + this._options._ariaRole + '"',
-            ' id="ch-' + this.name + '-' + this.uid + '"',
-            ' style="z-index:' + (ch.util.zIndex += 1) + ';width:' + this._options.width + ';height:' + this._options.height + '"',
+            ' id="ac-' + this.name + '-' + this.uid + '"',
+            ' style="z-index:' + (ac.util.zIndex += 1) + ';width:' + this._options.width + ';height:' + this._options.height + '"',
             '>'
-        ].join('')).on(ch.onpointertap + '.' + this.name, function (event) {
+        ].join('')).on(ac.onpointertap + '.' + this.name, function (event) {
             event.stopPropagation();
         });
 
@@ -2558,14 +2558,14 @@ ch.factory = function (Klass, fn) {
          * @private
          * @type {(jQuerySelector | ZeptoSelector)}
          */
-        this._$content = $('<div class="ch-popover-content">').appendTo(this.$container);
+        this._$content = $('<div class="ac-popover-content">').appendTo(this.$container);
 
         // Add functionality to the trigger if it exists
         this._configureTrigger();
         // Configure the way it hides
         this._configureHiding();
 
-        this._positioner = new ch.Positioner({
+        this._positioner = new ac.Positioner({
             'target': this.$container,
             'reference': this._options.reference,
             'side': this._options.side,
@@ -2579,7 +2579,7 @@ ch.factory = function (Klass, fn) {
          * Handler to execute the positioner refresh() method on layout changes.
          * @private
          * @function
-         * @todo Define this function on prototype and use bind(): $document.on(ch.onlayoutchange, this.refreshPosition.bind(this));
+         * @todo Define this function on prototype and use bind(): $document.on(ac.onlayoutchange, this.refreshPosition.bind(this));
          */
         this._refreshPositionListener = function () {
             if (that._shown) {
@@ -2591,9 +2591,9 @@ ch.factory = function (Klass, fn) {
 
         // Refresh position:
         // on layout change
-        $document.on(ch.onlayoutchange, this._refreshPositionListener);
+        $document.on(ac.onlayoutchange, this._refreshPositionListener);
         // on resize
-        ch.viewport.on(ch.onresize, this._refreshPositionListener);
+        ac.viewport.on(ac.onresize, this._refreshPositionListener);
 
         this
             .once('_show', this._refreshPositionListener)
@@ -2609,7 +2609,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Adds functionality to the trigger. When a non-trigger popover is initialized, this method isn't executed.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @private
      * @function
      */
@@ -2657,9 +2657,9 @@ ch.factory = function (Klass, fn) {
         // Open event when configured as able to shown anyway
         if (this._options.shownby !== 'none') {
             this._$el
-                .addClass('ch-shownby-' + this._options.shownby)
+                .addClass('ac-shownby-' + this._options.shownby)
                 .on(shownbyEvent[this._options.shownby] + '.' + this.name, function (event) {
-                    ch.util.prevent(event);
+                    ac.util.prevent(event);
                     showHandler();
                 });
         }
@@ -2683,7 +2683,7 @@ ch.factory = function (Klass, fn) {
         }
 
         // Set WAI-ARIA
-        this._el.setAttribute('aria-owns', 'ch-' + this.name + '-' + this.uid);
+        this._el.setAttribute('aria-owns', 'ac-' + this.name + '-' + this.uid);
         this._el.setAttribute('aria-haspopup', 'true');
 
         /**
@@ -2695,7 +2695,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Determines how to hide the component.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @private
      * @function
      */
@@ -2707,7 +2707,7 @@ ch.factory = function (Klass, fn) {
          */
         var that = this,
             hiddenby = this._options.hiddenby,
-            pointertap = ch.onpointertap + '.' + this.name,
+            pointertap = ac.onpointertap + '.' + this.name,
             timeout,
             events = {};
 
@@ -2723,11 +2723,11 @@ ch.factory = function (Klass, fn) {
         // Hide by leaving the component
         if (hiddenby === 'pointerleave' && this.$trigger !== undefined) {
 
-            events[ch.onpointerenter + '.' + this.name] = function () {
+            events[ac.onpointerenter + '.' + this.name] = function () {
                 window.clearTimeout(timeout);
             };
 
-            events[ch.onpointerleave + '.' + this.name] = hideTimer;
+            events[ac.onpointerleave + '.' + this.name] = hideTimer;
 
             this.$trigger.on(events);
             this.$container.on(events);
@@ -2735,7 +2735,7 @@ ch.factory = function (Klass, fn) {
 
         // Hide with the button Close
         if (hiddenby === 'button' || hiddenby === 'all') {
-            $('<i class="ch-close" role="button" aria-label="Close"></i>').on(pointertap, function () {
+            $('<i class="ac-close" role="button" aria-label="Close"></i>').on(pointertap, function () {
                 that.hide();
             }).prependTo(this.$container);
         }
@@ -2748,12 +2748,12 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Creates an options object from the parameters arriving to the constructor method.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @private
      * @function
      */
     Popover.prototype._normalizeOptions = function (options) {
-        if (typeof options === 'string' || ch.util.is$(options)) {
+        if (typeof options === 'string' || ac.util.is$(options)) {
             options = {
                 'content': options
             };
@@ -2763,7 +2763,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Shows the popover container and appends it to the body.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @param {(String | jQuerySelector | ZeptoSelector)} [content] The content that will be used by popover.
      * @param {Object} [options] A custom options to be used with content loaded by ajax.
@@ -2794,7 +2794,7 @@ ch.factory = function (Klass, fn) {
 
         // Increase z-index and append to body
         // Do it before set content because when content sets, it triggers the position refresh
-        this.$container.css('z-index', (ch.util.zIndex += 1)).appendTo($body);
+        this.$container.css('z-index', (ac.util.zIndex += 1)).appendTo($body);
 
         // Open the collapsible
         this._show();
@@ -2809,7 +2809,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Hides the popover container and deletes it from the body.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @returns {popover}
      * @example
@@ -2830,7 +2830,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Returns a Boolean specifying if the container is shown or not.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @returns {Boolean}
      * @example
@@ -2838,7 +2838,7 @@ ch.factory = function (Klass, fn) {
      * popover.isShown();
      * @example
      * // Check the popover status after an user action
-     * $(window).on(ch.onpointertap, function () {
+     * $(window).on(ac.onpointertap, function () {
      *     if (popover.isShown()) {
      *         alert('Popover: visible');
      *     } else {
@@ -2852,7 +2852,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Sets or gets the width of the container.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @param {String} [data] Set a width for the container.
      * @returns {(Number | popover)}
@@ -2880,7 +2880,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Sets or gets the height of the container.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @param {String} [data] Set a height for the container.
      * @returns {(Number | popover)}
@@ -2908,7 +2908,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Updates the current position of the container with given options or defaults.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @params {Object} [options] A configuration object.
      * @returns {popover}
@@ -2938,7 +2938,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Enables a Popover instance.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @returns {popover}
      * @example
@@ -2958,7 +2958,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Disables a Popover instance.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @returns {popover}
      * @example
@@ -2982,7 +2982,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Destroys a Popover instance.
-     * @memberof! ch.Popover.prototype
+     * @memberof! ac.Popover.prototype
      * @function
      * @returns {popover}
      * @example
@@ -2996,7 +2996,7 @@ ch.factory = function (Klass, fn) {
         if (this.$trigger !== undefined) {
             this.$trigger
                 .off('.' + this.name)
-                .removeClass('ch-' + this.name + '-trigger')
+                .removeClass('ac-' + this.name + '-trigger')
                 .removeAttr('data-title aria-owns aria-haspopup data-side data-align role')
                 .attr({
                     'alt': this._snippet.alt,
@@ -3004,28 +3004,28 @@ ch.factory = function (Klass, fn) {
                 });
         }
 
-        $document.off(ch.onlayoutchange, this._refreshPositionListener);
+        $document.off(ac.onlayoutchange, this._refreshPositionListener);
 
-        ch.viewport.off(ch.onresize, this._refreshPositionListener);
+        ac.viewport.off(ac.onresize, this._refreshPositionListener);
 
         parent.destroy.call(this);
 
         return;
     };
 
-    ch.factory(Popover, Popover.prototype._normalizeOptions);
+    ac.factory(Popover, Popover.prototype._normalizeOptions);
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 
 (function (window, $, ch) {
     'use strict';
 
     var $document = $(window.document);
 
-    ch.Popover.prototype._hidingShortcuts = function () {
+    ac.Popover.prototype._hidingShortcuts = function () {
 
         var that = this,
-            pointertap = ch.onpointertap + '.' + this.name;
+            pointertap = ac.onpointertap + '.' + this.name;
 
         function hide(event) {
             // event.button === 0: Fix issue #933 Right click closes it on Firefox.
@@ -3034,25 +3034,25 @@ ch.factory = function (Klass, fn) {
             }
         }
 
-        ch.shortcuts.add(ch.onkeyesc, this.uid, function () {
+        ac.shortcuts.add(ac.onkeyesc, this.uid, function () {
             that.hide();
         });
 
         this
             .on('show', function () {
-                ch.shortcuts.on(that.uid);
+                ac.shortcuts.on(that.uid);
                 $document.on(pointertap, hide);
             })
             .on('hide', function () {
-                ch.shortcuts.off(that.uid);
+                ac.shortcuts.off(that.uid);
                 $document.off(pointertap, hide);
             })
             .once('destroy', function () {
-                ch.shortcuts.remove(that.uid, ch.onkeyesc);
+                ac.shortcuts.remove(that.uid, ac.onkeyesc);
             });
     };
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 (function (window, $, ch) {
     'use strict';
 
@@ -3060,8 +3060,8 @@ ch.factory = function (Klass, fn) {
      * Layer is a dialog window that can be shown one at a time.
      * @memberof ch
      * @constructor
-     * @augments ch.Popover
-     * @param {(jQuerySelector | ZeptoSelector)} $el A jQuery or Zepto Selector to create an instance of ch.Layer.
+     * @augments ac.Popover
+     * @param {(jQuerySelector | ZeptoSelector)} $el A jQuery or Zepto Selector to create an instance of ac.Layer.
      * @param {Object} [options] Options to customize an instance.
      * @param {String} [options.addClass] CSS class names that will be added to the container on the component initialization.
      * @param {String} [options.fx] Enable or disable UI effects. You must use: "slideDown", "fadeIn" or "none". Default: "fadeIn".
@@ -3079,12 +3079,12 @@ ch.factory = function (Klass, fn) {
      * @param {String} [options.params] Params like query string to be sent to the server.
      * @param {Boolean} [options.cache] Force to cache the request by the browser. Default: true.
      * @param {Boolean} [options.async] Force to sent request asynchronously. Default: true.
-     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ch-loading ch-loading-centered"&gt;&lt;/div&gt;'.
+     * @param {(String | jQuerySelector | ZeptoSelector)} [options.waiting] Temporary content to use while the ajax request is loading. Default: '&lt;div class="ac-loading ac-loading-centered"&gt;&lt;/div&gt;'.
      * @param {(jQuerySelector | ZeptoSelector | HTMLElement | String)} [options.content] The content to be shown into the Layer container.
      * @returns {layer} Returns a new instance of Layer.
      * @example
      * // Create a new Layer.
-     * var layer = new ch.Layer($el, [options]);
+     * var layer = new ac.Layer($el, [options]);
      * @example
      * // Create a new Layer with jQuery or Zepto.
      * var layer = $(selector).layer([options]);
@@ -3110,7 +3110,7 @@ ch.factory = function (Klass, fn) {
         if (this.initialize !== undefined) {
             /**
              * If you define an initialize method, it will be executed when a new Layer is created.
-             * @memberof! ch.Layer.prototype
+             * @memberof! ac.Layer.prototype
              * @function
              */
             this.initialize();
@@ -3118,7 +3118,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Event emitted when the component is ready to use.
-         * @event ch.Layer#ready
+         * @event ac.Layer#ready
          * @example
          * // Subscribe to "ready" event.
          * layer.on('ready', function () {
@@ -3132,11 +3132,11 @@ ch.factory = function (Klass, fn) {
     // have 2 components open at the same time
     var lastShown,
         // Inheritance
-        parent = ch.util.inherits(Layer, ch.Popover);
+        parent = ac.util.inherits(Layer, ac.Popover);
 
     /**
      * The name of the component.
-     * @memberof! ch.Layer.prototype
+     * @memberof! ac.Layer.prototype
      * @type {String}
      * @example
      * // You can reach the associated instance.
@@ -3146,19 +3146,19 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Returns a reference to the constructor function.
-     * @memberof! ch.Layer.prototype
+     * @memberof! ac.Layer.prototype
      * @function
      */
     Layer.prototype.constructor = Layer;
 
     /**
      * Configuration by default.
-     * @memberof! ch.Layer.prototype
+     * @memberof! ac.Layer.prototype
      * @type {Object}
      * @private
      */
-    Layer.prototype._defaults = $.extend(ch.util.clone(parent._defaults), {
-        '_className': 'ch-layer ch-box-lite ch-cone',
+    Layer.prototype._defaults = $.extend(ac.util.clone(parent._defaults), {
+        '_className': 'ac-layer ac-box-lite ac-cone',
         '_ariaRole': 'tooltip',
         'shownby': 'pointerenter',
         'hiddenby': 'pointerleave',
@@ -3166,12 +3166,12 @@ ch.factory = function (Klass, fn) {
         'align': 'left',
         'offsetX': 0,
         'offsetY': 10,
-        'waiting': '<div class="ch-loading-small"></div>'
+        'waiting': '<div class="ac-loading-small"></div>'
     });
 
     /**
      * Shows the layer container and hides other layers.
-     * @memberof! ch.Layer.prototype
+     * @memberof! ac.Layer.prototype
      * @function
      * @param {(String | jQuerySelector | ZeptoSelector)} [content] The content that will be used by layer.
      * @param {Object} [options] A custom options to be used with content loaded by ajax.
@@ -3216,9 +3216,9 @@ ch.factory = function (Klass, fn) {
         return this;
     };
 
-    ch.factory(Layer, parent._normalizeOptions);
+    ac.factory(Layer, parent._normalizeOptions);
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 
 (function (window, $, ch) {
     'use strict';
@@ -3227,14 +3227,14 @@ ch.factory = function (Klass, fn) {
      * Autocomplete Component shows a list of suggestions for a HTMLInputElement.
      * @memberof ch
      * @constructor
-     * @augments ch.Component
-     * @requires ch.Popover
-     * @param {(jQuerySelector | ZeptoSelector)} $el A jQuery or Zepto Selector to create an instance of ch.Autocomplete.
+     * @augments ac.Component
+     * @requires ac.Popover
+     * @param {(jQuerySelector | ZeptoSelector)} $el A jQuery or Zepto Selector to create an instance of ac.Autocomplete.
      * @param {Object} [options] Options to customize an instance.
-     * @param {String} [options.loadingClass] Default: "ch-autocomplete-loading".
-     * @param {String} [options.highlightedClass] Default: "ch-autocomplete-highlighted".
-     * @param {String} [options.itemClass] Default: "ch-autocomplete-item".
-     * @param {String} [options.addClass] CSS class names that will be added to the container on the component initialization. Default: "ch-box-lite ch-autocomplete".
+     * @param {String} [options.loadingClass] Default: "ac-autocomplete-loading".
+     * @param {String} [options.highlightedClass] Default: "ac-autocomplete-highlighted".
+     * @param {String} [options.itemClass] Default: "ac-autocomplete-item".
+     * @param {String} [options.addClass] CSS class names that will be added to the container on the component initialization. Default: "ac-box-lite ac-autocomplete".
      * @param {Number} [options.keystrokesTime] Default: 150.
      * @param {Boolean} [options.html] Default: false.
      * @param {String} [options.side] The side option where the target element will be positioned. You must use: "left", "right", "top", "bottom" or "center". Default: "bottom".
@@ -3276,7 +3276,7 @@ ch.factory = function (Klass, fn) {
         if (this.initialize !== undefined) {
             /**
              * If you define an initialize method, it will be executed when a new Autocomplete is created.
-             * @memberof! ch.Autocomplete.prototype
+             * @memberof! ac.Autocomplete.prototype
              * @function
              */
             this.initialize();
@@ -3284,7 +3284,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Event emitted when the component is ready to use.
-         * @event ch.Autocomplete#ready
+         * @event ac.Autocomplete#ready
          * @example
          * // Subscribe to "ready" event.
          * autocomplete.on('ready',function () {
@@ -3298,7 +3298,7 @@ ch.factory = function (Klass, fn) {
     }
 
     // Inheritance
-    var parent = ch.util.inherits(Autocomplete, ch.Component);
+    var parent = ac.util.inherits(Autocomplete, ac.Component);
 
     /**
      * The name of the component.
@@ -3308,7 +3308,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Returns a reference to the constructor function.
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      */
     Autocomplete.prototype.constructor = Autocomplete;
@@ -3319,21 +3319,21 @@ ch.factory = function (Klass, fn) {
      * @private
      */
     Autocomplete.prototype._defaults = {
-        'loadingClass': 'ch-autocomplete-loading',
-        'highlightedClass': 'ch-autocomplete-highlighted',
-        'itemClass': 'ch-autocomplete-item',
-        'addClass': 'ch-box-lite ch-autocomplete',
+        'loadingClass': 'ac-autocomplete-loading',
+        'highlightedClass': 'ac-autocomplete-highlighted',
+        'itemClass': 'ac-autocomplete-item',
+        'addClass': 'ac-box-lite ac-autocomplete',
         'side': 'bottom',
         'align': 'left',
         'html': false,
         '_hiddenby': 'none',
         'keystrokesTime': 150,
-        '_itemTemplate': '<li class="{{itemClass}}"{{suggestedData}}>{{term}}<i class="ch-icon-arrow-up" data-js="ch-autocomplete-complete-query"></i></li>'
+        '_itemTemplate': '<li class="{{itemClass}}"{{suggestedData}}>{{term}}<i class="ac-icon-arrow-up" data-js="ac-autocomplete-complete-query"></i></li>'
     };
 
     /**
      * Initialize a new instance of Autocomplete and merge custom options with defaults options.
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
      * @returns {autocomplete}
@@ -3349,7 +3349,7 @@ ch.factory = function (Klass, fn) {
             POINTERDOWN = 'mousedown' + '.' + this.name,
             MOUSEENTER = 'mouseover' + '.' + this.name,
             // there is no mouseenter to highlight the item, so it happens when the user do mousedown
-            highlightEvent = (ch.support.touch) ? POINTERDOWN : MOUSEENTER;
+            highlightEvent = (ac.support.touch) ? POINTERDOWN : MOUSEENTER;
 
         // Call to its parent init method
         parent._init.call(this, $el, options);
@@ -3367,10 +3367,10 @@ ch.factory = function (Klass, fn) {
          * @type {(jQuerySelector | ZeptoSelector)}
          * @private
          */
-        this._$suggestionsList = $('<ul class="ch-autocomplete-list"></ul>');
+        this._$suggestionsList = $('<ul class="ac-autocomplete-list"></ul>');
 
         // The component who shows and manage the suggestions.
-        this._popover = $.popover({
+        this._popover = new ac.Popover({
             'reference': this._$el,
             'content': this._$suggestionsList,
             'side': this._options.side,
@@ -3395,7 +3395,7 @@ ch.factory = function (Klass, fn) {
 
                 // completes the value, it is a shortcut to avoid write the complete word
                 if (event.target.nodeName === 'I' && !that._options.html) {
-                    ch.util.prevent(event);
+                    ac.util.prevent(event);
                     that._el.value = that._suggestions[that._highlighted];
                     that.emit('type', that._el.value);
                     return;
@@ -3442,7 +3442,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Turns on the ability off listen the keystrokes
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
      * @returns {autocomplete}
@@ -3457,7 +3457,7 @@ ch.factory = function (Klass, fn) {
 
         this._originalQuery = this._el.value;
 
-        this.$trigger.on(ch.onkeyinput, function () {
+        this.$trigger.on(ac.onkeyinput, function () {
 
             // .trim()
             that._currentQuery = that._el.value.replace(/^\s+|\s+$/g, '');
@@ -3473,7 +3473,7 @@ ch.factory = function (Klass, fn) {
                 that.$trigger.addClass(that._options.loadingClass);
                 /**
                  * Event emitted when the user is typing.
-                 * @event ch.Autocomplete#type
+                 * @event ac.Autocomplete#type
                  * @example
                  * // Subscribe to "type" event with ajax call
                  * autocomplete.on('type', function (userInput) {
@@ -3510,7 +3510,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Turns off the ability off listen the keystrokes
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
      * @returns {autocomplete}
@@ -3523,14 +3523,14 @@ ch.factory = function (Klass, fn) {
 
         this.hide();
 
-        this.$trigger.off(ch.onkeyinput);
+        this.$trigger.off(ac.onkeyinput);
 
         return this;
     };
 
     /**
      * It sets to the HTMLInputElement the selected query and it emits a 'select' event.
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
      * @returns {autocomplete}
@@ -3551,7 +3551,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Event emitted when a suggestion is selected.
-         * @event ch.Autocomplete#select
+         * @event ac.Autocomplete#select
          * @example
          * // Subscribe to "select" event.
          * autocomplete.on('select', function () {
@@ -3565,7 +3565,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Selects the items
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
      * @returns {autocomplete}
@@ -3582,8 +3582,8 @@ ch.factory = function (Klass, fn) {
     };
 
     /**
-     * It highlights the item adding the "ch-autocomplete-highlighted" class name or the class name that you configured as "highlightedClass" option.
-     * @memberof! ch.Autocomplete.prototype
+     * It highlights the item adding the "ac-autocomplete-highlighted" class name or the class name that you configured as "highlightedClass" option.
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
      * @returns {autocomplete}
@@ -3605,7 +3605,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Add suggestions to be shown.
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @returns {autocomplete}
      * @example
@@ -3698,7 +3698,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Hides component's container.
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @returns {autocomplete}
      * @example
@@ -3715,7 +3715,7 @@ ch.factory = function (Klass, fn) {
 
         /**
          * Event emitted when the Autocomplete container is hidden.
-         * @event ch.Autocomplete#hide
+         * @event ac.Autocomplete#hide
          * @example
          * // Subscribe to "hide" event.
          * autocomplete.on('hide', function () {
@@ -3729,7 +3729,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Returns a Boolean if the component's core behavior is shown. That means it will return 'true' if the component is on and it will return false otherwise.
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @returns {Boolean}
      * @example
@@ -3755,7 +3755,7 @@ ch.factory = function (Klass, fn) {
 
     /**
      * Destroys an Autocomplete instance.
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @example
      * // Destroying an instance of Autocomplete.
@@ -3774,15 +3774,15 @@ ch.factory = function (Klass, fn) {
         return;
     };
 
-    ch.factory(Autocomplete);
+    ac.factory(Autocomplete);
 
-}(this, this.ch.$, this.ch));
+}(this, this.ac.$, this.ch));
 
 (function (Autocomplete, ch) {
     'use strict';
     /**
      * Congfigure shortcuts to navigate and set values, or cancel the typed text
-     * @memberof! ch.Autocomplete.prototype
+     * @memberof! ac.Autocomplete.prototype
      * @function
      * @private
      * @returns {autocomplete}
@@ -3797,18 +3797,18 @@ ch.factory = function (Klass, fn) {
         var that = this;
 
         // Shortcuts
-        ch.shortcuts.add(ch.onkeyenter, this.uid, function (event) {
-            ch.util.prevent(event);
+        ac.shortcuts.add(ac.onkeyenter, this.uid, function (event) {
+            ac.util.prevent(event);
             that._selectSuggestion();
         });
 
-        ch.shortcuts.add(ch.onkeyesc, this.uid, function () {
+        ac.shortcuts.add(ac.onkeyesc, this.uid, function () {
             that.hide();
             that._el.value = that._originalQuery;
         });
 
-        ch.shortcuts.add(ch.onkeyuparrow, this.uid, function (event) {
-            ch.util.prevent(event);
+        ac.shortcuts.add(ac.onkeyuparrow, this.uid, function (event) {
+            ac.util.prevent(event);
 
             var value;
 
@@ -3838,7 +3838,7 @@ ch.factory = function (Klass, fn) {
 
         });
 
-        ch.shortcuts.add(ch.onkeydownarrow, this.uid, function () {
+        ac.shortcuts.add(ac.onkeydownarrow, this.uid, function () {
             var value;
 
             // change the selected value & stores the future HTMLInputElement value
@@ -3869,16 +3869,614 @@ ch.factory = function (Klass, fn) {
         });
 
         // Activate the shortcuts for this instance
-        this._popover.on('show', function () { ch.shortcuts.on(that.uid); });
+        this._popover.on('show', function () { ac.shortcuts.on(that.uid); });
 
         // Deactivate the shortcuts for this instance
-        this._popover.on('hide', function () { ch.shortcuts.off(that.uid); });
+        this._popover.on('hide', function () { ac.shortcuts.off(that.uid); });
 
         this.on('destroy', function () {
-            ch.shortcuts.remove(this.uid);
+            ac.shortcuts.remove(this.uid);
         });
 
         return this;
     };
 
-}(this.ch.Autocomplete, this.ch));
+}(this.ac.Autocomplete, this.ch));
+(function (window, Autocomplete) {
+    'use strict';
+
+    var $searchForm,
+        $searchInput,
+        $checkbox,
+        $checkboxLabel,
+        maxQueryLength,
+        lastSearchesText,
+        meliDomain,
+        siteId,
+        genericAditionalInfo;
+
+
+    /**
+     * Init the component
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.initialize();
+     */
+    Autocomplete.prototype.initialize = function () {
+
+        var that = this;
+
+        $searchForm = this._options.searchForm;
+        $searchInput = this.$trigger;
+        $checkbox = this._options.categoryCheckbox;
+        $checkboxLabel = this._options.categoryCheckboxLabel;
+        maxQueryLength = this._options.maxQueryLength || 15;
+        lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
+        meliDomain = this._options.meliDomain || 'meli.domain';
+        siteId = this._options.siteId || 'MLA';
+        genericAditionalInfo = this._options.genericAditionalInfo || 'en todas las Tiendas Oficiales';
+
+
+        // REDIFINE the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
+        ac.shortcuts.remove(ac.onkeyenter);
+        ac.shortcuts.add(ac.onkeyenter, this.uid, function (event) {
+            that._selectSuggestion();
+        });
+
+
+        // Add the last searches queries from the cookies
+        this.addLastSearches();
+
+
+        this.on('type', function (userInput) {
+
+             $.ajax({
+                 'url': 'http://suggestgz.mlapps.com/sites/'+siteId+'/autosuggest?q='+userInput,
+                 'dataType': 'jsonp',
+                 'cache': false,
+                 'global': true,
+                 'context': this,
+                 'crossDomain': true
+             })
+             .done(this.parseResults);
+
+             this.adecuateCategoryLabel();
+        });
+
+
+        // doQuery when the select event is fire and a suggest y selected
+        this.on('select', function (e) {
+           this.doQuery({
+               element: this._highlighted
+           });
+        });
+
+
+        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
+        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
+
+        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.scrollInToView);
+        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.scrollInToView);
+
+        $searchForm.submit(function (event) {
+            event.preventDefault();
+            that.doQuery();
+        });
+    }
+
+
+    /**
+     * Parse the json and add the results to data array
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * this.parseResults();
+     */
+    Autocomplete.prototype.scrollInToView = function () {
+        var highlightedElement = document.querySelector('.ac-autocomplete-highlighted');
+
+        if (highlightedElement !== null) {
+            highlightedElement.scrollIntoView(false)
+        }
+
+    }
+
+
+    /**
+     * Parse the json and add the results to data array
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * this.parseResults();
+     */
+    Autocomplete.prototype.parseResults = function (results) {
+
+        var resultsTemp = {
+           "q":"ipod",
+           "suggested_queries":[
+              {
+                 "q":"ipod",
+                 "match_start":0,
+                 "match_end":4,
+                 "filters": {
+                    "id": "official_store_id",
+                    "name": "Tienda Oficial",
+                    "values": [
+                        {
+                            "id": "177",
+                            "name": "en Tienda Oficial Apple"
+                        },
+                        {
+                            "id": "188",
+                            "name": "en Tienda Oficial Megatone"
+                        }
+                    ]
+                 }
+              },
+              {
+                 "q":"ipod touch",
+                 "match_start":0,
+                 "match_end":4
+              },
+              {
+                 "q":"ipod 5",
+                 "match_start":0,
+                 "match_end":4
+              },
+              {
+                 "q":"ipod nano",
+                 "match_start":0,
+                 "match_end":4
+              },
+              {
+                 "q":"dock ipod",
+                 "match_start":5,
+                 "match_end":9
+              },
+              {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              },
+                            {
+                 "q":"auriculares ipod",
+                 "match_start":12,
+                 "match_end":16
+              }
+           ]
+        }
+
+        // if (results[2].suggested_queries !== undefined) {
+        //     results[2].suggested_queries.forEach(function (e, i) {
+        //         console.log(e.filters.name);
+        //         data.push(e.q);
+        //     });
+
+        //     this.suggest(data);
+        // }
+
+        var i,
+            queries = resultsTemp.suggested_queries,
+            suggestedResults = [],
+            suggestedResultsTO = [],
+            suggestedQueriesLength = queries.length;
+
+        if (queries === undefined) {
+            return;
+        }
+
+        var firstQuery = queries[0],
+            firstQueryFilters = firstQuery.filters;
+
+        if (firstQueryFilters !== undefined) {
+
+            var filtersLength = firstQueryFilters.values.length;
+
+            for (i = 0; i < filtersLength; i++) {
+                suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+firstQueryFilters.values[i].name+'</span>');
+
+            };
+
+            // Add the last <li>. It's the generic option tha always appear.
+            suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+genericAditionalInfo+'</span>');
+        }
+
+        for (i = 0; i < suggestedQueriesLength; i++) {
+            suggestedResults.push(queries[i].q);
+        };
+
+        // Add the official store queries suggested
+        this.addOfficialStoreQueries(suggestedResultsTO);
+
+        this.suggest(suggestedResults);
+    }
+
+
+    /**
+     * Adds 'last searches' to Autocomplete.
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {Autocomplete}
+     * @example
+     * Autocomplete.adecuateCategoryLabel();
+     */
+    Autocomplete.prototype.adecuateCategoryLabel = function () {
+        if ($searchInput.val().length > maxQueryLength) {
+            $checkboxLabel.addClass('nav-label-small');
+        } else {
+            $checkboxLabel.removeClass('nav-label-small');
+        }
+
+        return this;
+    }
+
+
+    /**
+     * Append 'last searches' to input.
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {Autocomplete}
+     * @example
+     * Autocomplete.addLastSearches();
+     */
+    Autocomplete.prototype.addLastSearches = function () {
+        var lastSearches = this.getLastSearches();
+
+        // Check if the last searches get from the cookie
+        if (lastSearches !== false) {
+            this._$lastSearchesQueries = $(this.makeTemplate(lastSearches, lastSearchesText, true)).appendTo(this.$container);
+        }
+
+        return this;
+    };
+
+
+    /**
+     * Get 'last searches' from cookie.
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.getLastSearches();
+     */
+    Autocomplete.prototype.getLastSearches = function () {
+
+        var isPMSCookie = this.getCookieValue("pmsctx"),
+            list,
+            searches;
+
+        // The user hasn't cookies. Esc the function becouse there aren't cookies to set as last searchs.
+        if (!isPMSCookie) {
+            return false;
+        }
+
+        searches = isPMSCookie.replace(/\+/g,' ').split('*')[5].split('|');
+
+        // Check if cookie exist and have word
+        if (searches != null && searches[0] !=null && searches[0] != '') {
+
+            // Remove the current querie empty by default of the cookie "" that is set when the browser load de page
+            // TESTEAR
+            searches.pop();
+
+            var i,
+                searchesLength = searches.length;
+
+            for (i = 0; i < searchesLength ; i++) {
+                searches[i] = searches[i].substr(1).toLowerCase();
+            }
+
+            // Return the searches array
+            return searches;
+        }
+
+    };
+
+
+    /**
+     * Add the official
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.doQuery();
+     */
+    Autocomplete.prototype.addOfficialStoreQueries = function (officialStoreQueries) {
+
+        if (this._$lastListOficialStore !== undefined) {
+            this._$lastListOficialStore.remove();
+        }
+
+        // Check if the officialStoreQueries was get from the api
+        if (officialStoreQueries !== false) {
+            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries)).insertAfter($('.ac-popover-content'));
+        }
+
+        return this;
+    };
+
+
+    /**
+     * Make html template to the list
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.doQuery();
+     */
+    Autocomplete.prototype.makeTemplate = function (searches, title, suggestedToInput) {
+
+        var searchesLength,
+            list,
+            uri,
+            i,
+            suggestedInInput = '',
+            officialStore = 'official-store';
+
+        searchesLength = searches.length;
+
+        list  = '<div class="aditional-info">';
+
+        if (title !== undefined) {
+            list += '<h4 class="aditional-info-title">' + title +'</h4>';
+            officialStore = '';
+        }
+
+        list += '<ul class="aditional-info-list'+ ' ' +officialStore+'">';
+
+        for (i = 0; i < searchesLength ; i++) {
+            try {
+                uri = decodeURI(searches[i]);
+            } catch (e) {}
+
+
+            if (suggestedToInput) {
+                suggestedInInput = searches[i];
+            }
+
+            list += '<li class="ac-autocomplete-item" data-suggested="'+suggestedInInput+'"><a num="'+i+'" href="/'+uri+'" class="aditional-info-item">'+searches[i]+'</a></li>';
+
+        }
+
+        list += '</ul></div>';
+
+        return list;
+    };
+
+
+    /**
+     * Do query
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.doQuery();
+     */
+    Autocomplete.prototype.doQuery = function (tracking) {
+        // Saving querys
+        // Use trim to remove white spaces
+        var query = $searchInput.val(), //trim($searchInput.val()),
+            searchQuery = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G';//settings.uri;
+            // searac = 'http://ipod.localhost.com.ar:8080/reproductores/';
+
+        // Naturalization
+        if (query && query.length > 0){
+            query = this.naturalization({
+                string: query,
+                replace: ' ',
+                replacement: '-'
+            });
+        } else {
+            // Focus when submit (valid en IE)
+            $searchInput.focus();
+            return false;
+        }
+
+        // Category checked
+        if ($checkbox !== null && $checkbox.is(':checked')) {
+            if (window.location.href.indexOf('_DisplayType_LF') != -1) {
+                searchQuery =  "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']" + '_DisplayType_LF';
+            } else {
+                searchQuery = "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']";
+            }
+        }
+
+        // Adults setting
+        if (this.getCookieValue('pr_categ') === 'AD' && searchQuery.indexOf('_PrCategId_AD') === -1) {
+            searchQuery = searchQuery + '_PrCategId_AD';
+        }
+
+        // Add query to the URL string
+        searchQuery = searchQuery.replace('$query', encodeURIComponent(query));
+
+        // Tracking
+        if (typeof tracking != 'undefined'){
+            searchQuery = searchQuery + '#D[A:' + query + ',B:' + tracking.element + ']';
+        }
+
+        // Cookies
+        console.info('revisar seteo de cookie');
+        this.setSearchCookies(query);
+
+        // Redirect
+        // location.href = searchQuery;
+        console.info(searchQuery);
+
+        return this;
+    };
+
+
+    /**
+     * Naturalize query
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {list}
+     * @example
+     * Autocomplete.naturalization();
+     */
+    Autocomplete.prototype.naturalization = function (conf) {
+        var query = conf.string.toLowerCase(),
+            replace = conf.replace,
+            replacement = conf.replacement;
+
+        while (query.toString().indexOf(replace) != -1){
+            query = query.toString().replace(replace,replacement);
+        }
+        return query;
+    }
+
+
+    /**
+     * Get the cookie from the user browser
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @returns {cookie}
+     * @example
+     * Autocomplete.getCookieValue();
+     */
+    Autocomplete.prototype.getCookieValue = function (name) {
+
+        var start = document.cookie.indexOf(name + "="),
+            len = start + name.length + 1,
+            end = document.cookie.indexOf(";", len);
+
+        if (start == -1) {
+            return null;
+        }
+
+        if (end == -1) {
+            end = document.cookie.length;
+        }
+
+        return unescape(document.cookie.substring(len, end));
+    }
+
+
+    /**
+     * Set the cookie to the user browser
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setCookie();
+     */
+    Autocomplete.prototype.setCookie = function (config) {
+
+        var domain = meliDomain,
+            today,
+            expire;
+
+        config.path = config.path || '/';
+
+        if (config.days !== undefined) {
+
+            today = new Date();
+            expire = new Date();
+
+            if (config.days === undefined || config.days === 0) {
+                config.days = 1;
+            }
+
+            expire.setTime(today.getTime() + 3600000 * 24 * config.days);
+            document.cookie = config.name + '=' + config.value + ';path=' + config.path + ';domain=.' + domain + ';expires=' + expire.toGMTString();
+
+        } else {
+            document.cookie = config.name + '=' + config.value + ';path=' + config.path + ';domain=.' + domain;
+        }
+    }
+
+
+    /**
+     * Set the cookie context
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setContextCookie();
+     */
+    Autocomplete.prototype.setContextCookie = function (val) {
+        url = urlPms + "/jm/PmsPixel?ck=" + val;
+
+        var pixelDiv = document.getElementById("pmspxl");
+
+        if (pixelDiv != null) {
+            pixelDiv.innerHTML = "<img width=0 height=0 src='" + url + "'>";
+        }
+    }
+
+
+    /**
+     * Set the search cookie
+     * @memberof! ac.Autocomplete.prototype
+     * @function
+     * @example
+     * Autocomplete.setSearchCookies();
+     */
+    Autocomplete.prototype.setSearchCookies = function (query) {
+        try {
+            // Only if PMS active
+            // this.setCookie({
+            //     name: 'ml_list',
+            //     value: 'searching'
+            // });
+            this.setCookie({
+                name: 'LAST_SEARCH',
+                value: query
+            });
+        } catch(e) {
+            // Nothing
+        }
+    }
+
+}(this, this.ac.Autocomplete));
+
+
+// TODO: migrate to a vanilla javascript scroll
+/*! perfect-scrollbar - v0.5.8
+* http://noraesae.github.com/perfect-scrollbar/
+* Copyright (c) 2014 Hyunje Alex Jun; Licensed MIT */
+(function(e){"use strict";"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?e(require("jquery")):e(jQuery)})(function(e){"use strict";function t(e){return"string"==typeof e?parseInt(e,10):~~e}var o={wheelSpeed:1,wheelPropagation:!1,swipePropagation:!0,minScrollbarLength:null,maxScrollbarLength:null,useBothWheelAxes:!1,useKeyboard:!0,suppressScrollX:!1,suppressScrollY:!1,scrollXMarginOffset:0,scrollYMarginOffset:0,includePadding:!1},n=0,r=function(){var e=n++;return function(t){var o=".perfect-scrollbar-"+e;return t===void 0?o:t+o}},l="WebkitAppearance"in document.documentElement.style;e.fn.perfectScrollbar=function(n,i){return this.each(function(){function a(e,o){var n=e+o,r=D-R;j=0>n?0:n>r?r:n;var l=t(j*(Y-D)/(D-R));M.scrollTop(l)}function s(e,o){var n=e+o,r=E-k;W=0>n?0:n>r?r:n;var l=t(W*(C-E)/(E-k));M.scrollLeft(l)}function c(e){return P.minScrollbarLength&&(e=Math.max(e,P.minScrollbarLength)),P.maxScrollbarLength&&(e=Math.min(e,P.maxScrollbarLength)),e}function u(){var e={width:I};e.left=B?M.scrollLeft()+E-C:M.scrollLeft(),N?e.bottom=_-M.scrollTop():e.top=Q+M.scrollTop(),H.css(e);var t={top:M.scrollTop(),height:A};Z?t.right=B?C-M.scrollLeft()-V-J.outerWidth():V-M.scrollLeft():t.left=B?M.scrollLeft()+2*E-C-$-J.outerWidth():$+M.scrollLeft(),G.css(t),U.css({left:W,width:k-z}),J.css({top:j,height:R-et})}function d(){M.removeClass("ps-active-x"),M.removeClass("ps-active-y"),E=P.includePadding?M.innerWidth():M.width(),D=P.includePadding?M.innerHeight():M.height(),C=M.prop("scrollWidth"),Y=M.prop("scrollHeight"),!P.suppressScrollX&&C>E+P.scrollXMarginOffset?(X=!0,I=E-F,k=c(t(I*E/C)),W=t(M.scrollLeft()*(I-k)/(C-E))):(X=!1,k=0,W=0,M.scrollLeft(0)),!P.suppressScrollY&&Y>D+P.scrollYMarginOffset?(O=!0,A=D-tt,R=c(t(A*D/Y)),j=t(M.scrollTop()*(A-R)/(Y-D))):(O=!1,R=0,j=0,M.scrollTop(0)),W>=I-k&&(W=I-k),j>=A-R&&(j=A-R),u(),X&&M.addClass("ps-active-x"),O&&M.addClass("ps-active-y")}function p(){var t,o,n=function(e){s(t,e.pageX-o),d(),e.stopPropagation(),e.preventDefault()},r=function(){H.removeClass("in-scrolling"),e(q).unbind(K("mousemove"),n)};U.bind(K("mousedown"),function(l){o=l.pageX,t=U.position().left,H.addClass("in-scrolling"),e(q).bind(K("mousemove"),n),e(q).one(K("mouseup"),r),l.stopPropagation(),l.preventDefault()}),t=o=null}function f(){var t,o,n=function(e){a(t,e.pageY-o),d(),e.stopPropagation(),e.preventDefault()},r=function(){G.removeClass("in-scrolling"),e(q).unbind(K("mousemove"),n)};J.bind(K("mousedown"),function(l){o=l.pageY,t=J.position().top,G.addClass("in-scrolling"),e(q).bind(K("mousemove"),n),e(q).one(K("mouseup"),r),l.stopPropagation(),l.preventDefault()}),t=o=null}function v(e,t){var o=M.scrollTop();if(0===e){if(!O)return!1;if(0===o&&t>0||o>=Y-D&&0>t)return!P.wheelPropagation}var n=M.scrollLeft();if(0===t){if(!X)return!1;if(0===n&&0>e||n>=C-E&&e>0)return!P.wheelPropagation}return!0}function g(e,t){var o=M.scrollTop(),n=M.scrollLeft(),r=Math.abs(e),l=Math.abs(t);if(l>r){if(0>t&&o===Y-D||t>0&&0===o)return!P.swipePropagation}else if(r>l&&(0>e&&n===C-E||e>0&&0===n))return!P.swipePropagation;return!0}function b(){function e(e){var t=e.originalEvent.deltaX,o=-1*e.originalEvent.deltaY;return(t===void 0||o===void 0)&&(t=-1*e.originalEvent.wheelDeltaX/6,o=e.originalEvent.wheelDeltaY/6),e.originalEvent.deltaMode&&1===e.originalEvent.deltaMode&&(t*=10,o*=10),t!==t&&o!==o&&(t=0,o=e.originalEvent.wheelDelta),[t,o]}function t(t){if(l||!(M.find("select:focus").length>0)){var n=e(t),r=n[0],i=n[1];o=!1,P.useBothWheelAxes?O&&!X?(i?M.scrollTop(M.scrollTop()-i*P.wheelSpeed):M.scrollTop(M.scrollTop()+r*P.wheelSpeed),o=!0):X&&!O&&(r?M.scrollLeft(M.scrollLeft()+r*P.wheelSpeed):M.scrollLeft(M.scrollLeft()-i*P.wheelSpeed),o=!0):(M.scrollTop(M.scrollTop()-i*P.wheelSpeed),M.scrollLeft(M.scrollLeft()+r*P.wheelSpeed)),d(),o=o||v(r,i),o&&(t.stopPropagation(),t.preventDefault())}}var o=!1;window.onwheel!==void 0?M.bind(K("wheel"),t):window.onmousewheel!==void 0&&M.bind(K("mousewheel"),t)}function h(){var t=!1;M.bind(K("mouseenter"),function(){t=!0}),M.bind(K("mouseleave"),function(){t=!1});var o=!1;e(q).bind(K("keydown"),function(n){if((!n.isDefaultPrevented||!n.isDefaultPrevented())&&t){for(var r=document.activeElement?document.activeElement:q.activeElement;r.shadowRoot;)r=r.shadowRoot.activeElement;if(!e(r).is(":input,[contenteditable]")){var l=0,i=0;switch(n.which){case 37:l=-30;break;case 38:i=30;break;case 39:l=30;break;case 40:i=-30;break;case 33:i=90;break;case 32:case 34:i=-90;break;case 35:i=n.ctrlKey?-Y:-D;break;case 36:i=n.ctrlKey?M.scrollTop():D;break;default:return}M.scrollTop(M.scrollTop()-i),M.scrollLeft(M.scrollLeft()+l),o=v(l,i),o&&n.preventDefault()}}})}function w(){function e(e){e.stopPropagation()}J.bind(K("click"),e),G.bind(K("click"),function(e){var o=t(R/2),n=e.pageY-G.offset().top-o,r=D-R,l=n/r;0>l?l=0:l>1&&(l=1),M.scrollTop((Y-D)*l)}),U.bind(K("click"),e),H.bind(K("click"),function(e){var o=t(k/2),n=e.pageX-H.offset().left-o,r=E-k,l=n/r;0>l?l=0:l>1&&(l=1),M.scrollLeft((C-E)*l)})}function m(){function t(){var e=window.getSelection?window.getSelection():document.getSlection?document.getSlection():{rangeCount:0};return 0===e.rangeCount?null:e.getRangeAt(0).commonAncestorContainer}function o(){r||(r=setInterval(function(){return x()?(M.scrollTop(M.scrollTop()+l.top),M.scrollLeft(M.scrollLeft()+l.left),d(),void 0):(clearInterval(r),void 0)},50))}function n(){r&&(clearInterval(r),r=null),H.removeClass("in-scrolling"),G.removeClass("in-scrolling")}var r=null,l={top:0,left:0},i=!1;e(q).bind(K("selectionchange"),function(){e.contains(M[0],t())?i=!0:(i=!1,n())}),e(window).bind(K("mouseup"),function(){i&&(i=!1,n())}),e(window).bind(K("mousemove"),function(e){if(i){var t={x:e.pageX,y:e.pageY},r=M.offset(),a={left:r.left,right:r.left+M.outerWidth(),top:r.top,bottom:r.top+M.outerHeight()};t.x<a.left+3?(l.left=-5,H.addClass("in-scrolling")):t.x>a.right-3?(l.left=5,H.addClass("in-scrolling")):l.left=0,t.y<a.top+3?(l.top=5>a.top+3-t.y?-5:-20,G.addClass("in-scrolling")):t.y>a.bottom-3?(l.top=5>t.y-a.bottom+3?5:20,G.addClass("in-scrolling")):l.top=0,0===l.top&&0===l.left?n():o()}})}function T(t,o){function n(e,t){M.scrollTop(M.scrollTop()-t),M.scrollLeft(M.scrollLeft()-e),d()}function r(){h=!0}function l(){h=!1}function i(e){return e.originalEvent.targetTouches?e.originalEvent.targetTouches[0]:e.originalEvent}function a(e){var t=e.originalEvent;return t.targetTouches&&1===t.targetTouches.length?!0:t.pointerType&&"mouse"!==t.pointerType&&t.pointerType!==t.MSPOINTER_TYPE_MOUSE?!0:!1}function s(e){if(a(e)){w=!0;var t=i(e);p.pageX=t.pageX,p.pageY=t.pageY,f=(new Date).getTime(),null!==b&&clearInterval(b),e.stopPropagation()}}function c(e){if(!h&&w&&a(e)){var t=i(e),o={pageX:t.pageX,pageY:t.pageY},r=o.pageX-p.pageX,l=o.pageY-p.pageY;n(r,l),p=o;var s=(new Date).getTime(),c=s-f;c>0&&(v.x=r/c,v.y=l/c,f=s),g(r,l)&&(e.stopPropagation(),e.preventDefault())}}function u(){!h&&w&&(w=!1,clearInterval(b),b=setInterval(function(){return x()?.01>Math.abs(v.x)&&.01>Math.abs(v.y)?(clearInterval(b),void 0):(n(30*v.x,30*v.y),v.x*=.8,v.y*=.8,void 0):(clearInterval(b),void 0)},10))}var p={},f=0,v={},b=null,h=!1,w=!1;t&&(e(window).bind(K("touchstart"),r),e(window).bind(K("touchend"),l),M.bind(K("touchstart"),s),M.bind(K("touchmove"),c),M.bind(K("touchend"),u)),o&&(window.PointerEvent?(e(window).bind(K("pointerdown"),r),e(window).bind(K("pointerup"),l),M.bind(K("pointerdown"),s),M.bind(K("pointermove"),c),M.bind(K("pointerup"),u)):window.MSPointerEvent&&(e(window).bind(K("MSPointerDown"),r),e(window).bind(K("MSPointerUp"),l),M.bind(K("MSPointerDown"),s),M.bind(K("MSPointerMove"),c),M.bind(K("MSPointerUp"),u)))}function y(){M.bind(K("scroll"),function(){d()})}function L(){M.unbind(K()),e(window).unbind(K()),e(q).unbind(K()),M.data("perfect-scrollbar",null),M.data("perfect-scrollbar-update",null),M.data("perfect-scrollbar-destroy",null),U.remove(),J.remove(),H.remove(),G.remove(),M=H=G=U=J=X=O=E=D=C=Y=k=W=_=N=Q=R=j=V=Z=$=B=K=null}function S(){d(),y(),p(),f(),w(),m(),b(),(ot||nt)&&T(ot,nt),P.useKeyboard&&h(),M.data("perfect-scrollbar",M),M.data("perfect-scrollbar-update",d),M.data("perfect-scrollbar-destroy",L)}var P=e.extend(!0,{},o),M=e(this),x=function(){return!!M};if("object"==typeof n?e.extend(!0,P,n):i=n,"update"===i)return M.data("perfect-scrollbar-update")&&M.data("perfect-scrollbar-update")(),M;if("destroy"===i)return M.data("perfect-scrollbar-destroy")&&M.data("perfect-scrollbar-destroy")(),M;if(M.data("perfect-scrollbar"))return M.data("perfect-scrollbar");M.addClass("ps-container");var E,D,C,Y,X,k,W,I,O,R,j,A,B="rtl"===M.css("direction"),K=r(),q=this.ownerDocument||document,H=e("<div class='ps-scrollbar-x-rail'>").appendTo(M),U=e("<div class='ps-scrollbar-x'>").appendTo(H),_=t(H.css("bottom")),N=_===_,Q=N?null:t(H.css("top")),z=t(H.css("borderLeftWidth"))+t(H.css("borderRightWidth")),F=t(H.css("marginLeft"))+t(H.css("marginRight")),G=e("<div class='ps-scrollbar-y-rail'>").appendTo(M),J=e("<div class='ps-scrollbar-y'>").appendTo(G),V=t(G.css("right")),Z=V===V,$=Z?null:t(G.css("left")),et=t(G.css("borderTopWidth"))+t(G.css("borderBottomWidth")),tt=t(G.css("marginTop"))+t(G.css("marginBottom")),ot="ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch,nt=null!==window.navigator.msMaxTouchPoints;return S(),M})}});
