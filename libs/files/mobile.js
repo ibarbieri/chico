@@ -73,7 +73,7 @@ JS.autocomplete = [
     "src/ui/js/Popover.js",
     "src/shared/js/Layer.js",
     "src/shared/js/Autocomplete.js",
-    "src/ui/js/Autocomplete.js",
+    // "src/ui/js/Autocomplete.js",
     "extensions/search-box/mobile/autocomplete.searchBox.js"
 ];
 
