@@ -43,7 +43,6 @@
 
 
     <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/vendor/zepto/zepto-1.0.min.js"></script>
-
     <script type="text/javascript" src="/extensions/search-box/mobile/autocomplete-1.1.1-standalone.js"></script>
 
 
@@ -67,6 +66,14 @@
 
         // Instance of autocomplete with chico 1.1.1 standalone
         var autocomplete = new ac.Autocomplete($('.nav-search-input'), autocompleteConfig);
+
+
+        // Instance of autocomplete scroll when the popover is showed
+        // autocomplete._popover.once('show', function () {
+        //     $('.ac-popover-content').perfectScrollbar({
+        //         suppressScrollX: true
+        //     });
+        // });
     </script>
 </body>
 </html>
