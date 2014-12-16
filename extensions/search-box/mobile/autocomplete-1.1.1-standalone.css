@@ -686,84 +686,70 @@
     background: url('http://static.mlstatic.com/org-img/ch/assets/0.3/loading-small.gif') no-repeat right 10px center;
 }
 
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
 /* Form
 ---------------------------------------------------------------*/
 .nav-search {
-    background: #FFF;
-    border-radius: 4px;
-    width: 100%;
-    height: 40px;
+    position: absolute;
     top: 0;
+    left: 0;
+    width: 100%;
+    height: 44px;
+    padding: 5px 66px 5px 66px;
+    vertical-align: top;
 }
 
 
 /* Input search
 ---------------------------------------------------------------*/
 .nav-search input {
-    border: 1px solid #CCC;
-    border-right: none;
-    border-radius: 3px 0 0 3px;
-    font-size: 16px;
-    padding: 5px 15px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 4px 48px 4px 10px;
     margin: 0;
-    width: 92%;
-    height: 40px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    font-family: Arial,Helvetica,"Nimbus Sans L",sans-serif;
-    vertical-align: top;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.nav-search input[type=text] {
-    width: 92% !important;
-    height: 40px !important;
-    border-radius: 3px 0 0 3px !important;
+    font-size: 16px;
+    color: #444444;
+    font-size: 17px;
+    background-color: white;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    -webkit-appearance: none;
 }
 
 .nav-search input[type=text]:focus {
-    box-shadow: 0 0 5px rgba(117,127,16,.2);
-    outline: none;
-}
-
-.nav-searac-categ input[type=text] {
-    padding-right: 27%;
-    width: 71%;
+    border: 1px solid #bfbfbf;
+    outline: 0;
+    -webkit-box-shadow: 0 0 5px rgba(117, 127, 16, 0.2);
+    box-shadow: 0 0 5px rgba(117, 127, 16, 0.2);
 }
 
 
 /* Button
 ---------------------------------------------------------------*/
 .nav-search button {
-    background: #fff;
-    background: -moz-linear-gradient(top,#fff 0,#f1f1f1 100%);
-    background: -ms-linear-gradient(top,#fff 0,#f1f1f1 100%);
-    background: -o-linear-gradient(top,#fff 0,#f1f1f1 100%);
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#f1f1f1));
-    background: -webkit-linear-gradient(top,#fff 0,#f1f1f1 100%);
-    background: linear-gradient(to bottom,#fff 0,#f1f1f1 100%);
-    -moz-border-radius: 0 3px 3px 0;
-    -webkit-border-radius: 0 3px 3px 0;
-    border-radius: 0 3px 3px 0;
-    border: 1px solid #CDCCCB;
-    color: #666;
-    cursor: pointer;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#f1f1f1',GradientType=0);
-    height: 40px;
     position: absolute;
     top: 0;
-    right: 0;
-    width: 46px;
+    right: 66px;
+    width: 37px;
+    height: 100%;
+    padding: 0;
+    line-height: 44px;
+    background: none;
+    border: none;
 }
 
 .nav-search .nav-icon-search {
     position: absolute;
     left: 0;
     top: 0;
-    background-position: 13px 10px;
+    background-position: 12px 13px;
     width: 44px;
     height: 40px;
     background-image: url(http://static.mlstatic.com/org-img/commons/assets/sprite.png?v1);
@@ -773,27 +759,92 @@
     text-indent: -9999px;
 }
 
+.nav-search button:focus,
+.nav-search .nav-icon-search:focus {
+    outline: none;
+}
+
 
 /* Autosuggest
 ---------------------------------------------------------------*/
+.ac-popover.ac-box-lite.ac-autocomplete {
+    position: absolute !important;
+    left: 0 !important;
+    padding: 0;
+    margin-top: 6px;
+    background: #fff;
+    min-width: 100%;
+    overflow-y: auto;
+    border-radius: 0;
+    border: 0;
+    color: #333;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
 .ac-autocomplete {
     padding: 0;
     box-shadow: none;
+    width: 100% !important;
+    left: 0 !important;
 }
 
 .ac-autocomplete-list .ac-autocomplete-item {
     margin: 0;
-    padding: 12px 10px;
+    padding: 15px 10px;
     cursor: pointer;
     border-top: 1px solid #EEEEEE;
     font-size: 13px;
     position: relative;
+    border-bottom: none;
+    min-height: 0;
+    line-height: normal;
+    text-indent: initial;
+    border-radius: 0;
 }
 
 .ac-autocomplete-list .ac-autocomplete-item .ac-icon-arrow-up {
     position: absolute;
-    right: 10px;
-    top: 9px;
+    display: block;
+    top: 18px;
+    right: 20px;
+    border-radius: 2px;
+    background: #CCC;
+    width: 3px;
+    height: 15px;
+    margin: 0;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.ac-autocomplete-list .ac-icon-arrow-up:before {
+    left: -3px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.ac-autocomplete-list .ac-icon-arrow-up:after {
+    left: 3px;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.ac-autocomplete-list .ac-icon-arrow-up:before,
+.ac-autocomplete-list .ac-icon-arrow-up:after {
+    position: absolute;
+    top: -4px;
+    width: 3px;
+    height: 11px;
+    display: block;
+    border-radius: 2px;
+    background: #CCC;
+    content: '';
 }
 
 
@@ -806,10 +857,6 @@
 
 /* Aditional Info
 ---------------------------------------------------------------*/
-.aditional-info {
-/*    border-top: solid 1px #EEE;*/
-}
-
 .aditional-info .aditional-info-title {
     color: #999999;
     font-size: 13px;
@@ -820,6 +867,12 @@
 .aditional-info .aditional-info-list li {
     border-top: 1px solid #EEEEEE;
     font-size: 13px;
+    position: relative;
+    border-radius: 0;
+    border-bottom: none;
+    min-height: 0;
+    line-height: 0;
+    text-indent: initial;
 }
 
 .aditional-info .aditional-info-list a {
@@ -828,7 +881,7 @@
     font-size: 13px;
     line-height: 7px;
     margin: 0;
-    padding: 15px 5px;
+    padding: 19px 10px 19px 5px;
 }
 
 .aditional-info .official-store li a {
@@ -848,7 +901,7 @@
     margin: 0px auto 10px auto;
     padding: 0px;
     width: auto;
-    height: 112px;
+    height: 127px;
     overflow: hidden;
 }
 
