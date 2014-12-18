@@ -671,6 +671,74 @@
     background: url('http://static.mlstatic.com/org-img/ch/assets/0.3/loading-small.gif') no-repeat right 10px center;
 }
 
+/* Autosaggest OLD look and feel
+---------------------------------------------------------------*/
+.ac-popover-content .ac-autocomple-list {
+    max-height: 150px !important;
+    overflow: auto;
+}
+
+.ac-popover-content .ac-autocomple-list.no-scroll {
+    height: auto !important;
+}
+
+.ac-popover-content .ac-autocomplete-item {
+    color: #0059B2;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 16px;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+.ac-popover-content .ac-autocomplete-item:first-child {
+    margin-top: 0;
+}
+
+.last-searches {
+    border-top: solid 1px #EEE;
+    margin: 3px -10px 0;
+    padding: 1px 0;
+}
+
+.last-searches .last-searches-title {
+    color: #CCC;
+    font-size: 13px;
+    line-height: 13px;
+    margin: 10px 15px 8px;
+}
+
+.last-searches .last-searches-item {
+    color: #0059B2;
+    display: block;
+    font-size : 14px;
+    line-height: 14px;
+    margin: 2px 10px;
+    padding: 5px;
+}
+
+.last-searches .last-searches-item:hover {
+    background-color: #FDF9D5;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.aditional-info .aditional-info-item {
+    color: #0059B2!important;
+    display: block;
+    font-size: 14px !important;
+    line-height: 7px;
+    margin: 2px 5px;
+    padding: 5px;
+}
+
+.ac-autocomplete-item, .ac-autocomplete-highlighted {
+    margin: 0;
+    padding: 5px 5px !important;
+    cursor: pointer;
+}
+
+
+
 /* Form
 ---------------------------------------------------------------*/
 .nav-search {
@@ -764,6 +832,10 @@
 
 /* Autosuggest
 ---------------------------------------------------------------*/
+.ac-autocomplete {
+    padding: 10px 10px 5px 10px;
+}
+
 .ac-autocomplete-list .ac-autocomplete-item i {
     display: none;
 }
@@ -876,13 +948,14 @@
     margin: 0px auto 10px auto;
     padding: 0px;
     width: auto;
-    height: 130px;
+    height: 118px; /* OLD STYLES*/
+    /*height: 130px; NEW STYLES  */
     overflow: hidden;
 }
 
 .ac-popover-content .ac-autocomplete-list {
     width: auto;
-    height: 350px;
+/*    height: 350px;*/
 }
 
 

@@ -3891,7 +3891,12 @@ ac.factory = function (Klass, fn) {
         $checkboxLabel,
         maxQueryLength,
         lastSearchesText,
+        searchQuery,
+        searchQueryInCategory,
         meliDomain,
+        platformId,
+        officialStoreFiltersEnabled,
+        officialStoreFilterId,
         siteId,
         genericAditionalInfo;
 
@@ -3913,7 +3918,12 @@ ac.factory = function (Klass, fn) {
         $checkboxLabel = this._options.categoryCheckboxLabel;
         maxQueryLength = this._options.maxQueryLength || 15;
         lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
+        searchQuery = this._options.searchQuery;
+        searchQueryInCategory = this._options.searchQueryInCategory;
         meliDomain = this._options.meliDomain || 'meli.domain';
+        platformId = this._options.platformId;
+        officialStoreFiltersEnabled = this._options.officialStoreFiltersEnabled;
+        officialStoreFilterId = this._options.officialStoreFilterId;
         siteId = this._options.siteId || 'MLA';
         genericAditionalInfo = this._options.genericAditionalInfo || 'en todas las Tiendas Oficiales';
 
@@ -3929,17 +3939,46 @@ ac.factory = function (Klass, fn) {
         this.addLastSearches();
 
 
-        this.on('type', function (userInput) {
+        // Converte siteId and PlatformId
+        var siteIdConverted;
+        function convertSiteAndPlatform (siteId, platformId) {
+            var sitePlatformCovertionMap = {
+                'MLV:tc': 'TCV',
+                'MCO:tc': 'TCC',
+                'MLV:tm': 'TMV',
+                'MCO:tm': 'TMC',
+                'MLV:tl': 'TLV',
+                'MCO:tl': 'TLC',
+                'MLV:ti': 'TIV',
+                'MCO:ti': 'TIC',
+                'MLM:ap': 'APM'
+            };
 
+            if (sitePlatformCovertionMap[siteId+':'+platformId]) {
+                siteIdConverted = sitePlatformCovertionMap[siteId+':'+platformId];
+            } else {
+                siteIdConverted = siteId;
+            }
+        }
+        convertSiteAndPlatform(siteId, platformId);
+
+
+        // Crete autosuggest url
+        var autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest?version=test&showFilters='+officialStoreFiltersEnabled+'&q='
+
+
+        this.on('type', function (userInput) {
              $.ajax({
-                 'url': 'http://suggestgz.mlapps.com/sites/'+siteId+'/autosuggest?q='+userInput,
+                 'url': autosuggestUrl+userInput, //'http://suggestgz.mlapps.com/sites/'+siteIdConverted+'/autosuggest?version=test&q='+userInput,
                  'dataType': 'jsonp',
                  'cache': false,
                  'global': true,
                  'context': this,
-                 'crossDomain': true
-             })
-             .done(this.parseResults);
+                 'crossDomain': true,
+                 success: function (data) {
+                    this.parseResults(data);
+                 }
+             });
 
              this.adecuateCategoryLabel();
         });
@@ -3983,6 +4022,15 @@ ac.factory = function (Klass, fn) {
     }
 
 
+    Autocomplete.prototype.getFilter = function (filtersArray, filterId) {
+        for (var i = 0; i < filtersArray.length; i++) {
+            if (filterId === filtersArray[i].id) {
+                return filtersArray[i];
+            };
+        }
+    }
+
+
     /**
      * Parse the json and add the results to data array
      * @memberof! ac.Autocomplete.prototype
@@ -3992,117 +4040,8 @@ ac.factory = function (Klass, fn) {
      */
     Autocomplete.prototype.parseResults = function (results) {
 
-        var resultsTemp = {
-           "q":"ipod",
-           "suggested_queries":[
-              {
-                 "q":"ipod",
-                 "match_start":0,
-                 "match_end":4,
-                 "filters": {
-                    "id": "official_store_id",
-                    "name": "Tienda Oficial",
-                    "values": [
-                        {
-                            "id": "177",
-                            "name": "en Tienda Oficial Apple"
-                        },
-                        {
-                            "id": "188",
-                            "name": "en Tienda Oficial Megatone"
-                        }
-                    ]
-                 }
-              },
-              {
-                 "q":"ipod touch",
-                 "match_start":0,
-                 "match_end":4
-              },
-              {
-                 "q":"ipod 5",
-                 "match_start":0,
-                 "match_end":4
-              },
-              {
-                 "q":"ipod nano",
-                 "match_start":0,
-                 "match_end":4
-              },
-              {
-                 "q":"dock ipod",
-                 "match_start":5,
-                 "match_end":9
-              },
-              {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              },
-                            {
-                 "q":"auriculares ipod",
-                 "match_start":12,
-                 "match_end":16
-              }
-           ]
-        }
-
-        // if (results[2].suggested_queries !== undefined) {
-        //     results[2].suggested_queries.forEach(function (e, i) {
-        //         console.log(e.filters.name);
-        //         data.push(e.q);
-        //     });
-
-        //     this.suggest(data);
-        // }
-
         var i,
-            queries = resultsTemp.suggested_queries,
+            queries = results[2].suggested_queries,
             suggestedResults = [],
             suggestedResultsTO = [],
             suggestedQueriesLength = queries.length;
@@ -4112,27 +4051,32 @@ ac.factory = function (Klass, fn) {
         }
 
         var firstQuery = queries[0],
-            firstQueryFilters = firstQuery.filters;
+            firstQueryOficialStoreFilter;
 
-        if (firstQueryFilters !== undefined) {
+        if (firstQuery !== undefined) {
 
-            var filtersLength = firstQueryFilters.values.length;
+            firstQueryOficialStoreFilter = this.getFilter(firstQuery.filters ,officialStoreFilterId);
 
-            for (i = 0; i < filtersLength; i++) {
-                suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+firstQueryFilters.values[i].name+'</span>');
+            if (firstQueryOficialStoreFilter !== undefined) {
+                var filtersLength = firstQueryOficialStoreFilter.values.length;
 
-            };
+                for (i = 0; i < filtersLength; i++) {
+                    suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+firstQueryOficialStoreFilter.values[i].name+'</span>');
 
-            // Add the last <li>. It's the generic option tha always appear.
-            suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+genericAditionalInfo+'</span>');
+                };
+
+                // Add the last <li>. It's the generic option tha always appear.
+                suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+genericAditionalInfo+'</span>');
+
+                // Add the official store queries suggested
+                this.addOfficialStoreQueries(suggestedResultsTO);
+            }
+
         }
 
         for (i = 0; i < suggestedQueriesLength; i++) {
             suggestedResults.push(queries[i].q);
         };
-
-        // Add the official store queries suggested
-        this.addOfficialStoreQueries(suggestedResultsTO);
 
         this.suggest(suggestedResults);
     }
@@ -4299,14 +4243,11 @@ ac.factory = function (Klass, fn) {
      * Autocomplete.doQuery();
      */
     Autocomplete.prototype.doQuery = function (tracking) {
-        // Saving querys
-        // Use trim to remove white spaces
-        var query = $searchInput.val(), //trim($searchInput.val()),
-            searchQuery = 'http://listado.localhost.com.ar:8080/$query_DisplayType_G';//settings.uri;
-            // searac = 'http://ipod.localhost.com.ar:8080/reproductores/';
+        // Saving querys. TODO?: Use trim to remove white spaces:trim($searchInput.val())
+        var query = $searchInput.val();
 
-        // Naturalization
-        if (query && query.length > 0){
+        // Naturalization the query
+        if (query && query.length > 0) {
             query = this.naturalization({
                 string: query,
                 replace: ' ',
@@ -4318,26 +4259,42 @@ ac.factory = function (Klass, fn) {
             return false;
         }
 
+        var searchCompleteUrl;
+
+
         // Category checked
         if ($checkbox !== null && $checkbox.is(':checked')) {
-            if (window.location.href.indexOf('_DisplayType_LF') != -1) {
-                searchQuery =  "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']" + '_DisplayType_LF';
-            } else {
-                searchQuery = "http://listado.localhost.com.ar:8080/$query_DisplayType_G#D[C:'']";
-            }
+            searchCompleteUrl = searchQueryInCategory;
+        } else {
+            searchCompleteUrl = searchQuery;
         }
 
+
+        // Matener el formato de vistas: gallery o listing
+        if (window.location.href.indexOf('_DisplayType_LF') != -1) {
+            searchCompleteUrl += "_DisplayType_LF";
+        } else {
+            searchCompleteUrl += "_DisplayType_G";
+        }
+
+
         // Adults setting
-        if (this.getCookieValue('pr_categ') === 'AD' && searchQuery.indexOf('_PrCategId_AD') === -1) {
-            searchQuery = searchQuery + '_PrCategId_AD';
+        if (this.getCookieValue('pr_categ') === 'AD' && searchCompleteUrl.indexOf('_PrCategId_AD') === -1) {
+            searchCompleteUrl += '_PrCategId_AD';
         }
 
         // Add query to the URL string
-        searchQuery = searchQuery.replace('$query', encodeURIComponent(query));
+        searchCompleteUrl = searchCompleteUrl.replace('$query', encodeURIComponent(query));
+
 
         // Tracking
         if (typeof tracking != 'undefined'){
-            searchQuery = searchQuery + '#D[A:' + query + ',B:' + tracking.element + ']';
+            // Matener el formato de vistas: gallery o listing
+            if ($checkbox !== null && $checkbox.is(':checked')) {
+                searchCompleteUrl += "#D[C:'']";
+            } else {
+                searchCompleteUrl = searchCompleteUrl + '#D[A:' + query + ',B:' + tracking.element + ']';
+            }
         }
 
         // Cookies
@@ -4345,8 +4302,8 @@ ac.factory = function (Klass, fn) {
         this.setSearchCookies(query);
 
         // Redirect
-        // location.href = searchQuery;
-        console.info(searchQuery);
+        location.href = searchCompleteUrl;
+        console.info(searchCompleteUrl);
 
         return this;
     };

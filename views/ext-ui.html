@@ -33,7 +33,7 @@
         <h1>Autocomplete Search Box</h1>
 
             <form class="nav-search" action="/" method="GET" role="search">
-                <input style="width:150px;" type="text" class="nav-search-input" name="as_word" value="" max-length="120"/>
+                <input type="text" class="nav-search-input" name="as_word" value="" max-length="120"/>
 
                 <p id="mlCategory" class="nav-category" title="Buscar solo en...">
                     <input type="checkbox" id="categorySearch" name="as_categ_id" value="MLA7262"/>
@@ -79,8 +79,12 @@
             'maxQueryLength': 15,
             'lastSearchesText': 'Últimas búsquedas',
             'meliDomain': 'localhost',
-            'searchQuery': 'http://listado.localhost.com.ar:8080/$query_DisplayType_G',
+            'searchQuery': 'http://listado.localhost.com.ar:8080/$query',
+            'searchQueryInCategory' : 'http://listado.localhost.com.ar:8080/$query',
             'siteId': 'MLA',
+            'platformId': 'ML',
+            'officialStoreFiltersEnabled': 'true',
+            'officialStoreFilterId': 'official_store_id',
             'genericAditionalInfo': 'en <span>todas las Tiendas Oficiales</span>'
         }
 
@@ -88,7 +92,7 @@
         // Instance of autocomplete with chico 1.1.1 standalone
         var autocomplete = new ac.Autocomplete($('.nav-search-input'), autocompleteConfig);
 
-        //      Instance of autocomplete scroll when the popover is showed
+        // Instance of autocomplete scroll when the popover is showed
         autocomplete._popover.once('show', function () {
             $('.ac-popover-content').perfectScrollbar({
                 suppressScrollX: true
