@@ -80,12 +80,15 @@
 
 
         // Crete autosuggest url
-        var autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest?version=test&showFilters='+officialStoreFiltersEnabled+'&q='
+        var autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest?version=test&showFilters='+officialStoreFiltersEnabled+'&q=';
+
+        // Temp
+        autosuggestUrl = 'http://suggestgz.mlapps.com/sites/'+siteIdConverted+'/autosuggest?version=test&showFilters='+officialStoreFiltersEnabled+'&q=';
 
 
         this.on('type', function (userInput) {
              $.ajax({
-                 'url': autosuggestUrl+userInput, //'http://suggestgz.mlapps.com/sites/'+siteIdConverted+'/autosuggest?version=test&q='+userInput,
+                 'url': autosuggestUrl+userInput,
                  'dataType': 'jsonp',
                  'cache': false,
                  'global': true,
@@ -169,7 +172,7 @@
         var firstQuery = queries[0],
             firstQueryOficialStoreFilter;
 
-        if (firstQuery !== undefined) {
+        if (firstQuery !== undefined && officialStoreFiltersEnabled === 'true') {
 
             firstQueryOficialStoreFilter = this.getFilter(firstQuery.filters ,officialStoreFilterId);
 

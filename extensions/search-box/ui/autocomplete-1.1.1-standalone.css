@@ -841,6 +841,15 @@
 }
 
 
+.ac-popover-content .ac-autocomplete-item {
+    font-weight: bold;
+}
+
+.ac-popover-content .ac-autocomplete-item strong {
+    font-weight: normal;
+}
+
+
 /* Category checkbox
 ---------------------------------------------------------------*/
 .nav-search .nav-category {

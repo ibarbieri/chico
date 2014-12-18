@@ -170,8 +170,17 @@
     padding: 10px 10px 5px 10px;
 }
 
-.ac-autocomplete-list .ac-autocomplete-item i {
+.ch-autocomplete-list .ch-autocomplete-item i {
     display: none;
+}
+
+
+.ch-popover-content .ch-autocomplete-item {
+    font-weight: bold;
+}
+
+.ch-popover-content .ch-autocomplete-item strong {
+    font-weight: normal;
 }
 
 
