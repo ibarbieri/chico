@@ -9,6 +9,8 @@
         lastSearchesText,
         searchQuery,
         searchQueryInCategory,
+        currentCategory,
+        suggestionsQuantity,
         meliDomain,
         platformId,
         officialStoreFiltersEnabled,
@@ -36,6 +38,8 @@
         lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
         searchQuery = this._options.searchQuery;
         searchQueryInCategory = this._options.searchQueryInCategory;
+        currentCategory = this._options.currentCategory;
+        suggestionsQuantity = this._options.suggestionsQuantity || 6;
         meliDomain = this._options.meliDomain || 'meli.domain';
         platformId = this._options.platformId;
         officialStoreFiltersEnabled = this._options.officialStoreFiltersEnabled;
@@ -47,7 +51,10 @@
         // REDIFINE the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
         ch.shortcuts.remove(ch.onkeyenter);
         ch.shortcuts.add(ch.onkeyenter, this.uid, function (event) {
-            that._selectSuggestion();
+            //that._selectSuggestion();
+            that.doQuery({
+                element: this._highlighted
+            });
         });
 
 
@@ -79,27 +86,54 @@
         convertSiteAndPlatform(siteId, platformId);
 
 
-        // Crete autosuggest url
-        var autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest?version=test&showFilters='+officialStoreFiltersEnabled+'&q=';
-
-        // Temp
-        autosuggestUrl = 'http://suggestgz.mlapps.com/sites/'+siteIdConverted+'/autosuggest?version=test&showFilters='+officialStoreFiltersEnabled+'&q=';
+        var autosuggestUrl;
+        var extraParameters = {};
 
 
+        if (window.location.href.indexOf('_autosuggest_test') != -1 || window.location.href.indexOf('autosuggest=test') != -1) {
+            autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest';
+            extraParameters["version"]= "test";
+        } else if ( window.location.href.indexOf('_autosuggest_nocahe') != -1 || window.location.href.indexOf('autosuggest=nocache') != -1 ) {
+            autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest';
+        } else {
+            autosuggestUrl = 'http://suggestgz.mlapps.com/sites/'+siteIdConverted+'/autosuggest';
+        }
+
+        if (officialStoreFiltersEnabled) {
+            extraParameters["showFilters"] = true;
+        }
+
+        extraParameters["limit"] = suggestionsQuantity;
+
+        var autosuggestCache = {};
+
+        // Cache the querie and do the ajax request autosuggest
         this.on('type', function (userInput) {
-             $.ajax({
-                 'url': autosuggestUrl+userInput,
-                 'dataType': 'jsonp',
-                 'cache': false,
-                 'global': true,
-                 'context': this,
-                 'crossDomain': true,
-                 success: function (data) {
-                    this.parseResults(data);
-                 }
-             });
 
-             this.adecuateCategoryLabel();
+            if (userInput === undefined || userInput === '') {
+                return;
+            }
+
+            if (userInput in autosuggestCache){
+                this.parseResults(autosuggestCache[userInput]);
+
+            } else {
+                extraParameters["q"] = userInput;
+                $.ajax({
+                     'url': autosuggestUrl,
+                     'data' : extraParameters,
+                     'dataType': 'jsonp',
+                     'cache': false,
+                     'global': true,
+                     'context': this,
+                     'crossDomain': true,
+                     success: function (data) {
+                        autosuggestCache[userInput] = data;
+                        this.parseResults(data);
+                     }
+                 });
+            }
+         this.adecuateCategoryLabel();
         });
 
 
@@ -408,21 +442,25 @@
 
         // Tracking
         if (typeof tracking != 'undefined'){
-            // Matener el formato de vistas: gallery o listing
             if ($checkbox !== null && $checkbox.is(':checked')) {
-                searchCompleteUrl += "#D[C:'']";
+                searchCompleteUrl += "#D[C:'" + currentCategory + "',B:" + tracking.element + "]";
             } else {
-                searchCompleteUrl = searchCompleteUrl + '#D[A:' + query + ',B:' + tracking.element + ']';
+                searchCompleteUrl += "#D[A:" + query + ",B:" + tracking.element + "]";
+            }
+        } else {
+            if ($checkbox !== null && $checkbox.is(':checked')) {
+                searchCompleteUrl += "#D[C:'" + currentCategory + "']";
+            } else {
+                searchCompleteUrl += "#D[A:" + query + "]";
             }
         }
 
+
         // Cookies
-        console.info('revisar seteo de cookie');
         this.setSearchCookies(query);
 
         // Redirect
         location.href = searchCompleteUrl;
-        console.info(searchCompleteUrl);
 
         return this;
     };

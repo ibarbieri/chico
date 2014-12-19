@@ -43,7 +43,7 @@ module.exports = function (grunt) {
                     'footer': '\n\tch.version = \'<%= pkg.version %>\';\n\twindow.ch = ch;\n}(this, this.$));'
                 },
                 'src': files.JS.core,
-                'dest': 'temp/' + environment + '/core.tmp.js'
+                'dest': 'temp/' + environment + '/core.tmp.js',
             },
 
             'js': {
@@ -58,10 +58,16 @@ module.exports = function (grunt) {
                 'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.components),
                 'dest': destination + '/' + environment + '/<%= pkg.name %>.css'
             },
+
             'autocompleteJs': {
-                'src': ['temp/' + environment + '/core.tmp.js'].concat(files.JS.abilities).concat(files.JS.autocomplete),
+                'options': {
+                    'banner': '<%= banner.full %>' + "\n\n(function (window, $) {\n\t'use strict';\n\n",
+                    'footer': '\n\tac.version = \'<%= pkg.version %>\';\n\twindow.ac = ac;\n}(this, this.$));'
+                },
+                'src': files.JS.autocompleteCore.concat(files.JS.abilities).concat(files.JS.autocomplete),
                 'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.js'
             },
+
             'autocompleteCss': {
                 'options': {
                     'banner': '<%= banner.full %>'
@@ -155,6 +161,14 @@ module.exports = function (grunt) {
                         'from': 'ch-',
                         'to': 'ac-'
                     },
+                    {
+                        'from': ', this.ch)',
+                        'to': ', this.ac)'
+                    },
+                    {
+                        'from': ',(this.ch)',
+                        'to': ',(this.ac)'
+                    }
                 ]
             },
             'nameSpaceCss': {

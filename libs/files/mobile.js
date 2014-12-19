@@ -14,7 +14,7 @@ JS.core = [
     "src/shared/js/support.js",
     "src/shared/js/events.js",
     "src/shared/js/factory.js",
-    "src/mobile/js/init.js"
+    "extensions/search-box/init.js"
 ];
 
 /*
@@ -66,6 +66,16 @@ JS.components = [
 /*
  * JS: Autocomplete
  */
+JS.autocompleteCore = [
+    "src/shared/js/helpers.js",
+    "src/shared/js/util.js",
+    "src/mobile/js/util.js",
+    "src/shared/js/support.js",
+    "src/shared/js/events.js",
+    "extensions/search-box/factory-standalone.js",
+    "src/mobile/js/init.js"
+];
+
 JS.autocomplete = [
     "src/shared/js/onImagesLoads.js",
     "src/shared/js/Component.js",
@@ -73,7 +83,6 @@ JS.autocomplete = [
     "src/ui/js/Popover.js",
     "src/shared/js/Layer.js",
     "src/shared/js/Autocomplete.js",
-    // "src/ui/js/Autocomplete.js",
     "extensions/search-box/mobile/autocomplete.searchBox.js"
 ];
 

@@ -745,6 +745,20 @@
     border: none;
 }
 
+.nav-search .ac-autocomplete-loading + button:before {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: -11px;
+    z-index: 0;
+    width: 15px;
+    height: 15px;
+    margin: -8px 0 0;
+    background: url("http://static.mlstatic.com/org-img/ch/assets/0.3/loading-big.gif") no-repeat center center white;
+    background-size: 100% auto;
+}
+
 .nav-search .nav-icon-search {
     position: absolute;
     left: 0;
@@ -846,6 +860,15 @@
     background: #CCC;
     content: '';
 }
+
+.ac-popover-content .ac-autocomplete-item {
+    font-weight: bold;
+}
+
+.ac-popover-content .ac-autocomplete-item strong {
+    font-weight: normal;
+}
+
 
 
 /* Category checkbox

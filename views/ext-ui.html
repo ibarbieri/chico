@@ -70,6 +70,7 @@
 
     <script type="text/javascript">
         //grunt buildExtensions
+        //grunt buildExtensions --env mobile
 
         // Configuration
         var autocompleteConfig = {
@@ -81,6 +82,8 @@
             'meliDomain': 'localhost',
             'searchQuery': 'http://listado.localhost.com.ar:8080/$query',
             'searchQueryInCategory' : 'http://listado.localhost.com.ar:8080/$query',
+            'currentCategory': "${searchResultFe.getSelectedCategoryId()}",
+            'suggestionsQuantity': 20,
             'siteId': 'MLA',
             'platformId': 'ML',
             'officialStoreFiltersEnabled': 'false',
@@ -98,18 +101,6 @@
                 suppressScrollX: true
             });
         });
-
-
-        //Instance of autocomplete with chico 1.1.1
-        // var autocomplete = new ch.Autocomplete($('.nav-search-input'), autocompleteConfig);
-
-        // autocomplete._popover.once('show', function () {
-        //     $('.ch-popover-content').perfectScrollbar({
-        //         suppressScrollX: true
-        //     });
-        // });
-
-
     </script>
 </body>
 </html>

@@ -71,6 +71,19 @@ JS.components = [
 ];
 
 
+/*
+ * JS: Core autocomplete
+ */
+JS.autocompleteCore = [
+    "src/shared/js/helpers.js",
+    "src/shared/js/util.js",
+    "src/shared/js/support.js",
+    "src/shared/js/events.js",
+    "src/ui/js/events.js",
+    "extensions/search-box/factory-standalone.js",
+    "extensions/search-box/init.js"
+];
+
 JS.autocomplete = [
     "src/shared/js/onImagesLoads.js",
     "src/shared/js/Component.js",
