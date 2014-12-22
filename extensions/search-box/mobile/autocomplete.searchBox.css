@@ -77,6 +77,10 @@
     background-size: 100% auto;
 }
 
+.ch-autocomplete-loading {
+    background: none;
+}
+
 .nav-search .nav-icon-search {
     position: absolute;
     left: 0;

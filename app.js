@@ -18,6 +18,8 @@ app.use('/static', express.static(__dirname + '/views/static'));
 app.use('/test', express.static(__dirname + '/tests'));
 app.use('/libs', express.static(__dirname + '/libs'));
 app.use('/extensions', express.static(__dirname + '/extensions'));
+app.use('/search-box-ui/', express.static(__dirname + '/build/search-box-ui'));
+app.use('/search-box-mobile/', express.static(__dirname + '/build/search-box-mobile'));
 /**
  * Render HTML files
  */

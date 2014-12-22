@@ -153,6 +153,15 @@
     }
 
 
+    Autocomplete.prototype.getFilter = function (filtersArray, filterId) {
+        for (var i = 0; i < filtersArray.length; i++) {
+            if (filterId === filtersArray[i].id) {
+                return filtersArray[i];
+            };
+        }
+    }
+
+
     /**
      * Parse the json and add the results to data array
      * @memberof! ch.Autocomplete.prototype
@@ -161,7 +170,6 @@
      * this.parseResults();
      */
     Autocomplete.prototype.parseResults = function (results) {
-        console.log(results);
         var i,
             queries = results[2].suggested_queries,
             suggestedResults = [],
@@ -175,7 +183,7 @@
         var firstQuery = queries[0],
             firstQueryOficialStoreFilter;
 
-        if (firstQuery !== undefined && officialStoreFiltersEnabled === 'true') {
+        if (firstQuery !== undefined && officialStoreFiltersEnabled === 'true' && firstQuery.filters !== undefined) {
 
             firstQueryOficialStoreFilter = this.getFilter(firstQuery.filters ,officialStoreFilterId);
 
@@ -183,12 +191,11 @@
                 var filtersLength = firstQueryOficialStoreFilter.values.length;
 
                 for (i = 0; i < filtersLength; i++) {
-                    suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+firstQueryOficialStoreFilter.values[i].name+'</span>');
-
+                    suggestedResultsTO.push('<strong>'+ firstQuery.q + '</strong> ' + '<span>' +genericAditionalInfo+ firstQueryOficialStoreFilter.values[i].name+'</span>');
                 };
 
                 // Add the last <li>. It's the generic option tha always appear.
-                suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+genericAditionalInfo+'</span>');
+                //suggestedResultsTO.push('<strong>' + firstQuery.q + '</strong> ' + '<span>'+genericAditionalInfo+'</span>');
 
                 // Add the official store queries suggested
                 this.addOfficialStoreQueries(suggestedResultsTO);

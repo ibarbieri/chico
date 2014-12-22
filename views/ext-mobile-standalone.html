@@ -14,7 +14,7 @@
     <meta http-equiv="cleartype" content="on">
 
     <link rel="stylesheet" href="http://static.mlstatic.com/org-img/mobile/ch/0.4.8/chico.min.css">
-    <link rel="stylesheet" href="/extensions/search-box/mobile/autocomplete.searchBox.css">
+    <link rel="stylesheet" href="/search-box-mobile/chico.css">
 </head>
 
 <body>
@@ -29,10 +29,10 @@
         </form>
     </section>
 
-    <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/vendor/zepto/zepto-1.0.min.js"></script>
-    <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/mobile/1.1.1/chico.js"></script>
 
-    <script type="text/javascript" src="/extensions/search-box/mobile/autocomplete.searchBox.js"></script>
+    <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/vendor/zepto/zepto-1.0.min.js"></script>
+    <script type="text/javascript" src="/search-box-mobile/chico.js"></script>
+
 
     <script type="text/javascript">
         // Configuration
@@ -55,7 +55,7 @@
         }
 
         // Instance of autocomplete with chico 1.1.1 standalone
-        var autocomplete = new ch.Autocomplete($('.nav-search-input'), autocompleteConfig);
+        var autocomplete = new ac.Autocomplete($('.nav-search-input'), autocompleteConfig);
 
 
         // Instance of autocomplete scroll when the popover is showed

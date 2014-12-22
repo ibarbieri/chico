@@ -57,23 +57,6 @@ module.exports = function (grunt) {
                 },
                 'src': files.CSS.resetML.concat(files.CSS.core).concat(files.CSS.components),
                 'dest': destination + '/' + environment + '/<%= pkg.name %>.css'
-            },
-
-            'autocompleteJs': {
-                'options': {
-                    'banner': '<%= banner.full %>' + "\n\n(function (window, $) {\n\t'use strict';\n\n",
-                    'footer': '\n\tac.version = \'<%= pkg.version %>\';\n\twindow.ac = ac;\n}(this, this.$));'
-                },
-                'src': files.JS.autocompleteCore.concat(files.JS.abilities).concat(files.JS.autocomplete),
-                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.js'
-            },
-
-            'autocompleteCss': {
-                'options': {
-                    'banner': '<%= banner.full %>'
-                },
-                'src': files.CSS.core.concat(files.CSS.autocomplete),
-                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css'
             }
         },
 
@@ -138,9 +121,9 @@ module.exports = function (grunt) {
                     'to': '../../assets/0.3/'
                 }]
             },
-            'nameSpaceJs': {
-                'src': ['extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.js'],
-                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.js',
+            'nameSpaceJsUi': {
+                'src': ['build/search-box-ui/chico.js'],
+                'dest': 'build/search-box-ui/chico.js',
                 'replacements': [{
                         'from': 'ch =',
                         'to': 'ac ='
@@ -166,26 +149,93 @@ module.exports = function (grunt) {
                         'to': ', this.ac)'
                     },
                     {
-                        'from': ',(this.ch)',
-                        'to': ',(this.ac)'
+                        'from': '(this.ch)',
+                        'to': '(this.ac)'
+                    },
+                    {
+                        'from': ', ch)',
+                        'to': ', ac)'
+                    },
+                    {
+                        'from': '(ch)',
+                        'to': '(ac)'
                     }
                 ]
             },
-            'nameSpaceCss': {
-                'src': ['extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css'],
-                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css',
+            'nameSpaceJsMobile': {
+                'src': ['build/search-box-mobile/chico.js'],
+                'dest': 'build/search-box-mobile/chico.js',
+                'replacements': [{
+                        'from': 'ch =',
+                        'to': 'ac ='
+                    },
+                    {
+                        'from': 'ch.',
+                        'to': 'ac.'
+                    },
+                    {
+                        'from': 'ch[',
+                        'to': 'ac['
+                    },
+                    {
+                        'from': ' = ch',
+                        'to': ' = ac'
+                    },
+                    {
+                        'from': 'ch-',
+                        'to': 'ac-'
+                    },
+                    {
+                        'from': ', this.ch)',
+                        'to': ', this.ac)'
+                    },
+                    {
+                        'from': '(this.ch)',
+                        'to': '(this.ac)'
+                    },
+                    {
+                        'from': ', ch)',
+                        'to': ', ac)'
+                    },
+                    {
+                        'from': '(ch)',
+                        'to': '(ac)'
+                    }
+                ]
+            },
+            'nameSpaceCssUi': {
+                'src': ['build/search-box-ui/chico.css'],
+                'dest': 'build/search-box-ui/chico.css',
                 'replacements': [{
                         'from': 'ch-',
                         'to': 'ac-'
                     }
                 ]
             },
-            'assetsPath': {
-                'src': ['extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css'],
-                'dest': 'extensions/search-box/'+environment+'/autocomplete-1.1.1-standalone.css',
+            'nameSpaceCssMobile': {
+                'src': ['build/search-box-mobile/chico.css'],
+                'dest': 'build/search-box-mobile/chico.css',
                 'replacements': [{
-                        'from': '../assets/',
-                        'to': 'http://static.mlstatic.com/org-img/ch/assets/0.3/'
+                        'from': 'ch-',
+                        'to': 'ac-'
+                    }
+                ]
+            },
+            'assetsPathUi': {
+                'src': ['build/search-box-ui/chico.css'],
+                'dest': 'build/search-box-ui/chico.css',
+                'replacements': [{
+                        'from': '../../assets/',
+                        'to': 'http://static.mlstatic.com/org-img/ch/assets/'
+                    }
+                ]
+            },
+            'assetsPathMobile': {
+                'src': ['build/search-box-mobile/chico.css'],
+                'dest': 'build/search-box-mobile/chico.css',
+                'replacements': [{
+                        'from': '../../assets/',
+                        'to': 'http://static.mlstatic.com/org-img/ch/assets/'
                     }
                 ]
             }
@@ -206,7 +256,7 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['jslint']);
     grunt.registerTask('doc', ['jsdoc']);
     grunt.registerTask('dev', ['concat', 'clean']);
-    grunt.registerTask('dist', ['concat', 'replace:example', 'uglify', 'cssmin', 'clean']);
+    grunt.registerTask('dist', ['concat', 'replace', 'uglify', 'cssmin', 'clean']);
     grunt.registerTask('buildExtensions', ['concat', 'clean', 'replace']);
     grunt.registerTask('distExtensions', ['concat', 'replace:nameSpace', 'uglify', 'cssmin', 'clean']);
 };
