@@ -229,13 +229,21 @@
     padding: 19px 10px 19px 5px;
 }
 
-.aditional-info .official-store li a {
+.aditional-info .official-store li {
     color: #333333;
     font-size: 13px;
+    padding: 24px 0 24px 11px;
+    margin: 0;
 }
 
-.aditional-info .official-store li a span {
+.aditional-info .official-store li span {
     color: #999999;
+}
+
+.aditional-info .ch-autocomplete-item {
+    margin: 0 0 0 10px;
+    color: #0059B2;
+    font-size: 15px;
 }
 
 
