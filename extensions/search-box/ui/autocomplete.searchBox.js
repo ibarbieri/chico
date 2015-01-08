@@ -6,7 +6,6 @@
         $checkbox,
         $checkboxLabel,
         maxQueryLength,
-        lastSearchesText,
         searchQuery,
         searchQueryInCategory,
         currentCategory,
@@ -17,7 +16,11 @@
         officialStoreFilterId,
         siteId,
         searchFEStoreParamId,
-        genericAditionalInfo;
+        messages,
+        isMobile,
+        position;
+
+    Autocomplete.prototype.autosuggestCache = {};
 
 
     /**
@@ -35,8 +38,7 @@
         $searchInput = this.$trigger;
         $checkbox = this._options.categoryCheckbox;
         $checkboxLabel = this._options.categoryCheckboxLabel;
-        maxQueryLength = this._options.maxQueryLength || 15;
-        lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
+        maxQueryLength = this._options.maxQueryLength || 35;
         searchQuery = this._options.searchQuery;
         searchQueryInCategory = this._options.searchQueryInCategory;
         currentCategory = this._options.currentCategory;
@@ -46,11 +48,19 @@
         officialStoreFiltersEnabled = this._options.officialStoreFiltersEnabled;
         officialStoreFilterId = this._options.officialStoreFilterId;
         siteId = this._options.siteId || 'MLA';
-        genericAditionalInfo = this._options.genericAditionalInfo || 'en todas las Tiendas Oficiales';
+        isMobile = this._options.isMobile || 'false';
+        messages = this._options.messages || {
+            'lastSearches': 'Últimas búsquedas',
+            'inOfficialStore': 'en tienda oficial',
+            'inAllOficialStores': 'en todas las tiendas oficiales'
+        };
+        position = this._position;
+
 
         var searchFEStoreParamIdBySite = {"MLB": "Loja" , "default":"Tienda"};
         searchFEStoreParamId = ((siteId in searchFEStoreParamIdBySite) ? searchFEStoreParamIdBySite[siteId] : searchFEStoreParamIdBySite["default"]);
 
+        this._options.loadingClass = "" //dont show loading icon
 
         // REDIFINE the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
         ch.shortcuts.remove(ch.onkeyenter);
@@ -61,11 +71,13 @@
 
 
         // Add the last searches queries from the cookies
-        this.addLastSearches();
-
+        if (isMobile === 'false' || isMobile === false){
+            this.addLastSearches();
+        }
 
         // Converte siteId and PlatformId
         var siteIdConverted;
+
         function convertSiteAndPlatform (siteId, platformId) {
             var sitePlatformCovertionMap = {
                 'MLV:tc': 'TCV',
@@ -85,6 +97,7 @@
                 siteIdConverted = siteId;
             }
         }
+
         convertSiteAndPlatform(siteId, platformId);
 
 
@@ -97,45 +110,58 @@
             extraParameters["version"]= "test";
         } else if ( window.location.href.indexOf('_autosuggest_nocahe') != -1 || window.location.href.indexOf('autosuggest=nocache') != -1 ) {
             autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest';
+        } else if (Math.random() < 0.01) { //10% of the traffic direct to webserver, without cache
+            autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest';
+            var date = new Date();
+            extraParameters["cacheBypassTimeStamp"] = date.getTime();
         } else {
             autosuggestUrl = 'http://suggestgz.mlapps.com/sites/'+siteIdConverted+'/autosuggest';
         }
 
-        if (officialStoreFiltersEnabled) {
+        if (officialStoreFiltersEnabled === "true") {
             extraParameters["showFilters"] = true;
         }
 
         extraParameters["limit"] = suggestionsQuantity;
 
-        var autosuggestCache = {};
 
-        // Cache the querie and do the ajax request autosuggest
+        // Cache the query and do the ajax request autosuggest
         this.on('type', function (userInput) {
+            userInput = this._el.value;
 
             if (userInput === undefined || userInput === '') {
                 return;
             }
 
-            if (userInput in autosuggestCache){
-                this.parseResults(autosuggestCache[userInput]);
+            if (userInput in this.autosuggestCache){
+                this.parseResults(this.autosuggestCache[userInput]);
 
             } else {
                 extraParameters["q"] = userInput;
-                $.ajax({
-                     'url': autosuggestUrl,
-                     'data' : extraParameters,
-                     'dataType': 'jsonp',
-                     'cache': false,
-                     'global': true,
-                     'context': this,
-                     'crossDomain': true,
-                     success: function (data) {
-                        autosuggestCache[userInput] = data;
-                        this.parseResults(data);
-                     }
-                 });
+                if(isMobile === "true" || isMobile === true){
+                    this.doJSONPCall({
+                        'url': autosuggestUrl,
+                        'data': extraParameters,
+                        'jsonp': "callback",
+                        'jsonpCallback': "autocomplete.jsonpCallback"
+                    });
+                } else {
+                    $.ajax({
+                         'url': autosuggestUrl,
+                         'data': extraParameters,
+                         'dataType': 'jsonp',
+                         'cache': true,
+                         'jsonp': "callback",
+                         'global': true,
+                         'context': this,
+                         'crossDomain': true,
+                         'jsonpCallback': "autocomplete.jsonpCallback"
+                     });
+                }
             }
+
          this.adecuateCategoryLabel();
+
         });
 
 
@@ -153,18 +179,62 @@
 
         $searchForm.submit(function (event) {
             event.preventDefault();
-
-            //Disable direct Submit
-            //that.doQuery();
+            if (typeof that._highlighted === "undefined" || that._highlighted === null ){
+                that.doQuery();
+            }
         });
     }
 
-    Autocomplete.prototype.getSelectedElementMap = function () {
-        var selectedElementHtml = this.$container[0].querySelectorAll('li')[this._highlighted];
-        var selectedElementMap;
 
-        if(typeof selectedElementHtml != 'undefined' && selectedElementHtml != null ) {
+    Autocomplete.prototype.convertParamsToUrl = function (params) {
+        var response = "?";
+        for (var key in params) {
+            response += key + "=" + params[key] + "&";
+        }
+        response = response.substring(0, response.length - 1); //remove last &
+        return response;
+    }
+
+
+    //function used for mobile, cause ZEPTO doesnt allow named JSONP callbacks
+    Autocomplete.prototype.doJSONPCall = function (options) {
+
+        var script = document.createElement('script'),
+            url = options.url + this.convertParamsToUrl(options.data);
+
+        url += "&" + options.jsonp + "=" + options.jsonpCallback;
+
+        script.onerror = function() {
+            console.log("error on JSONP call to url:" + url);
+        }
+
+        script.src = url
+
+        $('head').append(script);
+
+    }
+
+
+    Autocomplete.prototype.jsonpCallback = function (data) {
+        var jsonResponse = data[2],
+            responseQuery = jsonResponse.q;
+
+        this.autosuggestCache[responseQuery] = jsonResponse;
+
+        if (this._el.value === responseQuery) {
+            this.parseResults(jsonResponse);
+        }
+    }
+
+
+    Autocomplete.prototype.getSelectedElementMap = function () {
+        var selectedElementHtml = this.$container[0].querySelectorAll('li')[this._highlighted],
+            selectedElementMap;
+
+        if (typeof selectedElementHtml != 'undefined' && selectedElementHtml != null ) {
+
             var selectedElementHtmlAnchor = selectedElementHtml;
+
             if (typeof selectedElementHtmlAnchor != 'undefined' && selectedElementHtmlAnchor != null ) {
                 selectedElementMap = {
                     selectedIndex: this._highlighted,
@@ -174,9 +244,9 @@
             }
         }
 
-        if(typeof selectedElementMap === 'undefined'){
+        if (typeof selectedElementMap === 'undefined'){
             selectedElementMap = {
-                selectedIndex: this._highlighted,
+                selectedIndex: this._highlighted
             }
         }
 
@@ -192,7 +262,7 @@
      * this.parseResults();
      */
     Autocomplete.prototype.scrollInToView = function () {
-        var highlightedElement = document.querySelector('.ac-autocomplete-highlighted');
+        var highlightedElement = document.querySelector('.ch-autocomplete-highlighted');
 
         if (highlightedElement !== null) {
             highlightedElement.scrollIntoView(false)
@@ -203,7 +273,7 @@
 
     Autocomplete.prototype.getFilter = function (filtersArray, filterId) {
         for (var i = 0; i < filtersArray.length; i++) {
-            if (filterId === filtersArray[i].id) {
+            if (filterId === filtersArray[i].id || "official_store_id" === filtersArray[i].id) { //TODO: delete OR when parameter gets migrated
                 return filtersArray[i];
             };
         }
@@ -220,58 +290,78 @@
     Autocomplete.prototype.parseResults = function (results) {
 
         var i,
-            queries = results[2].suggested_queries,
+            queries = results.suggested_queries,
             suggestedResults = [],
             suggestedResultsTO = [],
-            suggestedQueriesLength = queries.length;
+            suggestedQueriesQtyToShow = queries.length,
+            firstQuery = queries[0],
+            firstQueryOfficialStoreFilter;
 
         if (queries === undefined) {
             return;
         }
 
+        if (this._$lastListOficialStore !== undefined) {
+            this._$lastListOficialStore.remove();
+        }
 
-        var firstQuery = queries[0],
-            firstQueryOficialStoreFilter;
+        if (firstQuery !== undefined && officialStoreFiltersEnabled === "true" && firstQuery.filters !== undefined && firstQuery.filters !== undefined) {
 
-        if (firstQuery !== undefined && officialStoreFiltersEnabled === 'true' && firstQuery.filters !== undefined) {
+            firstQueryOfficialStoreFilter = this.getFilter(firstQuery.filters ,officialStoreFilterId);
 
-            firstQueryOficialStoreFilter = this.getFilter(firstQuery.filters ,officialStoreFilterId);
-
-            if (firstQueryOficialStoreFilter !== undefined) {
-                var filtersLength = firstQueryOficialStoreFilter.values.length;
-
+            if (firstQueryOfficialStoreFilter !== undefined) {
+                var filtersLength = firstQueryOfficialStoreFilter.values.length;
                 for (i = 0; i < filtersLength; i++) {
                     var suggestionMap = {};
                     suggestionMap["query"] = firstQuery.q;
-                    suggestionMap["text"] = '<strong>'+ firstQuery.q + '</strong> ' + '<span>' +genericAditionalInfo+ firstQueryOficialStoreFilter.values[i].name+'</span>';
-                    suggestionMap["url"] = this.makeOfficialStoreUrl(firstQuery.q, firstQueryOficialStoreFilter.values[i].id , firstQueryOficialStoreFilter.values[i].name)
+                    if(firstQueryOfficialStoreFilter.values[i].id === "all") {
+                        suggestionMap["text"] = firstQuery.q + " " + '<span>'+ messages.inAllOficialStores +'</span>';
+                    } else {
+                        suggestionMap["text"] = firstQuery.q + " " + '<span>' +messages.inOfficialStore+ " " + firstQueryOfficialStoreFilter.values[i].name+'</span>';
+                    }
+
+                    suggestionMap["url"] = this.makeOfficialStoreUrl(firstQuery.q, firstQueryOfficialStoreFilter.values[i].id , firstQueryOfficialStoreFilter.values[i].name)
                     suggestedResultsTO.push(suggestionMap);
                 };
 
-                // Add the official store queries suggested
                 this.addOfficialStoreQueries(suggestedResultsTO);
+
+                if(isMobile === 'false' || isMobile === false){
+                    suggestedQueriesQtyToShow = 6;
+                } else {
+                    suggestedQueriesQtyToShow = 3;
+                }
             }
         }
 
-        for (i = 0; i < suggestedQueriesLength; i++) {
+        for (i = 0; i < Math.min(queries.length, suggestedQueriesQtyToShow); i++) {
             suggestedResults.push(queries[i].q);
         };
 
         this.suggest(suggestedResults);
+
+
     }
 
+    /**
+     * Make the official store url
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @returns {url}
+     * @example
+     * this.makeOfficialStoreUrl(firstQuery.q, firstQueryOfficialStoreFilter.values[i].id , firstQueryOfficialStoreFilter.values[i].name);
+     */
     Autocomplete.prototype.makeOfficialStoreUrl = function (query , officialStoreId, officialStoreName) {
         var url = searchQuery;
         var officialStoreParamValue,officialStoreParamId;
         url = url.replace('$query', encodeURIComponent(query));
 
+        officialStoreParamId = searchFEStoreParamId;
         if(officialStoreId === "all"){
-            officialStoreParamId = officialStoreFilterId.replace(/_/g,'*');
             officialStoreParamValue = officialStoreId;
         } else {
             officialStoreParamValue = officialStoreName.toLowerCase();
             officialStoreParamValue = officialStoreParamValue.replace(/ /g, '-');
-            officialStoreParamId = searchFEStoreParamId;
         }
 
         url += "_" + officialStoreParamId + "_" + officialStoreParamValue;
@@ -311,7 +401,7 @@
 
         // Check if the last searches get from the cookie
         if (lastSearches !== false) {
-            this._$lastSearchesQueries = $(this.makeTemplate(lastSearches, lastSearchesText, true)).appendTo(this.$container);
+            this._$lastSearchesQueries = $(this.makeTemplate(lastSearches, messages.lastSearches, true)).appendTo(this.$container);
         }
 
         return this;
@@ -332,8 +422,6 @@
             list,
             plainSearches,
             searchesList = [];
-
-
 
         // The user hasn't cookies. Esc the function becouse there aren't cookies to set as last searchs.
         if (!isPMSCookie) {
@@ -379,13 +467,8 @@
      */
     Autocomplete.prototype.addOfficialStoreQueries = function (officialStoreQueries) {
 
-        if (this._$lastListOficialStore !== undefined) {
-            this._$lastListOficialStore.remove();
-        }
-
-        // Check if the officialStoreQueries was get from the api
-        if (officialStoreQueries !== false) {
-            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries)).insertAfter($('.ac-popover-content'));
+        if (officialStoreQueries.length > 0) {
+            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries)).insertAfter(this.$container.find('.ch-popover-content'));
         }
 
         return this;
@@ -406,7 +489,7 @@
             uri,
             i,
             suggestedInInput = '',
-            officialStore = 'official-store',
+            officialStore = 'official-store-suggest',
             query,
             text;
 
@@ -439,6 +522,7 @@
         return list;
     };
 
+
     /**
      * Do query
      * @memberof! ch.Autocomplete.prototype
@@ -447,7 +531,7 @@
      * @example
      * Autocomplete.doQuery();
      */
-    Autocomplete.prototype.doQuery = function (tracking) {
+    Autocomplete.prototype.doQuery = function (selectedElement) {
         // Saving querys. TODO?: Use trim to remove white spaces:trim($searchInput.val())
         var searchCompleteUrl,query;
 
@@ -481,7 +565,6 @@
             searchCompleteUrl = searchCompleteUrl.replace('$query', encodeURIComponent(query));
         }
 
-
         // Matener el formato de vistas: gallery o listing
         if (window.location.href.indexOf('_DisplayType_LF') != -1) {
             searchCompleteUrl += "_DisplayType_LF";
@@ -492,6 +575,19 @@
         // Adults setting
         if (this.getCookieValue('pr_categ') === 'AD' && searchCompleteUrl.indexOf('_PrCategId_AD') === -1) {
             searchCompleteUrl += '_PrCategId_AD';
+        }
+
+        //test navigation
+        if        (window.location.href.indexOf('_version_test3') != -1 || window.location.href.indexOf('version=test3') != -1) {
+            searchCompleteUrl += '_version_test3';
+        } else if (window.location.href.indexOf('_version_test2') != -1 || window.location.href.indexOf('version=test2') != -1) {
+            searchCompleteUrl += '_version_test2';
+        } else if (window.location.href.indexOf('_version_test') != -1 || window.location.href.indexOf('version=test') != -1) {
+            searchCompleteUrl += '_version_test';
+        }
+
+        if        (window.location.href.indexOf('_autosuggest_test') != -1 || window.location.href.indexOf('autosuggest=test') != -1) {
+            searchCompleteUrl += '_autosuggest_test';
         }
 
         // Tracking
@@ -626,11 +722,6 @@
      */
     Autocomplete.prototype.setSearchCookies = function (query) {
         try {
-            // Only if PMS active
-            // this.setCookie({
-            //     name: 'ml_list',
-            //     value: 'searching'
-            // });
             this.setCookie({
                 name: 'LAST_SEARCH',
                 value: query

@@ -107,7 +107,6 @@ CSS.resetML = [
  * CSS: Core
  */
 CSS.core = [
-    "src/shared/css/base.css",
     "src/mobile/css/base.css",
     "src/shared/css/icons.css",
     "src/shared/css/boxes.css",

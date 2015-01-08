@@ -6,7 +6,6 @@
         $checkbox,
         $checkboxLabel,
         maxQueryLength,
-        lastSearchesText,
         searchQuery,
         searchQueryInCategory,
         currentCategory,
@@ -17,7 +16,11 @@
         officialStoreFilterId,
         siteId,
         searchFEStoreParamId,
-        genericAditionalInfo;
+        messages,
+        isMobile,
+        position;
+
+    Autocomplete.prototype.autosuggestCache = {};
 
 
     /**
@@ -35,8 +38,7 @@
         $searchInput = this.$trigger;
         $checkbox = this._options.categoryCheckbox;
         $checkboxLabel = this._options.categoryCheckboxLabel;
-        maxQueryLength = this._options.maxQueryLength || 15;
-        lastSearchesText = this._options.lastSearchesText || 'Últimas búsquedas';
+        maxQueryLength = this._options.maxQueryLength || 35;
         searchQuery = this._options.searchQuery;
         searchQueryInCategory = this._options.searchQueryInCategory;
         currentCategory = this._options.currentCategory;
@@ -46,26 +48,29 @@
         officialStoreFiltersEnabled = this._options.officialStoreFiltersEnabled;
         officialStoreFilterId = this._options.officialStoreFilterId;
         siteId = this._options.siteId || 'MLA';
-        genericAditionalInfo = this._options.genericAditionalInfo || 'en todas las Tiendas Oficiales';
+        isMobile = this._options.isMobile || 'false';
+        messages = this._options.messages || {
+            'lastSearches': 'Últimas búsquedas',
+            'inOfficialStore': 'en tienda oficial',
+            'inAllOficialStores': 'en todas las tiendas oficiales'
+        };
+        position = this._position;
+
 
         var searchFEStoreParamIdBySite = {"MLB": "Loja" , "default":"Tienda"};
         searchFEStoreParamId = ((siteId in searchFEStoreParamIdBySite) ? searchFEStoreParamIdBySite[siteId] : searchFEStoreParamIdBySite["default"]);
 
-
-        // REDIFINE the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
-        // ch.shortcuts.remove(ch.onkeyenter);
-        // ch.shortcuts.add(ch.onkeyenter, this.uid, function (event) {
-        //     //that._selectSuggestion();
-        //     that.doQuery(that.getSelectedElementMap());
-        // });
+        this._options.loadingClass = "" //dont show loading icon
 
 
         // Add the last searches queries from the cookies
-        //this.addLastSearches();
-
+        if (isMobile === 'false' || isMobile === false){
+            this.addLastSearches();
+        }
 
         // Converte siteId and PlatformId
         var siteIdConverted;
+
         function convertSiteAndPlatform (siteId, platformId) {
             var sitePlatformCovertionMap = {
                 'MLV:tc': 'TCV',
@@ -85,6 +90,7 @@
                 siteIdConverted = siteId;
             }
         }
+
         convertSiteAndPlatform(siteId, platformId);
 
 
@@ -97,45 +103,58 @@
             extraParameters["version"]= "test";
         } else if ( window.location.href.indexOf('_autosuggest_nocahe') != -1 || window.location.href.indexOf('autosuggest=nocache') != -1 ) {
             autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest';
+        } else if (Math.random() < 0.01) { //10% of the traffic direct to webserver, without cache
+            autosuggestUrl = 'https://api.mercadolibre.com/sites/'+siteIdConverted+'/autosuggest';
+            var date = new Date();
+            extraParameters["cacheBypassTimeStamp"] = date.getTime();
         } else {
             autosuggestUrl = 'http://suggestgz.mlapps.com/sites/'+siteIdConverted+'/autosuggest';
         }
 
-        if (officialStoreFiltersEnabled) {
+        if (officialStoreFiltersEnabled === "true") {
             extraParameters["showFilters"] = true;
         }
 
         extraParameters["limit"] = suggestionsQuantity;
 
-        var autosuggestCache = {};
 
-        // Cache the querie and do the ajax request autosuggest
+        // Cache the query and do the ajax request autosuggest
         this.on('type', function (userInput) {
+            userInput = this._el.value;
 
             if (userInput === undefined || userInput === '') {
                 return;
             }
 
-            if (userInput in autosuggestCache){
-                this.parseResults(autosuggestCache[userInput]);
+            if (userInput in this.autosuggestCache){
+                this.parseResults(this.autosuggestCache[userInput]);
 
             } else {
                 extraParameters["q"] = userInput;
-                $.ajax({
-                     'url': autosuggestUrl,
-                     'data' : extraParameters,
-                     'dataType': 'jsonp',
-                     'cache': false,
-                     'global': true,
-                     'context': this,
-                     'crossDomain': true,
-                     success: function (data) {
-                        autosuggestCache[userInput] = data;
-                        this.parseResults(data);
-                     }
-                 });
+                if(isMobile === "true" || isMobile === true){
+                    this.doJSONPCall({
+                        'url': autosuggestUrl,
+                        'data': extraParameters,
+                        'jsonp': "callback",
+                        'jsonpCallback': "autocomplete.jsonpCallback"
+                    });
+                } else {
+                    $.ajax({
+                         'url': autosuggestUrl,
+                         'data': extraParameters,
+                         'dataType': 'jsonp',
+                         'cache': true,
+                         'jsonp': "callback",
+                         'global': true,
+                         'context': this,
+                         'crossDomain': true,
+                         'jsonpCallback': "autocomplete.jsonpCallback"
+                     });
+                }
             }
+
          this.adecuateCategoryLabel();
+
         });
 
 
@@ -145,26 +164,64 @@
         });
 
 
-        // ch.shortcuts.add(ch.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
-        // ch.shortcuts.add(ch.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
-
-        // ch.shortcuts.add(ch.onkeydownarrow, this.uid, this.scrollInToView);
-        // ch.shortcuts.add(ch.onkeyuparrow, this.uid, this.scrollInToView);
-
         $searchForm.submit(function (event) {
             event.preventDefault();
-
-            //Disable direct Submit
-            //that.doQuery();
+            if (typeof that._highlighted === "undefined" || that._highlighted === null ){
+                that.doQuery();
+            }
         });
     }
 
-    Autocomplete.prototype.getSelectedElementMap = function () {
-        var selectedElementHtml = this.$container[0].querySelectorAll('li')[this._highlighted];
-        var selectedElementMap;
 
-        if(typeof selectedElementHtml != 'undefined' && selectedElementHtml != null ) {
+    Autocomplete.prototype.convertParamsToUrl = function (params) {
+        var response = "?";
+        for (var key in params) {
+            response += key + "=" + params[key] + "&";
+        }
+        response = response.substring(0, response.length - 1); //remove last &
+        return response;
+    }
+
+
+    //function used for mobile, cause ZEPTO doesnt allow named JSONP callbacks
+    Autocomplete.prototype.doJSONPCall = function (options) {
+
+        var script = document.createElement('script'),
+            url = options.url + this.convertParamsToUrl(options.data);
+
+        url += "&" + options.jsonp + "=" + options.jsonpCallback;
+
+        script.onerror = function() {
+            console.log("error on JSONP call to url:" + url);
+        }
+
+        script.src = url
+
+        $('head').append(script);
+
+    }
+
+
+    Autocomplete.prototype.jsonpCallback = function (data) {
+        var jsonResponse = data[2],
+            responseQuery = jsonResponse.q;
+
+        this.autosuggestCache[responseQuery] = jsonResponse;
+
+        if (this._el.value === responseQuery) {
+            this.parseResults(jsonResponse);
+        }
+    }
+
+
+    Autocomplete.prototype.getSelectedElementMap = function () {
+        var selectedElementHtml = this.$container[0].querySelectorAll('li')[this._highlighted],
+            selectedElementMap;
+
+        if (typeof selectedElementHtml != 'undefined' && selectedElementHtml != null ) {
+
             var selectedElementHtmlAnchor = selectedElementHtml;
+
             if (typeof selectedElementHtmlAnchor != 'undefined' && selectedElementHtmlAnchor != null ) {
                 selectedElementMap = {
                     selectedIndex: this._highlighted,
@@ -174,9 +231,9 @@
             }
         }
 
-        if(typeof selectedElementMap === 'undefined'){
+        if (typeof selectedElementMap === 'undefined'){
             selectedElementMap = {
-                selectedIndex: this._highlighted,
+                selectedIndex: this._highlighted
             }
         }
 
@@ -192,7 +249,7 @@
      * this.parseResults();
      */
     Autocomplete.prototype.scrollInToView = function () {
-        var highlightedElement = document.querySelector('.ac-autocomplete-highlighted');
+        var highlightedElement = document.querySelector('.ch-autocomplete-highlighted');
 
         if (highlightedElement !== null) {
             highlightedElement.scrollIntoView(false)
@@ -203,7 +260,7 @@
 
     Autocomplete.prototype.getFilter = function (filtersArray, filterId) {
         for (var i = 0; i < filtersArray.length; i++) {
-            if (filterId === filtersArray[i].id) {
+            if (filterId === filtersArray[i].id || "official_store_id" === filtersArray[i].id) { //TODO: delete OR when parameter gets migrated
                 return filtersArray[i];
             };
         }
@@ -220,58 +277,78 @@
     Autocomplete.prototype.parseResults = function (results) {
 
         var i,
-            queries = results[2].suggested_queries,
+            queries = results.suggested_queries,
             suggestedResults = [],
             suggestedResultsTO = [],
-            suggestedQueriesLength = queries.length;
+            suggestedQueriesQtyToShow = queries.length,
+            firstQuery = queries[0],
+            firstQueryOfficialStoreFilter;
 
         if (queries === undefined) {
             return;
         }
 
+        if (this._$lastListOficialStore !== undefined) {
+            this._$lastListOficialStore.remove();
+        }
 
-        var firstQuery = queries[0],
-            firstQueryOficialStoreFilter;
+        if (firstQuery !== undefined && officialStoreFiltersEnabled === "true" && firstQuery.filters !== undefined && firstQuery.filters !== undefined) {
 
-        if (firstQuery !== undefined && officialStoreFiltersEnabled === 'true' && firstQuery.filters !== undefined) {
+            firstQueryOfficialStoreFilter = this.getFilter(firstQuery.filters ,officialStoreFilterId);
 
-            firstQueryOficialStoreFilter = this.getFilter(firstQuery.filters ,officialStoreFilterId);
-
-            if (firstQueryOficialStoreFilter !== undefined) {
-                var filtersLength = firstQueryOficialStoreFilter.values.length;
-
+            if (firstQueryOfficialStoreFilter !== undefined) {
+                var filtersLength = firstQueryOfficialStoreFilter.values.length;
                 for (i = 0; i < filtersLength; i++) {
                     var suggestionMap = {};
                     suggestionMap["query"] = firstQuery.q;
-                    suggestionMap["text"] = '<strong>'+ firstQuery.q + '</strong> ' + '<span>' +genericAditionalInfo+ firstQueryOficialStoreFilter.values[i].name+'</span>';
-                    suggestionMap["url"] = this.makeOfficialStoreUrl(firstQuery.q, firstQueryOficialStoreFilter.values[i].id , firstQueryOficialStoreFilter.values[i].name)
+                    if(firstQueryOfficialStoreFilter.values[i].id === "all") {
+                        suggestionMap["text"] = firstQuery.q + " " + '<span>'+ messages.inAllOficialStores +'</span>';
+                    } else {
+                        suggestionMap["text"] = firstQuery.q + " " + '<span>' +messages.inOfficialStore+ " " + firstQueryOfficialStoreFilter.values[i].name+'</span>';
+                    }
+
+                    suggestionMap["url"] = this.makeOfficialStoreUrl(firstQuery.q, firstQueryOfficialStoreFilter.values[i].id , firstQueryOfficialStoreFilter.values[i].name)
                     suggestedResultsTO.push(suggestionMap);
                 };
 
-                // Add the official store queries suggested
                 this.addOfficialStoreQueries(suggestedResultsTO);
+
+                if(isMobile === 'false' || isMobile === false){
+                    suggestedQueriesQtyToShow = 6;
+                } else {
+                    suggestedQueriesQtyToShow = 3;
+                }
             }
         }
 
-        for (i = 0; i < suggestedQueriesLength; i++) {
+        for (i = 0; i < Math.min(queries.length, suggestedQueriesQtyToShow); i++) {
             suggestedResults.push(queries[i].q);
         };
 
         this.suggest(suggestedResults);
+
+
     }
 
+    /**
+     * Make the official store url
+     * @memberof! ch.Autocomplete.prototype
+     * @function
+     * @returns {url}
+     * @example
+     * this.makeOfficialStoreUrl(firstQuery.q, firstQueryOfficialStoreFilter.values[i].id , firstQueryOfficialStoreFilter.values[i].name);
+     */
     Autocomplete.prototype.makeOfficialStoreUrl = function (query , officialStoreId, officialStoreName) {
         var url = searchQuery;
         var officialStoreParamValue,officialStoreParamId;
         url = url.replace('$query', encodeURIComponent(query));
 
+        officialStoreParamId = searchFEStoreParamId;
         if(officialStoreId === "all"){
-            officialStoreParamId = officialStoreFilterId.replace(/_/g,'*');
             officialStoreParamValue = officialStoreId;
         } else {
             officialStoreParamValue = officialStoreName.toLowerCase();
             officialStoreParamValue = officialStoreParamValue.replace(/ /g, '-');
-            officialStoreParamId = searchFEStoreParamId;
         }
 
         url += "_" + officialStoreParamId + "_" + officialStoreParamValue;
@@ -311,7 +388,7 @@
 
         // Check if the last searches get from the cookie
         if (lastSearches !== false) {
-            this._$lastSearchesQueries = $(this.makeTemplate(lastSearches, lastSearchesText, true)).appendTo(this.$container);
+            this._$lastSearchesQueries = $(this.makeTemplate(lastSearches, messages.lastSearches, true)).appendTo(this.$container);
         }
 
         return this;
@@ -332,8 +409,6 @@
             list,
             plainSearches,
             searchesList = [];
-
-
 
         // The user hasn't cookies. Esc the function becouse there aren't cookies to set as last searchs.
         if (!isPMSCookie) {
@@ -379,13 +454,8 @@
      */
     Autocomplete.prototype.addOfficialStoreQueries = function (officialStoreQueries) {
 
-        if (this._$lastListOficialStore !== undefined) {
-            this._$lastListOficialStore.remove();
-        }
-
-        // Check if the officialStoreQueries was get from the api
-        if (officialStoreQueries !== false) {
-            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries)).insertAfter($('.ac-popover-content'));
+        if (officialStoreQueries.length > 0) {
+            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries)).insertAfter(this.$container.find('.ch-popover-content'));
         }
 
         return this;
@@ -406,7 +476,7 @@
             uri,
             i,
             suggestedInInput = '',
-            officialStore = 'official-store',
+            officialStore = 'official-store-suggest',
             query,
             text;
 
@@ -439,6 +509,7 @@
         return list;
     };
 
+
     /**
      * Do query
      * @memberof! ch.Autocomplete.prototype
@@ -447,7 +518,7 @@
      * @example
      * Autocomplete.doQuery();
      */
-    Autocomplete.prototype.doQuery = function (tracking) {
+    Autocomplete.prototype.doQuery = function (selectedElement) {
         // Saving querys. TODO?: Use trim to remove white spaces:trim($searchInput.val())
         var searchCompleteUrl,query;
 
@@ -481,7 +552,6 @@
             searchCompleteUrl = searchCompleteUrl.replace('$query', encodeURIComponent(query));
         }
 
-
         // Matener el formato de vistas: gallery o listing
         if (window.location.href.indexOf('_DisplayType_LF') != -1) {
             searchCompleteUrl += "_DisplayType_LF";
@@ -492,6 +562,19 @@
         // Adults setting
         if (this.getCookieValue('pr_categ') === 'AD' && searchCompleteUrl.indexOf('_PrCategId_AD') === -1) {
             searchCompleteUrl += '_PrCategId_AD';
+        }
+
+        //test navigation
+        if        (window.location.href.indexOf('_version_test3') != -1 || window.location.href.indexOf('version=test3') != -1) {
+            searchCompleteUrl += '_version_test3';
+        } else if (window.location.href.indexOf('_version_test2') != -1 || window.location.href.indexOf('version=test2') != -1) {
+            searchCompleteUrl += '_version_test2';
+        } else if (window.location.href.indexOf('_version_test') != -1 || window.location.href.indexOf('version=test') != -1) {
+            searchCompleteUrl += '_version_test';
+        }
+
+        if        (window.location.href.indexOf('_autosuggest_test') != -1 || window.location.href.indexOf('autosuggest=test') != -1) {
+            searchCompleteUrl += '_autosuggest_test';
         }
 
         // Tracking
@@ -626,11 +709,6 @@
      */
     Autocomplete.prototype.setSearchCookies = function (query) {
         try {
-            // Only if PMS active
-            // this.setCookie({
-            //     name: 'ml_list',
-            //     value: 'searching'
-            // });
             this.setCookie({
                 name: 'LAST_SEARCH',
                 value: query
@@ -641,14 +719,3 @@
     }
 
 }(this, this.ch.Autocomplete));
-
-
-// TODO: migrate to a vanilla javascript scroll
-/*! perfect-scrollbar - v0.5.8
-* http://noraesae.github.com/perfect-scrollbar/
-* Copyright (c) 2014 Hyunje Alex Jun; Licensed MIT */
-//(function(e){"use strict";"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?e(require("jquery")):e($)})(function(e){"use strict";function t(e){return"string"==typeof e?parseInt(e,10):~~e}var o={wheelSpeed:1,wheelPropagation:!1,swipePropagation:!0,minScrollbarLength:null,maxScrollbarLength:null,useBothWheelAxes:!1,useKeyboard:!0,suppressScrollX:!1,suppressScrollY:!1,scrollXMarginOffset:0,scrollYMarginOffset:0,includePadding:!1},n=0,r=function(){var e=n++;return function(t){var o=".perfect-scrollbar-"+e;return t===void 0?o:t+o}},l="WebkitAppearance"in document.documentElement.style;e.fn.perfectScrollbar=function(n,i){return this.each(function(){function a(e,o){var n=e+o,r=D-R;j=0>n?0:n>r?r:n;var l=t(j*(Y-D)/(D-R));M.scrollTop(l)}function s(e,o){var n=e+o,r=E-k;W=0>n?0:n>r?r:n;var l=t(W*(C-E)/(E-k));M.scrollLeft(l)}function c(e){return P.minScrollbarLength&&(e=Math.max(e,P.minScrollbarLength)),P.maxScrollbarLength&&(e=Math.min(e,P.maxScrollbarLength)),e}function u(){var e={width:I};e.left=B?M.scrollLeft()+E-C:M.scrollLeft(),N?e.bottom=_-M.scrollTop():e.top=Q+M.scrollTop(),H.css(e);var t={top:M.scrollTop(),height:A};Z?t.right=B?C-M.scrollLeft()-V-J.outerWidth():V-M.scrollLeft():t.left=B?M.scrollLeft()+2*E-C-$-J.outerWidth():$+M.scrollLeft(),G.css(t),U.css({left:W,width:k-z}),J.css({top:j,height:R-et})}function d(){M.removeClass("ps-active-x"),M.removeClass("ps-active-y"),E=P.includePadding?M.innerWidth():M.width(),D=P.includePadding?M.innerHeight():M.height(),C=M.prop("scrollWidth"),Y=M.prop("scrollHeight"),!P.suppressScrollX&&C>E+P.scrollXMarginOffset?(X=!0,I=E-F,k=c(t(I*E/C)),W=t(M.scrollLeft()*(I-k)/(C-E))):(X=!1,k=0,W=0,M.scrollLeft(0)),!P.suppressScrollY&&Y>D+P.scrollYMarginOffset?(O=!0,A=D-tt,R=c(t(A*D/Y)),j=t(M.scrollTop()*(A-R)/(Y-D))):(O=!1,R=0,j=0,M.scrollTop(0)),W>=I-k&&(W=I-k),j>=A-R&&(j=A-R),u(),X&&M.addClass("ps-active-x"),O&&M.addClass("ps-active-y")}function p(){var t,o,n=function(e){s(t,e.pageX-o),d(),e.stopPropagation(),e.preventDefault()},r=function(){H.removeClass("in-scrolling"),e(q).unbind(K("mousemove"),n)};U.bind(K("mousedown"),function(l){o=l.pageX,t=U.position().left,H.addClass("in-scrolling"),e(q).bind(K("mousemove"),n),e(q).one(K("mouseup"),r),l.stopPropagation(),l.preventDefault()}),t=o=null}function f(){var t,o,n=function(e){a(t,e.pageY-o),d(),e.stopPropagation(),e.preventDefault()},r=function(){G.removeClass("in-scrolling"),e(q).unbind(K("mousemove"),n)};J.bind(K("mousedown"),function(l){o=l.pageY,t=J.position().top,G.addClass("in-scrolling"),e(q).bind(K("mousemove"),n),e(q).one(K("mouseup"),r),l.stopPropagation(),l.preventDefault()}),t=o=null}function v(e,t){var o=M.scrollTop();if(0===e){if(!O)return!1;if(0===o&&t>0||o>=Y-D&&0>t)return!P.wheelPropagation}var n=M.scrollLeft();if(0===t){if(!X)return!1;if(0===n&&0>e||n>=C-E&&e>0)return!P.wheelPropagation}return!0}function g(e,t){var o=M.scrollTop(),n=M.scrollLeft(),r=Math.abs(e),l=Math.abs(t);if(l>r){if(0>t&&o===Y-D||t>0&&0===o)return!P.swipePropagation}else if(r>l&&(0>e&&n===C-E||e>0&&0===n))return!P.swipePropagation;return!0}function b(){function e(e){var t=e.originalEvent.deltaX,o=-1*e.originalEvent.deltaY;return(t===void 0||o===void 0)&&(t=-1*e.originalEvent.wheelDeltaX/6,o=e.originalEvent.wheelDeltaY/6),e.originalEvent.deltaMode&&1===e.originalEvent.deltaMode&&(t*=10,o*=10),t!==t&&o!==o&&(t=0,o=e.originalEvent.wheelDelta),[t,o]}function t(t){if(l||!(M.find("select:focus").length>0)){var n=e(t),r=n[0],i=n[1];o=!1,P.useBothWheelAxes?O&&!X?(i?M.scrollTop(M.scrollTop()-i*P.wheelSpeed):M.scrollTop(M.scrollTop()+r*P.wheelSpeed),o=!0):X&&!O&&(r?M.scrollLeft(M.scrollLeft()+r*P.wheelSpeed):M.scrollLeft(M.scrollLeft()-i*P.wheelSpeed),o=!0):(M.scrollTop(M.scrollTop()-i*P.wheelSpeed),M.scrollLeft(M.scrollLeft()+r*P.wheelSpeed)),d(),o=o||v(r,i),o&&(t.stopPropagation(),t.preventDefault())}}var o=!1;window.onwheel!==void 0?M.bind(K("wheel"),t):window.onmousewheel!==void 0&&M.bind(K("mousewheel"),t)}function h(){var t=!1;M.bind(K("mouseenter"),function(){t=!0}),M.bind(K("mouseleave"),function(){t=!1});var o=!1;e(q).bind(K("keydown"),function(n){if((!n.isDefaultPrevented||!n.isDefaultPrevented())&&t){for(var r=document.activeElement?document.activeElement:q.activeElement;r.shadowRoot;)r=r.shadowRoot.activeElement;if(!e(r).is(":input,[contenteditable]")){var l=0,i=0;switch(n.which){case 37:l=-30;break;case 38:i=30;break;case 39:l=30;break;case 40:i=-30;break;case 33:i=90;break;case 32:case 34:i=-90;break;case 35:i=n.ctrlKey?-Y:-D;break;case 36:i=n.ctrlKey?M.scrollTop():D;break;default:return}M.scrollTop(M.scrollTop()-i),M.scrollLeft(M.scrollLeft()+l),o=v(l,i),o&&n.preventDefault()}}})}function w(){function e(e){e.stopPropagation()}J.bind(K("click"),e),G.bind(K("click"),function(e){var o=t(R/2),n=e.pageY-G.offset().top-o,r=D-R,l=n/r;0>l?l=0:l>1&&(l=1),M.scrollTop((Y-D)*l)}),U.bind(K("click"),e),H.bind(K("click"),function(e){var o=t(k/2),n=e.pageX-H.offset().left-o,r=E-k,l=n/r;0>l?l=0:l>1&&(l=1),M.scrollLeft((C-E)*l)})}function m(){function t(){var e=window.getSelection?window.getSelection():document.getSlection?document.getSlection():{rangeCount:0};return 0===e.rangeCount?null:e.getRangeAt(0).commonAncestorContainer}function o(){r||(r=setInterval(function(){return x()?(M.scrollTop(M.scrollTop()+l.top),M.scrollLeft(M.scrollLeft()+l.left),d(),void 0):(clearInterval(r),void 0)},50))}function n(){r&&(clearInterval(r),r=null),H.removeClass("in-scrolling"),G.removeClass("in-scrolling")}var r=null,l={top:0,left:0},i=!1;e(q).bind(K("selectionchange"),function(){e.contains(M[0],t())?i=!0:(i=!1,n())}),e(window).bind(K("mouseup"),function(){i&&(i=!1,n())}),e(window).bind(K("mousemove"),function(e){if(i){var t={x:e.pageX,y:e.pageY},r=M.offset(),a={left:r.left,right:r.left+M.outerWidth(),top:r.top,bottom:r.top+M.outerHeight()};t.x<a.left+3?(l.left=-5,H.addClass("in-scrolling")):t.x>a.right-3?(l.left=5,H.addClass("in-scrolling")):l.left=0,t.y<a.top+3?(l.top=5>a.top+3-t.y?-5:-20,G.addClass("in-scrolling")):t.y>a.bottom-3?(l.top=5>t.y-a.bottom+3?5:20,G.addClass("in-scrolling")):l.top=0,0===l.top&&0===l.left?n():o()}})}function T(t,o){function n(e,t){M.scrollTop(M.scrollTop()-t),M.scrollLeft(M.scrollLeft()-e),d()}function r(){h=!0}function l(){h=!1}function i(e){return e.originalEvent.targetTouches?e.originalEvent.targetTouches[0]:e.originalEvent}function a(e){var t=e.originalEvent;return t.targetTouches&&1===t.targetTouches.length?!0:t.pointerType&&"mouse"!==t.pointerType&&t.pointerType!==t.MSPOINTER_TYPE_MOUSE?!0:!1}function s(e){if(a(e)){w=!0;var t=i(e);p.pageX=t.pageX,p.pageY=t.pageY,f=(new Date).getTime(),null!==b&&clearInterval(b),e.stopPropagation()}}function c(e){if(!h&&w&&a(e)){var t=i(e),o={pageX:t.pageX,pageY:t.pageY},r=o.pageX-p.pageX,l=o.pageY-p.pageY;n(r,l),p=o;var s=(new Date).getTime(),c=s-f;c>0&&(v.x=r/c,v.y=l/c,f=s),g(r,l)&&(e.stopPropagation(),e.preventDefault())}}function u(){!h&&w&&(w=!1,clearInterval(b),b=setInterval(function(){return x()?.01>Math.abs(v.x)&&.01>Math.abs(v.y)?(clearInterval(b),void 0):(n(30*v.x,30*v.y),v.x*=.8,v.y*=.8,void 0):(clearInterval(b),void 0)},10))}var p={},f=0,v={},b=null,h=!1,w=!1;t&&(e(window).bind(K("touchstart"),r),e(window).bind(K("touchend"),l),M.bind(K("touchstart"),s),M.bind(K("touchmove"),c),M.bind(K("touchend"),u)),o&&(window.PointerEvent?(e(window).bind(K("pointerdown"),r),e(window).bind(K("pointerup"),l),M.bind(K("pointerdown"),s),M.bind(K("pointermove"),c),M.bind(K("pointerup"),u)):window.MSPointerEvent&&(e(window).bind(K("MSPointerDown"),r),e(window).bind(K("MSPointerUp"),l),M.bind(K("MSPointerDown"),s),M.bind(K("MSPointerMove"),c),M.bind(K("MSPointerUp"),u)))}function y(){M.bind(K("scroll"),function(){d()})}function L(){M.unbind(K()),e(window).unbind(K()),e(q).unbind(K()),M.data("perfect-scrollbar",null),M.data("perfect-scrollbar-update",null),M.data("perfect-scrollbar-destroy",null),U.remove(),J.remove(),H.remove(),G.remove(),M=H=G=U=J=X=O=E=D=C=Y=k=W=_=N=Q=R=j=V=Z=$=B=K=null}function S(){d(),y(),p(),f(),w(),m(),b(),(ot||nt)&&T(ot,nt),P.useKeyboard&&h(),M.data("perfect-scrollbar",M),M.data("perfect-scrollbar-update",d),M.data("perfect-scrollbar-destroy",L)}var P=e.extend(!0,{},o),M=e(this),x=function(){return!!M};if("object"==typeof n?e.extend(!0,P,n):i=n,"update"===i)return M.data("perfect-scrollbar-update")&&M.data("perfect-scrollbar-update")(),M;if("destroy"===i)return M.data("perfect-scrollbar-destroy")&&M.data("perfect-scrollbar-destroy")(),M;if(M.data("perfect-scrollbar"))return M.data("perfect-scrollbar");M.addClass("ps-container");var E,D,C,Y,X,k,W,I,O,R,j,A,B="rtl"===M.css("direction"),K=r(),q=this.ownerDocument||document,H=e("<div class='ps-scrollbar-x-rail'>").appendTo(M),U=e("<div class='ps-scrollbar-x'>").appendTo(H),_=t(H.css("bottom")),N=_===_,Q=N?null:t(H.css("top")),z=t(H.css("borderLeftWidth"))+t(H.css("borderRightWidth")),F=t(H.css("marginLeft"))+t(H.css("marginRight")),G=e("<div class='ps-scrollbar-y-rail'>").appendTo(M),J=e("<div class='ps-scrollbar-y'>").appendTo(G),V=t(G.css("right")),Z=V===V,$=Z?null:t(G.css("left")),et=t(G.css("borderTopWidth"))+t(G.css("borderBottomWidth")),tt=t(G.css("marginTop"))+t(G.css("marginBottom")),ot="ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch,nt=null!==window.navigator.msMaxTouchPoints;return S(),M})}});
-
-
-
-
