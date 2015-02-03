@@ -2,10 +2,10 @@
 
     'use strict';
 
-    var $searchForm,
-        $searchInput,
-        $checkbox,
-        $checkboxLabel,
+    var searchForm,
+        searchInput,
+        checkbox,
+        checkboxLabel,
         maxQueryLength,
         searchQuery,
         searchQueryInCategory,
@@ -29,16 +29,14 @@
             plain_query : "plain",
             store_query : "storequery",
             last_search : "last"
-        };
-
-
-    Autocomplete.prototype.autosuggestCache = {};
-    Autocomplete.prototype.mouseOverActive;
+        },
+        mouseOverActive,
+        autosuggestCache = {};
 
 
     /**
      * Init the component
-     * @memberof! ac.Autocomplete.prototype
+     * @memberof! ch.Autocomplete.prototype
      * @function
      * @example
      * Autocomplete.initialize();
@@ -48,10 +46,10 @@
         var that = this,
             searchFEStoreParamIdBySite;
 
-        $searchForm = this._options.searchForm;
-        $searchInput = this.$trigger;
-        $checkbox = this._options.categoryCheckbox;
-        $checkboxLabel = this._options.categoryCheckboxLabel;
+        searchForm = this._options.searchForm;
+        searchInput = this.$trigger;
+        checkbox = this._options.categoryCheckbox;
+        checkboxLabel = this._options.categoryCheckboxLabel;
         maxQueryLength = this._options.maxQueryLength || 35;
         searchQuery = this._options.searchQuery;
         searchQueryInCategory = this._options.searchQueryInCategory;
@@ -85,8 +83,8 @@
 
 
         // Redifine the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
-        ac.shortcuts.remove(ac.onkeyenter);
-        ac.shortcuts.add(ac.onkeyenter, this.uid, function (event) {
+        ch.shortcuts.remove(ch.onkeyenter);
+        ch.shortcuts.add(ch.onkeyenter, this.uid, function (event) {
             that.doQuery(that.getSelectedElementMap());
         });
 
@@ -136,21 +134,21 @@
 
 
         // Do the query when the select event is fire and a suggest y selected
-        this.on('select', function (e) {
-           this.doQuery(this.getSelectedElementMap());
+        this.on('select', function () {
+            this.doQuery(this.getSelectedElementMap());
         });
 
 
         // Add arrows shorcuts
-        ac.shortcuts.add(ac.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
-        ac.shortcuts.add(ac.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
+        ch.shortcuts.add(ch.onkeydownarrow, this.uid, this.adecuateCategoryLabel);
+        ch.shortcuts.add(ch.onkeyuparrow, this.uid, this.adecuateCategoryLabel);
 
-        ac.shortcuts.add(ac.onkeydownarrow, this.uid, function(e){that.scrollInToView.call(that, e.type)});
-        ac.shortcuts.add(ac.onkeyuparrow, this.uid, function(e){that.scrollInToView.call(that, e.type)});
+        ch.shortcuts.add(ch.onkeydownarrow, this.uid, function(e){that.scrollInToView.call(that, e.type)});
+        ch.shortcuts.add(ch.onkeyuparrow, this.uid, function(e){that.scrollInToView.call(that, e.type)});
 
 
         // Submit the searcj query
-        $searchForm.submit(function (event) {
+        searchForm.submit(function (event) {
             event.preventDefault();
             if (typeof that._highlighted === "undefined" || that._highlighted === null ){
                 that.doQuery();
@@ -159,7 +157,7 @@
 
 
         // Do suggest when the user press down or rigth arrow
-        $searchForm.keydown(function (ev) {
+        searchForm.keydown(function (ev) {
             // 40 arrow down
             if (ev.keyCode === 40 && !that._popover.isShown()) {
                 that.doSuggest("");
@@ -210,8 +208,8 @@
             return;
         }
 
-        if (userInput in this.autosuggestCache){
-            this.parseResults(this.autosuggestCache[userInput]);
+        if (userInput in autosuggestCache){
+            this.parseResults(autosuggestCache[userInput]);
 
         } else {
             extraParameters["q"] = userInput;
@@ -249,17 +247,17 @@
      * this.resetScroll();
      */
     Autocomplete.prototype.resetScroll = function () {
-        var scrollableContent = document.querySelector('.ac-popover-content');
+        var scrollableContent = document.querySelector('.ch-popover-content');
 
         if (scrollableContent) {
             scrollableContent.scrollTop = 0;
             scrollTopAnimateItem = 0;
         }
-    }
+    };
 
 
     /**
-     * Converts params to url
+     * Convert params yo url
      * @function
      * @param {String} Params in the browser url
      * @example
@@ -273,7 +271,7 @@
             response += key + "=" + params[key] + "&";
         }
 
-        // remove last &
+        //remove last &
         response = response.substring(0, response.length - 1);
         return response;
     };
@@ -320,7 +318,7 @@
         var jsonResponse = data[2],
             responseQuery = jsonResponse.q;
 
-        this.autosuggestCache[responseQuery] = jsonResponse;
+        autosuggestCache[responseQuery] = jsonResponse;
 
         if (this._el.value === responseQuery) {
             this.parseResults(jsonResponse);
@@ -388,17 +386,19 @@
      */
     Autocomplete.prototype.scrollInToView = function (eventType) {
 
-        var acPopoverContent = document.querySelector('.ac-popover-content'),
-            highlightedElement = document.querySelector('.ac-autocomplete-highlighted'),
-            acAutocompleteList = document.querySelectorAll('.ac-autocomplete-list li');
+        var acPopoverContent = document.querySelector('.ch-popover-content'),
+            highlightedElement = document.querySelector('.ch-autocomplete-highlighted'),
+            acAutocompleteList = $('.ch-autocomplete-list'),
+            acAutocompleteListLi = document.querySelectorAll('.ch-autocomplete-list li'),
+            acPopoverContent = $('.ch-popover-content');
 
 
         if (eventType === 'up_arrow' && lastHighlighted === 0) {
-            this.$container[0].querySelector('ul').children[this._highlighted].className = 'ac-autocomplete-item ';
+            this.$container[0].querySelector('ul').children[this._highlighted].className = 'ch-autocomplete-item ';
             this._highlighted = null;
 
-        } else if (eventType === 'up_arrow' && this._highlighted === acAutocompleteList.length -1) {
-            scrollTopAnimateItem = $('.ac-autocomplete-list').height() - $('.ac-popover-content').height() + 8;
+        } else if (eventType === 'up_arrow' && this._highlighted === acAutocompleteListLi.length -1) {
+            scrollTopAnimateItem = acAutocompleteList.height() - acPopoverContent.height() + 8;
             acPopoverContent.scrollTop = scrollTopAnimateItem;
         }
 
@@ -406,9 +406,9 @@
         if (highlightedElement) {
             var highlightedElementTopPosition = highlightedElement.getBoundingClientRect().top - 52,
                 highlightedElementBottomPosition = highlightedElement.getBoundingClientRect().bottom - 52,
-                autocompleteHeigth = $('.ac-popover-content').height(),
-                autocompleteListHeigth = $('.ac-autocomplete-list').height(),
-                autocompleteItems = acAutocompleteList.length,
+                autocompleteHeigth = acPopoverContent.height(),
+                autocompleteListHeigth = acAutocompleteList.height(),
+                autocompleteItems = acAutocompleteListLi.length,
                 currentItem = highlightedElement.getAttribute('aria-posinset');
 
             if (highlightedElementBottomPosition > autocompleteHeigth && currentItem <= autocompleteItems) {
@@ -427,13 +427,13 @@
 
         lastHighlighted = this._highlighted;
 
-        this.mouseOverActive = false;
-        $('.ac-popover-content').css('pointer-events', 'none');
+        mouseOverActive = false;
+        acPopoverContent.css('pointer-events', 'none');
 
         $(document).on('mousemove', function(e){
-            if(autocomplete.mouseOverActive === false){
-                autocomplete.mouseOverActive = true;
-                $('.ac-popover-content').css('pointer-events', 'auto');
+            if(mouseOverActive === false){
+                mouseOverActive = true;
+                acPopoverContent.css('pointer-events', 'auto');
             }
         });
 
@@ -474,15 +474,17 @@
             suggestedResultsTO = [],
             suggestedQueriesQtyToShow = queries.length,
             firstQuery = queries[0],
-            firstQueryOfficialStoreFilter;
+            firstQueryOfficialStoreFilter,
+            acList = $('.ch-autocomplete-list'),
+            acScrollBar = $('.ps-scrollbar-y-rail');
 
         if (queries === undefined) {
             return;
         }
 
         // Reset the scroll
-        $('.ac-autocomplete-list').css('top', '0px');
-        $('.ps-scrollbar-y-rail').css('top', '0px');
+        acList.css('top', '0px');
+        acScrollBar.css('top', '0px');
 
 
         if (this._$lastListOficialStore !== undefined) {
@@ -526,7 +528,7 @@
         this.suggest(suggestedResults);
 
         if (this.isShown()) {
-            document.querySelector('.ac-popover-content').scrollTop = 0;
+            document.querySelector('.ch-popover-content').scrollTop = 0;
             scrollTopAnimateItem = 0;
         }
 
@@ -544,11 +546,14 @@
      * this.makeOfficialStoreUrl(firstQuery.q, firstQueryOfficialStoreFilter.values[i].id , firstQueryOfficialStoreFilter.values[i].name);
      */
     Autocomplete.prototype.makeOfficialStoreUrl = function (query, officialStoreId, officialStoreName) {
-        var url = searchQuery;
-        var officialStoreParamValue,officialStoreParamId;
+        var url = searchQuery,
+            officialStoreParamValue,
+            officialStoreParamId;
+
         url = url.replace('$query', encodeURIComponent(query));
 
         officialStoreParamId = searchFEStoreParamId;
+
         if(officialStoreId === "all"){
             officialStoreParamValue = officialStoreId;
         } else {
@@ -557,6 +562,7 @@
         }
 
         url += "_" + officialStoreParamId + "_" + officialStoreParamValue;
+
         return url;
     };
 
@@ -569,10 +575,12 @@
      * this.adecuateCategoryLabel();
      */
     Autocomplete.prototype.adecuateCategoryLabel = function () {
-        if ($searchInput.val().length > maxQueryLength) {
-            $checkboxLabel.addClass('nav-label-small');
+
+        if (searchInput.val().length > maxQueryLength) {
+            checkboxLabel.addClass('nav-label-small');
+
         } else {
-            $checkboxLabel.removeClass('nav-label-small');
+            checkboxLabel.removeClass('nav-label-small');
         }
 
         return this;
@@ -631,14 +639,16 @@
 
             for (i = 0; i < searchesLength ; i++) {
                 try {
-                    var searchesMap = {};
-                    var queryText = plainSearches[i].substr(1).toLowerCase();
-                    var url = searchQuery.replace('$query', encodeURIComponent(queryText));
+                    var searchesMap = {},
+                        queryText = plainSearches[i].substr(1).toLowerCase(),
+                        url = searchQuery.replace('$query', encodeURIComponent(queryText));
+
                     searchesMap["query"] = queryText;
                     searchesMap["text"] = queryText;
                     searchesMap["url"] = url;
                     searchesList[i] = searchesMap;
-                }catch (e) {}
+
+                } catch (e) {}
             }
 
             return searchesList;
@@ -658,7 +668,7 @@
     Autocomplete.prototype.addOfficialStoreQueries = function (officialStoreQueries) {
 
         if (typeof officialStoreQueries != 'undefined' && officialStoreQueries != null && officialStoreQueries.length > 0) {
-            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries,suggestionTypes.store_query)).insertAfter(this.$container.find('.ac-popover-content'));
+            this._$lastListOficialStore = $(this.makeTemplate(officialStoreQueries,suggestionTypes.store_query)).insertAfter(this.$container.find('.ch-popover-content'));
         }
 
         return this;
@@ -708,7 +718,7 @@
                     suggestedInInput = searches[i].query;
                 }
 
-                list += '<li class="ac-autocomplete-item" data-suggested="'+suggestedInInput+'" num="'+i+'" data-sug-type="' + sugType + '" data-query="' + query + '" data-url="' + uri + '" class="aditional-info-item">'+text+'</li>';
+                list += '<li class="ch-autocomplete-item" data-suggested="'+suggestedInInput+'" num="'+i+'" data-sug-type="' + sugType + '" data-query="' + query + '" data-url="' + uri + '" class="aditional-info-item">'+text+'</li>';
             } catch (e) {}
         }
 
@@ -727,7 +737,7 @@
      * this.doQuery(this.getSelectedElementMap());
      */
     Autocomplete.prototype.doQuery = function (selectedElement) {
-        // Saving querys. TODO?: Use trim to remove white spaces:trim($searchInput.val())
+        // Saving querys. TODO?: Use trim to remove white spaces:trim(searchInput.val())
         var searchCompleteUrl,
             query;
 
@@ -736,7 +746,7 @@
             searchCompleteUrl = selectedElement.url;
 
         } else {
-            query = $searchInput.val();
+            query = searchInput.val();
 
             // Naturalization the query
             if (query && query.length > 0) {
@@ -747,13 +757,13 @@
                 });
             } else {
                 // Focus when submit (valid en IE)
-                $searchInput.focus();
+                searchInput.focus();
                 return false;
             }
 
 
             // Category checked
-            if ($checkbox !== null && $checkbox.is(':checked')) {
+            if (checkbox !== null && checkbox.is(':checked')) {
                 searchCompleteUrl = searchQueryInCategory;
             } else {
                 searchCompleteUrl = searchQuery;
@@ -788,7 +798,7 @@
             searchCompleteUrl += '_autosuggest_test';
         }
 
-        searchCompleteUrl += this.makeTrackingHash(selectedElement , $checkbox , query);
+        searchCompleteUrl += this.makeTrackingHash(selectedElement , checkbox , query);
 
         this.setSearchCookies(query);
 
@@ -806,14 +816,16 @@
      * @function
      * @returns {hashString}
      * @example
-     * this.makeTrackingHash(selectedElement , $checkbox , query);
+     * this.makeTrackingHash(selectedElement , checkbox , query);
      */
     Autocomplete.prototype.makeTrackingHash = function (selectedElement, categoryCheckBox, query) {
 
         var trackingList = [],
             selectedIndex,
             posInBlock,
-            sugType;
+            sugType,
+            trackingMapAsString,
+            hashString;
 
         if (typeof selectedElement != 'undefined' && selectedElement != null){
             selectedIndex = selectedElement.selectedIndex;
@@ -841,8 +853,9 @@
             }
         }
 
-        var trackingMapAsString = trackingList.join(),
-            hashString = "#D[" + trackingMapAsString + "]";
+        trackingMapAsString = trackingList.join();
+
+        hashString = "#D[" + trackingMapAsString + "]";
 
         return hashString
     };
