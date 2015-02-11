@@ -7,16 +7,16 @@
 
 /* Autosaggest OLD look and feel
 ---------------------------------------------------------------*/
-.ac-popover-content .ac-autocomple-list {
+.ch-popover-content .ch-autocomple-list {
     max-height: 150px !important;
     overflow: auto;
 }
 
-.ac-popover-content .ac-autocomple-list.no-scroll {
+.ch-popover-content .ch-autocomple-list.no-scroll {
     height: auto !important;
 }
 
-.ac-popover-content .ac-autocomplete-item {
+.ch-popover-content .ch-autocomplete-item {
     color: #0059B2;
     cursor: pointer;
     font-size: 16px;
@@ -26,7 +26,7 @@
     font-weight: bold;
 }
 
-.ac-popover-content .ac-autocomplete-item:first-child {
+.ch-popover-content .ch-autocomplete-item:first-child {
     margin-top: 0;
 }
 
@@ -67,7 +67,7 @@
     padding: 5px;
 }
 
-.ac-autocomplete-item .ac-autocomplete-highlighted {
+.ch-autocomplete-item .ch-autocomplete-highlighted {
     margin: 0;
     padding: 5px 5px !important;
     cursor: pointer;
@@ -198,27 +198,27 @@
 
 /* Autosuggest
 ---------------------------------------------------------------*/
-.ac-autocomplete {
+.ch-autocomplete {
     padding: 10px 0 0 10px;
 }
 
-.ac-autocomplete-list {
+.ch-autocomplete-list {
     position: relative;
 }
 
-.ac-autocomplete-list .ac-autocomplete-item i {
+.ch-autocomplete-list .ch-autocomplete-item i {
     display: none;
 }
 
-.aditional-info .ac-popover-content .ac-autocomplete-item {
+.aditional-info .ch-popover-content .ch-autocomplete-item {
     font-weight: bold;
 }
 
-.ac-popover-content .ac-autocomplete-item strong {
+.ch-popover-content .ch-autocomplete-item strong {
     font-weight: normal;
 }
 
-.ac-autocomplete-highlighted {
+.ch-autocomplete-highlighted {
     background-color: #FDF9D5;
     border-radius: 5px;
 }
@@ -343,7 +343,7 @@
 
 /* Autocomplete scroll bar
 ---------------------------------------------------------------*/
-.ac-popover-content {
+.ch-popover-content {
     position: relative;
     margin: 0 auto;
     padding: 0;
@@ -352,7 +352,7 @@
     overflow-y: hidden;
 }
 
-.ac-popover-content .ac-autocomplete-list {
+.ch-popover-content .ch-autocomplete-list {
     width: auto;
     margin-bottom: 8px;
     padding-right: 10px;
@@ -393,7 +393,7 @@ a.ch-btn-skin:visited {
 .ps-container.ps-active-x>.ps-scrollbar-x-rail,.ps-container.ps-active-y>.ps-scrollbar-y-rail{display:block}.ps-container>.ps-scrollbar-x-rail{display:none;position:absolute;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;opacity:0;-ms-filter:"alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:background-color .2s linear,opacity .2s linear;-moz-transition:background-color .2s linear,opacity .2s linear;-o-transition:background-color .2s linear,opacity .2s linear;transition:background-color .2s linear,opacity .2s linear;bottom:3px;height:8px}.ps-container>.ps-scrollbar-x-rail>.ps-scrollbar-x{position:absolute;background-color:#aaa;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;-webkit-transition:background-color .2s linear;-moz-transition:background-color .2s linear;-o-transition:background-color .2s linear;transition:background-color .2s linear;bottom:0;height:8px}.ps-container>.ps-scrollbar-x-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container>.ps-scrollbar-y-rail{display:none;position:absolute;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;opacity:0;-ms-filter:"alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:background-color .2s linear,opacity .2s linear;-moz-transition:background-color .2s linear,opacity .2s linear;-o-transition:background-color .2s linear,opacity .2s linear;transition:background-color .2s linear,opacity .2s linear;right:3px;width:8px}.ps-container>.ps-scrollbar-y-rail>.ps-scrollbar-y{position:absolute;background-color:#aaa;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;border-radius:4px;-webkit-transition:background-color .2s linear;-moz-transition:background-color .2s linear;-o-transition:background-color .2s linear;transition:background-color .2s linear;right:0;width:8px}.ps-container>.ps-scrollbar-y-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail,.ps-container:hover>.ps-scrollbar-y-rail{opacity:.6;-ms-filter:"alpha(Opacity=60)";filter:alpha(opacity=60)}.ps-container:hover>.ps-scrollbar-x-rail.in-scrolling,.ps-container:hover>.ps-scrollbar-y-rail.in-scrolling{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail:hover{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-x-rail:hover>.ps-scrollbar-x{background-color:#999}.ps-container:hover>.ps-scrollbar-y-rail:hover{background-color:#eee;opacity:.9;-ms-filter:"alpha(Opacity=90)";filter:alpha(opacity=90)}.ps-container:hover>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y{background-color:#999}
 
 /* to make scrollbars always visible */
-.ac-popover-content > .ps-scrollbar-x-rail,
-.ac-popover-content > .ps-scrollbar-y-rail {
+.ch-popover-content > .ps-scrollbar-x-rail,
+.ch-popover-content > .ps-scrollbar-y-rail {
     opacity: 0.6;
 }

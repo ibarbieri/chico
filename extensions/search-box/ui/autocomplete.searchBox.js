@@ -80,7 +80,14 @@
 
         // Dont show loading icon
         this._options.loadingClass = "";
+ 
 
+        // On input focus check if the input searchbox value is empty
+        searchInput.on('focus', function () {
+            if (searchInput.value === undefined || searchInput.value === null) {
+                that.lastSearchesOnFocus();
+            }
+        });
 
         // Redifine the Autocomplete _configureShortcuts to fix this issue: https://github.com/mercadolibre/chico/issues/1220
         ch.shortcuts.remove(ch.onkeyenter);
@@ -253,6 +260,17 @@
             scrollableContent.scrollTop = 0;
             scrollTopAnimateItem = 0;
         }
+    };
+
+
+    /**
+     * Show the last searches on input focus and if it is empty 
+     * @function
+     * @example
+     * this.resetScroll();
+     */
+    Autocomplete.prototype.lastSearchesOnFocus = function () {
+        this._popover.show();
     };
 
 

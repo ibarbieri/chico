@@ -12,13 +12,13 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="cleartype" content="on">
-    <link rel="stylesheet" href="http://static.mlstatic.com/org-img/ch/ui/0.13.4/chico.min.css">
-    <link rel="stylesheet" href="/extensions/search-box/ui/autocomplete.searchBox.css">
+    <link rel="stylesheet" href="http://static.mlstatic.com/org-img/ch/ui/1.1.1/chico.min.css">
+    <link rel="stylesheet" href="../extensions/search-box/ui/autocomplete.searchBox.css">
 </head>
 
 <body>
     <div class="ml-header">
-        <h1 id="components" class="ch-shownby-pointertap" aria-owns="ch-layer-34" aria-haspopup="true">Extensions (Chico UI 1.1.1)</h1>
+        <h1 id="components" class="ch-shownby-pointertap" aria-owns="ch-layer-34" aria-haspopup="true">Searchbox extension with Chico UI 1.1.1</h1>
     </div>
 
     <section id="autocomplete">
@@ -45,7 +45,7 @@
     <script type="text/javascript" src="http://static.mlstatic.com/org-img/ch/ui/1.1.1/chico.js"></script>
 
     <!-- Search box standalone -->
-    <script type="text/javascript" src="/extensions/search-box/ui/autocomplete.searchBox.js"></script>
+    <script type="text/javascript" src="../extensions/search-box/ui/autocomplete.searchBox.js"></script>
 
     <script type="text/javascript">
         /**
@@ -58,26 +58,25 @@
             'categoryCheckbox': $('#categorySearch'),
             'categoryCheckboxLabel': $('label[for="categorySearch"]'),
             'maxQueryLength': 35,
-            'meliDomain': '${siteInfoHelper.getDomainUrl(searchContext.siteId)}',
-            'searchQuery': "${siteInfoHelper.getNaturalSearchUrlWithQueryParameter(searchContext.layout,searchContext.baseUrl,null,searchContext.overridenLayout,'replace')?.replace('replace','$query')}",
-            'searchQueryInCategory' : "${siteInfoHelper.getUriCateg(searchResultFe, searchContext, '$query')}",
-            'currentCategory': "${searchResultFe?.getSelectedCategoryId()}",
+            'meliDomain': '',
+            'searchQuery': "",
+            'searchQueryInCategory' : "",
+            'currentCategory': "",
             'suggestionsQuantity': 20,
-            'siteId': "${searchContext.siteId}",
-            'platformId': '${searchContext.platform}',
-            'officialStoreFiltersEnabled': "${onOffHelper.check([id:"autosuggestWithStores",siteId:searchContext.siteId,visualId:searchContext.visualId],params)}",
+            'siteId': "MLA",
+            'platformId': 'MLA',
             'messages':{
-                'lastSearches': '<%=t9n.tr(s:"Últimas búsquedas")%>',
-                'inOfficialStore': '<%=t9n.tr(s:"en tienda oficial")%> ',
-                'inAllOficialStores': '<%=t9n.tr(s:"en todas las ")%>',
-                'officalStoreName': '<%=t9n.tr(s:"tiendas oficiales")%>'
+                'lastSearches': 'Últimas búsquedas',
+                'inOfficialStore': 'en tienda oficial',
+                'inAllOficialStores': 'en todas las',
+                'officalStoreName': 'tiendas oficiales'
             },
             'isMobile':'false',
             'position':'fixed'
         };
 
         // Instance of autocomplete with chico 1.1.1 standalone
-        autocomplete = new ac.Autocomplete($('.nav-search-input'), autocompleteConfig);
+        autocomplete = new ch.Autocomplete($('.nav-search-input'), autocompleteConfig);
 
 
         // Position fixed when the autocomplete is ready
@@ -92,18 +91,18 @@
 
         // Instance of autocomplete scroll when the popover is showed
         autocomplete._popover.once('show', function () {
-            $('.ac-popover-content').perfectScrollbar({
+            $('.ch-popover-content').perfectScrollbar({
                 suppressScrollX: true
             });
         });
 
 
         // Check if the input searchbox value is different to the search query url params
-        if (autocomplete._el.value !== "${searchContext.query}") {
-            autocomplete._el.blur();
-            autocomplete._el.focus();
-            autocomplete.emit("type","");
-        }
+        // if (autocomplete._el.value !== "${searchContext.query}") {
+        //     autocomplete._el.blur();
+        //     autocomplete._el.focus();
+        //     autocomplete.emit("type","");
+        // }
     </script>
 
 </body>
