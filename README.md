@@ -53,7 +53,7 @@ Navigate `./doc` directory and enjoy!
 
 You can create a new extension in the extensions folder.
 
-To generate the build run:
+Generate a build of each extension:
 
     grunt dist --env=search-box-ui
     grunt dist --env=search-box-mobile
