@@ -60,9 +60,6 @@ CSS.resetML = [
  * CSS: Core
  */
 CSS.core = [
-    "src/shared/css/base.css",
-    "src/ui/css/base.css",
-    "src/shared/css/icons.css",
     "src/ui/css/badges.css",
     "src/shared/css/boxes.css",
     "src/ui/css/boxes.css",

@@ -60,10 +60,6 @@ CSS.resetML = [
  * CSS: Core
  */
 CSS.core = [
-    "src/shared/css/base.css",
-    "src/ui/css/base.css",
-    "src/shared/css/icons.css",
-    "src/ui/css/badges.css",
     "src/shared/css/boxes.css",
     "src/ui/css/boxes.css",
     "src/shared/css/loading.css"
@@ -73,28 +69,6 @@ CSS.core = [
  * CSS: Components
  */
 CSS.components = [
-    // "src/shared/css/buttons.css",
-    // "src/ui/css/buttons.css",
-    // "src/shared/css/datagrid.css",
-    // "src/shared/css/lists.css",
-    // "src/shared/css/pagination.css",
-    // "src/ui/css/pagination.css",
-    // "src/shared/css/Form.css",
-    // "src/ui/css/Form.css",
-    // "src/shared/css/Popover.css",
-    // "src/shared/css/Tooltip.css",
-    // "src/shared/css/Bubble.css",
-    // "src/shared/css/Modal.css",
-    // "src/shared/css/Transition.css",
-    // "src/ui/css/Zoom.css",
-    // "src/ui/css/wizard.css",
-    // "src/shared/css/Calendar.css",
-    // "src/shared/css/Carousel.css",
-    // "src/shared/css/Dropdown.css",
-    // "src/ui/css/Expandable.css",
-    // "src/ui/css/Menu.css",
-    // "src/ui/css/Tabs.css",
-    // "src/ui/css/Datepicker.css",
     "src/shared/css/Autocomplete.css",
     "src/ui/css/Autocomplete.css",
     "src/shared/css/Popover.css",
