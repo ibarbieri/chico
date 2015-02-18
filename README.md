@@ -49,6 +49,15 @@ The API doc may also be run locally by running:
 
 Navigate `./doc` directory and enjoy!
 
+## Extensions
+
+You can create a new extension in the extensions folder.
+
+To generate the build run:
+
+    grunt dist --env=search-box-ui
+    grunt dist --env=search-box-mobile
+
 ## Tests
 You can run our tests in your browser:
 
