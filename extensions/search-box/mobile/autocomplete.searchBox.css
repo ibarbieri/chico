@@ -212,23 +212,31 @@
     margin: 10px 15px 8px;
 }
 
+.aditional-info.official-store-suggest {
+    background-color: #EEEEEE;
+}
+
 .aditional-info .aditional-info-list li {
-    border-top: 1px solid #EEEEEE;
+    border-top: 1px solid #EEE;
     font-size: 13px;
     position: relative;
     border-radius: 0;
     border-bottom: none;
     min-height: 0;
-    line-height: 0;
+    line-height: normal;
     text-indent: initial;
     display: block;
-    padding: 24px 10px 19px 10px;
+    padding: 15px 10px;
     margin: 0;
-    color: #333333;
+    color: #333;
     text-overflow: ellipsis;
     width: auto;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.aditional-info .official-store-suggest > li {
+    border-bottom: 1px solid #dedede;
 }
 
 .aditional-info .official-store-suggest li span {

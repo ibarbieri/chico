@@ -150,9 +150,7 @@
         // Submit the searcj query
         searchForm.submit(function (event) {
             event.preventDefault();
-            if (typeof that._highlighted === "undefined" || that._highlighted === null ){
-                that.doQuery();
-            }
+            that.doQuery();
         });
 
 
@@ -694,14 +692,17 @@
             i,
             suggestedInInput = '',
             officialStore = 'official-store-suggest',
+            lastSearchesClass = 'last-searches',
             query,
             text;
 
         searchesLength = searches.length;
 
-        list  = '<div class="aditional-info">';
+        list = '<div class="aditional-info' + ' ' + officialStore + '">';
 
         if (title !== undefined) {
+            list = '<div class="aditional-info' + ' ' + lastSearchesClass + '">';
+
             list += '<h4 class="aditional-info-title">' + title +'</h4>';
             officialStore = '';
         }
@@ -717,8 +718,7 @@
                 if (suggestedToInput || title === undefined) {
                     suggestedInInput = searches[i].query;
                 }
-
-                list += '<li class="ch-autocomplete-item" data-suggested="'+suggestedInInput+'" num="'+i+'" data-sug-type="' + sugType + '" data-query="' + query + '" data-url="' + uri + '" class="aditional-info-item">'+text+'</li>';
+                list += '<li class="ac-autocomplete-item" data-suggested="'+suggestedInInput+'" num="'+i+'" data-sug-type="' + sugType + '" data-query="' + query + '" data-url="' + uri + '" class="aditional-info-item">'+text+'</li>';
             } catch (e) {}
         }
 
